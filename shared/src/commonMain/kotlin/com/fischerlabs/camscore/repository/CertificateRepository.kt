@@ -16,8 +16,13 @@ import kotlinx.datetime.toLocalDateTime
  */
 class CertificateRepository {
 
-    private val firestore = Firebase.firestore
-    private val certificatesCollection = firestore.collection("certificates")
+    private val firestore by lazy {
+        try {
+            Firebase.firestore
+        } catch (_: Throwable) {
+            null
+        }
+    }
 
     /**
      * Generate a Certificate from a completed TestResult.
@@ -52,7 +57,8 @@ class CertificateRepository {
      */
     suspend fun uploadVerification(certificate: Certificate) = withContext(Dispatchers.Default) {
         try {
-            certificatesCollection.document(certificate.verificationHash).set(
+            val fs = firestore ?: return@withContext
+            fs.collection("certificates").document(certificate.verificationHash).set(
                 mapOf(
                     "testId" to certificate.testId,
                     "deviceModel" to certificate.deviceModel,
@@ -82,7 +88,8 @@ class CertificateRepository {
      */
     suspend fun verifyCertificate(hash: String): Certificate? = withContext(Dispatchers.Default) {
         try {
-            val doc = certificatesCollection.document(hash).get()
+            val fs = firestore ?: return@withContext null
+            val doc = fs.collection("certificates").document(hash).get()
             if (!doc.exists) return@withContext null
 
             Certificate(

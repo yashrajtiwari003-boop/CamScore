@@ -3,6 +3,17 @@
 
 ---
 
+### 🌐 Live Web App (No App Download Required)
+👉 **Launch Live Website:** [https://yashrajtiwari003-boop.github.io/CamScore/](https://yashrajtiwari003-boop.github.io/CamScore/)
+
+- **Instant Browser Access**: Open directly in Chrome, Safari, Firefox, or Edge on any phone, tablet, or PC without installing anything.
+- **Figure 3.1 Dual Themes**: Switch between Dark Mode 🌙 and Light Mode ☀️ instantly.
+- **Live 10-Second Camera Benchmark**: Test autofocus speed, OIS motor dampening, and lens color fidelity.
+- **Digital Health Certificate**: View tamper-proof hardware certificates and scan QR verification.
+- **Global Leaderboard**: Browse monthly smartphone rankings with Non-OIS Fair Mode redistribution.
+
+---
+
 ### 1. Executive Summary
 **CamScore** is the world's first cross-platform, on-device, zero-lab-equipment camera hardware diagnostic benchmark. In a single **10-second hands-off test**, CamScore:
 1. **Sweeps zoom 1x–10x** across physical lenses (Ultrawide, Main, Telephoto).

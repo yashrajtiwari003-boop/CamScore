@@ -10,7 +10,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.content.ContextCompat
 import com.fischerlabs.camscore.CamScoreApp
 import com.fischerlabs.camscore.viewmodel.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
 
 /**
  * Main Activity for CamScore on Android.
@@ -18,11 +18,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class MainActivity : ComponentActivity() {
 
-    private val homeViewModel: HomeViewModel by viewModel()
-    private val diagnosticViewModel: DiagnosticViewModel by viewModel()
-    private val resultViewModel: ResultViewModel by viewModel()
-    private val certificateViewModel: CertificateViewModel by viewModel()
-    private val leaderboardViewModel: LeaderboardViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by inject()
+    private val diagnosticViewModel: DiagnosticViewModel by inject()
+    private val resultViewModel: ResultViewModel by inject()
+    private val certificateViewModel: CertificateViewModel by inject()
+    private val leaderboardViewModel: LeaderboardViewModel by inject()
 
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
