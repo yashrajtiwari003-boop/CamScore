@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CamScore</string>
+    <string name="app_subtitle">by Fischer Labs</string>
+    <string name="start_test">Start Test</string>
+    <string name="camera_permission_required">Camera permission is required to run the hardware diagnostic benchmark.</string>
+</resources>

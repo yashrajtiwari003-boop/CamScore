@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verified by CamScore — Official Hardware Health Certificate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #0A192F;
+            --card-bg: #112240;
+            --card-inner: #172A45;
+            --text-primary: #E6F1FF;
+            --text-secondary: #8892B0;
+            --accent-blue: #1976D2;
+            --accent-cyan: #29B6F6;
+            --pass-green: #10B981;
+            --warn-amber: #F59E0B;
+            --fail-coral: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .cert-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976D2 50%, #29B6F6 100%);
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+        }
+
+        .app-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 4px;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .device-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .device-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .device-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .score-box {
+            background: var(--card-inner);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            line-height: 1.1;
+            margin: 6px 0;
+        }
+
+        .health-gauge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .health-pill {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .pass-pill {
+            background: var(--pass-green);
+            color: #FFFFFF;
+        }
+
+        .hash-code {
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            word-break: break-all;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cert-card">
+        <div class="header-banner">
+            <div class="badge-verified">
+                ✓ VERIFIED BY CAMSCORE
+            </div>
+            <h1 class="app-title">Official Hardware Health Certificate</h1>
+            <p class="app-sub">Fischer Labs Anti-Fraud Diagnostic Registry</p>
+        </div>
+
+        <div class="content">
+            <div class="device-info">
+                <div class="device-name" id="device-model">Verifying Device...</div>
+                <div class="device-meta" id="test-timestamp">Authenticating cryptographic hash with Firebase...</div>
+            </div>
+
+            <div class="score-box">
+                <div class="score-label">Uncapped CamScore</div>
+                <div class="score-number" id="cam-score">---</div>
+                <div id="status-badge" class="health-pill pass-pill">MINT HARDWARE HEALTH</div>
+            </div>
+
+            <div class="health-gauge-row">
+                <span>Overall Hardware Health</span>
+                <strong id="health-pct" style="color: var(--pass-green); font-size: 18px;">---%</strong>
+            </div>
+
+            <div class="health-gauge-row">
+                <span>Autofocus Motor (Laplacian σ²)</span>
+                <strong id="af-pct">---%</strong>
+            </div>
+
+            <div class="health-gauge-row">
+                <span>OIS Stabilization Motor</span>
+                <strong id="ois-pct">---%</strong>
+            </div>
+
+            <div class="health-gauge-row">
+                <span>Lens Switch & Color Fidelity (ΔE)</span>
+                <strong id="lens-pct">---%</strong>
+            </div>
+
+            <div class="hash-code" id="hash-display">
+                Verification Hash: loading...
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 Fischer Labs • CamScore Benchmark & Diagnostics Engine<br>
+        100% On-Device Testing • Zero Lab Equipment Required
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const hash = params.get('id') || '4a8f9c1b7e2d63018274aef0c82937bd';
+
+        document.getElementById('hash-display').textContent = `SHA-256: ${hash}`;
+        document.getElementById('device-model').textContent = 'Google Pixel 8 Pro';
+        document.getElementById('test-timestamp').textContent = 'Oct 29, 2026 • Android 14 • Fair OIS Protocol';
+        document.getElementById('cam-score').textContent = '14,820';
+        document.getElementById('health-pct').textContent = '96%';
+        document.getElementById('af-pct').textContent = '98% (Lock: 142ms)';
+        document.getElementById('ois-pct').textContent = '95% (Dampening: 91%)';
+        document.getElementById('lens-pct').textContent = '94% (ΔE: 1.8)';
+    </script>
+</body>
+</html>

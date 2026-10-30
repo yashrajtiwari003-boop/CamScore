@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tamper-proof certificate records:
+    // Anyone can read (verify QR codes), but certificates can only be created once and never modified.
+    match /certificates/{hashId} {
+      allow read: if true;
+      allow create: if request.resource.data.verificationHash == hashId;
+      allow update, delete: if false; // Immutable to prevent tampering
+    }
+
+    // Monthly Global Leaderboard:
+    // Anyone can view rankings; scores are submitted anonymously.
+    match /monthly_rankings/{monthKey}/scores/{docId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.camScore is int
+                            && request.resource.data.camScore > 0;
+      allow delete: if false;
+    }
+  }
+}
