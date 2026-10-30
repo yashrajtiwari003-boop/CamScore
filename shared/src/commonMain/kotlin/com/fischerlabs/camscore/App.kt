@@ -75,7 +75,7 @@ fun CamScoreApp(
             topBar = {
                 CamScoreTopBar(
                     onThemeToggle = { isDarkTheme = !isDarkTheme },
-                    isDarkTheme = isDarkTheme
+                    isDarkMode = isDarkTheme
                 )
             }
         ) { paddingValues ->

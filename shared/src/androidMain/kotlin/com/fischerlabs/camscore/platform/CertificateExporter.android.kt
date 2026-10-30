@@ -11,19 +11,22 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.fischerlabs.camscore.model.Certificate
+import com.fischerlabs.camscore.model.HealthRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 /**
  * Android CertificateExporter implementation.
  *
- * Renders certificates using Android Canvas/Paint for PNG,
- * PdfDocument for PDF, and Intent.ACTION_SEND with FileProvider for sharing.
+ * Renders official certificates matching Figure 3.1:
+ *   - Royal blue header banner ("CamScore by Fischer Labs")
+ *   - Device model, platform, date, and hash ID
+ *   - Big CamScore number (e.g. 862 / 1000) and CERTIFIED PASS / MINOR WEAR / FAIL badge
+ *   - Component scores (Autofocus, OIS, Lens)
+ *   - Export as PNG / PDF, and share via Android Intent with FileProvider.
  */
 class AndroidCertificateExporter(
     private val context: Context
@@ -66,7 +69,6 @@ class AndroidCertificateExporter(
 
     override suspend fun shareFile(fileBytes: ByteArray, fileName: String, mimeType: String) {
         withContext(Dispatchers.IO) {
-            // Write the file to the app's cache directory for FileProvider access
             val shareDir = File(context.cacheDir, "shared_certificates")
             shareDir.mkdirs()
 
@@ -82,10 +84,10 @@ class AndroidCertificateExporter(
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = mimeType
                 putExtra(Intent.EXTRA_STREAM, fileUri)
-                putExtra(Intent.EXTRA_SUBJECT, "CamScore Certificate")
+                putExtra(Intent.EXTRA_SUBJECT, "CamScore Certificate: ${shareFile.name}")
                 putExtra(
                     Intent.EXTRA_TEXT,
-                    "Check out my CamScore camera benchmark results!"
+                    "Verified CamScore Camera Health Certificate by Fischer Labs."
                 )
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -97,11 +99,6 @@ class AndroidCertificateExporter(
         }
     }
 
-    // ---------- Private rendering helpers ----------
-
-    /**
-     * Render the full certificate as an Android Bitmap.
-     */
     private fun renderCertificateBitmap(certificate: Certificate): Bitmap {
         val bitmap = Bitmap.createBitmap(CERT_WIDTH, CERT_HEIGHT, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -109,17 +106,13 @@ class AndroidCertificateExporter(
         return bitmap
     }
 
-    /**
-     * Draw all certificate content onto a Canvas.
-     * Used by both PNG (via Bitmap Canvas) and PDF (via PdfDocument Page Canvas).
-     */
     private fun drawCertificateContent(canvas: Canvas, certificate: Certificate) {
         // Background
         canvas.drawColor(Color.WHITE)
 
-        // Border
+        // Outer border
         val borderPaint = Paint().apply {
-            color = Color.parseColor("#1A237E") // Deep indigo
+            color = Color.parseColor("#1976D2")
             style = Paint.Style.STROKE
             strokeWidth = 6f
             isAntiAlias = true
@@ -130,9 +123,9 @@ class AndroidCertificateExporter(
             borderPaint
         )
 
-        // Inner border
+        // Inner frame
         val innerBorderPaint = Paint().apply {
-            color = Color.parseColor("#3F51B5")
+            color = Color.parseColor("#E0E7FF")
             style = Paint.Style.STROKE
             strokeWidth = 2f
             isAntiAlias = true
@@ -145,10 +138,10 @@ class AndroidCertificateExporter(
 
         var yPos = MARGIN + 80f
 
-        // App title
+        // Brand Title
         val titlePaint = Paint().apply {
-            color = Color.parseColor("#1A237E")
-            textSize = 56f
+            color = Color.parseColor("#0D233A")
+            textSize = 52f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
@@ -156,45 +149,44 @@ class AndroidCertificateExporter(
         canvas.drawText("CamScore", CERT_WIDTH / 2f, yPos, titlePaint)
         yPos += 40f
 
-        // Subtitle
         val subtitlePaint = Paint().apply {
-            color = Color.parseColor("#5C6BC0")
+            color = Color.parseColor("#1976D2")
             textSize = 24f
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.drawText("by Fischer Labs", CERT_WIDTH / 2f, yPos, subtitlePaint)
-        yPos += 60f
+        canvas.drawText("BY FISCHER LABS", CERT_WIDTH / 2f, yPos, subtitlePaint)
+        yPos += 50f
 
-        // Divider line
+        // Divider
         val dividerPaint = Paint().apply {
-            color = Color.parseColor("#C5CAE9")
+            color = Color.parseColor("#E2E8F0")
             strokeWidth = 2f
         }
         canvas.drawLine(MARGIN + 40f, yPos, CERT_WIDTH - MARGIN - 40f, yPos, dividerPaint)
         yPos += 50f
 
-        // "Camera Benchmark Certificate"
+        // Certificate Header
         val certTitlePaint = Paint().apply {
-            color = Color.parseColor("#212121")
-            textSize = 36f
+            color = Color.parseColor("#0F172A")
+            textSize = 34f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.drawText("Camera Benchmark Certificate", CERT_WIDTH / 2f, yPos, certTitlePaint)
-        yPos += 80f
+        canvas.drawText("Camera Hardware Health Certificate", CERT_WIDTH / 2f, yPos, certTitlePaint)
+        yPos += 70f
 
-        // Device info
+        // Metadata labels
         val labelPaint = Paint().apply {
-            color = Color.parseColor("#616161")
+            color = Color.parseColor("#64748B")
             textSize = 26f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             isAntiAlias = true
         }
         val valuePaint = Paint().apply {
-            color = Color.parseColor("#212121")
+            color = Color.parseColor("#0F172A")
             textSize = 26f
             isAntiAlias = true
         }
@@ -204,116 +196,102 @@ class AndroidCertificateExporter(
         canvas.drawText(certificate.deviceModel, MARGIN + 220f, yPos, valuePaint)
         yPos += 45f
 
-        // OS Version
-        canvas.drawText("OS:", MARGIN + 40f, yPos, labelPaint)
-        canvas.drawText(certificate.osVersion, MARGIN + 220f, yPos, valuePaint)
+        // Platform
+        canvas.drawText("Platform:", MARGIN + 40f, yPos, labelPaint)
+        canvas.drawText(certificate.platform, MARGIN + 220f, yPos, valuePaint)
         yPos += 45f
 
         // Date
-        val dateFormat = SimpleDateFormat("MMMM dd, yyyy 'at' HH:mm", Locale.getDefault())
-        val dateStr = dateFormat.format(Date(certificate.timestamp))
-        canvas.drawText("Date:", MARGIN + 40f, yPos, labelPaint)
-        canvas.drawText(dateStr, MARGIN + 220f, yPos, valuePaint)
-        yPos += 80f
+        canvas.drawText("Test Date:", MARGIN + 40f, yPos, labelPaint)
+        canvas.drawText(certificate.testDate, MARGIN + 220f, yPos, valuePaint)
+        yPos += 70f
 
         // Divider
         canvas.drawLine(MARGIN + 40f, yPos, CERT_WIDTH - MARGIN - 40f, yPos, dividerPaint)
         yPos += 60f
 
-        // Overall Score - large centered
+        // Score Section
         val scoreHeaderPaint = Paint().apply {
-            color = Color.parseColor("#424242")
-            textSize = 28f
+            color = Color.parseColor("#64748B")
+            textSize = 26f
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.drawText("OVERALL SCORE", CERT_WIDTH / 2f, yPos, scoreHeaderPaint)
-        yPos += 70f
+        canvas.drawText("UNCAPPED CAMSCORE", CERT_WIDTH / 2f, yPos, scoreHeaderPaint)
+        yPos += 65f
 
         val scorePaint = Paint().apply {
-            color = getScoreColor(certificate.overallScore)
-            textSize = 96f
+            color = Color.parseColor("#1976D2")
+            textSize = 88f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.drawText(
-            String.format(Locale.US, "%.1f", certificate.overallScore),
-            CERT_WIDTH / 2f, yPos, scorePaint
-        )
+        canvas.drawText("${certificate.camScore}", CERT_WIDTH / 2f, yPos, scorePaint)
         yPos += 30f
 
-        // Score label (e.g., "/ 100")
-        val maxScorePaint = Paint().apply {
-            color = Color.parseColor("#9E9E9E")
-            textSize = 28f
+        val healthTextPaint = Paint().apply {
+            color = when (certificate.healthRating) {
+                HealthRating.MINT -> Color.parseColor("#10B981")
+                HealthRating.MINOR_WEAR -> Color.parseColor("#F59E0B")
+                HealthRating.FAIL -> Color.parseColor("#EF4444")
+            }
+            textSize = 30f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.drawText("/ 100", CERT_WIDTH / 2f, yPos, maxScorePaint)
-        yPos += 80f
+        val ratingBadge = when (certificate.healthRating) {
+            HealthRating.MINT -> "✓ CERTIFIED PASS (${certificate.healthPercent.toInt()}%)"
+            HealthRating.MINOR_WEAR -> "⚠ MINOR WEAR (${certificate.healthPercent.toInt()}%)"
+            HealthRating.FAIL -> "✗ HARDWARE FAIL (${certificate.healthPercent.toInt()}%)"
+        }
+        canvas.drawText(ratingBadge, CERT_WIDTH / 2f, yPos, healthTextPaint)
+        yPos += 60f
 
         // Divider
         canvas.drawLine(MARGIN + 40f, yPos, CERT_WIDTH - MARGIN - 40f, yPos, dividerPaint)
         yPos += 50f
 
-        // Sub-scores section
-        val sectionPaint = Paint().apply {
-            color = Color.parseColor("#1A237E")
-            textSize = 28f
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textAlign = Paint.Align.CENTER
-            isAntiAlias = true
-        }
-        canvas.drawText("COMPONENT SCORES", CERT_WIDTH / 2f, yPos, sectionPaint)
-        yPos += 50f
-
-        // Draw each score bar
+        // Subscores
         val scores = listOf(
-            "Autofocus Speed" to certificate.autofocusScore,
-            "OIS Effectiveness" to certificate.oisScore,
-            "Lens Consistency" to certificate.lensScore
+            "Autofocus Speed" to certificate.afHealthPercent,
+            (if (certificate.isOisDevice) "OIS Optical Stabilization" else "Non-OIS Fair Stability") to (certificate.oisHealthPercent ?: 100f),
+            "Lens Transition & Color" to certificate.lensHealthPercent
         )
 
         for ((label, score) in scores) {
             yPos = drawScoreBar(canvas, label, score, yPos)
-            yPos += 30f
+            yPos += 35f
         }
 
         yPos += 30f
-
-        // Divider
         canvas.drawLine(MARGIN + 40f, yPos, CERT_WIDTH - MARGIN - 40f, yPos, dividerPaint)
         yPos += 50f
 
-        // Hash / ID
+        // Verification Hash
         val hashPaint = Paint().apply {
-            color = Color.parseColor("#BDBDBD")
-            textSize = 18f
+            color = Color.parseColor("#64748B")
+            textSize = 20f
             textAlign = Paint.Align.CENTER
             typeface = Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL)
             isAntiAlias = true
         }
-        canvas.drawText("ID: ${certificate.id}", CERT_WIDTH / 2f, yPos, hashPaint)
-        yPos += 30f
+        canvas.drawText("Verification: ${certificate.verificationHash.take(32)}...", CERT_WIDTH / 2f, yPos, hashPaint)
+        yPos += 35f
 
-        // App version
-        val versionPaint = Paint().apply {
-            color = Color.parseColor("#BDBDBD")
-            textSize = 16f
+        val footerPaint = Paint().apply {
+            color = Color.parseColor("#94A3B8")
+            textSize = 18f
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
         canvas.drawText(
-            "CamScore v${certificate.appVersion} • Fischer Labs",
-            CERT_WIDTH / 2f, yPos, versionPaint
+            "Verified by CamScore • Fischer Labs On-Device Diagnostic Engine",
+            CERT_WIDTH / 2f, yPos, footerPaint
         )
     }
 
-    /**
-     * Draw a horizontal score bar with label and value.
-     * Returns the updated Y position after drawing.
-     */
     private fun drawScoreBar(
         canvas: Canvas,
         label: String,
@@ -325,19 +303,16 @@ class AndroidCertificateExporter(
         val barHeight = 28f
         val barWidth = barRight - barLeft
 
-        // Label
         val labelPaint = Paint().apply {
-            color = Color.parseColor("#424242")
+            color = Color.parseColor("#334155")
             textSize = 24f
             isAntiAlias = true
         }
         canvas.drawText(label, barLeft, yPos, labelPaint)
 
-        val barTop = yPos + 10f
-
-        // Background bar
+        val barTop = yPos + 12f
         val bgPaint = Paint().apply {
-            color = Color.parseColor("#E8EAF6")
+            color = Color.parseColor("#E2E8F0")
             style = Paint.Style.FILL
         }
         canvas.drawRoundRect(
@@ -345,7 +320,6 @@ class AndroidCertificateExporter(
             barHeight / 2, barHeight / 2, bgPaint
         )
 
-        // Filled bar
         val fillWidth = (barWidth * (score / 100f)).coerceIn(0f, barWidth)
         val fillPaint = Paint().apply {
             color = getScoreColor(score)
@@ -356,15 +330,14 @@ class AndroidCertificateExporter(
             barHeight / 2, barHeight / 2, fillPaint
         )
 
-        // Score value
         val scoreTextPaint = Paint().apply {
-            color = Color.parseColor("#212121")
+            color = Color.parseColor("#0F172A")
             textSize = 24f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             isAntiAlias = true
         }
         canvas.drawText(
-            String.format(Locale.US, "%.1f", score),
+            String.format(Locale.US, "%.1f%%", score),
             barRight + 15f, barTop + barHeight - 4f,
             scoreTextPaint
         )
@@ -372,16 +345,11 @@ class AndroidCertificateExporter(
         return barTop + barHeight
     }
 
-    /**
-     * Get a color based on the score value.
-     * Green for high scores, amber for medium, red for low.
-     */
     private fun getScoreColor(score: Float): Int {
         return when {
-            score >= 80f -> Color.parseColor("#2E7D32") // Green
-            score >= 60f -> Color.parseColor("#F9A825") // Amber
-            score >= 40f -> Color.parseColor("#EF6C00") // Orange
-            else -> Color.parseColor("#C62828") // Red
+            score >= 85f -> Color.parseColor("#10B981")
+            score >= 65f -> Color.parseColor("#F59E0B")
+            else -> Color.parseColor("#EF4444")
         }
     }
 }

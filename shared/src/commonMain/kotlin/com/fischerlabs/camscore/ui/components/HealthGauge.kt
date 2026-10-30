@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fischerlabs.camscore.ui.model.BadgeType
 import com.fischerlabs.camscore.ui.theme.CamScoreTheme
 
 @Composable
@@ -126,7 +125,7 @@ fun HealthGauge(
         StatusBadge(
             text = statusText,
             type = badgeType,
-            icon = true,
+            showIcon = true,
             modifier = Modifier.padding(top = 12.dp)
         )
     }

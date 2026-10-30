@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,14 +73,13 @@ fun CountdownRing(
 
             // Center content
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.Filled.CameraAlt,
-                    contentDescription = null,
-                    tint = colors.accentBlue,
-                    modifier = Modifier.size(28.dp)
-                )
                 Text(
-                    text = if (isRunning) "%.1fs".format(remaining) else "Ready",
+                    text = "📷",
+                    fontSize = 24.sp
+                )
+                val timeStr = "${((remaining * 10).toInt() / 10.0)}s"
+                Text(
+                    text = if (isRunning) timeStr else "Ready",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold

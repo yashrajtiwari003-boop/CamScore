@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CamScore-iOS-XCFramework
-          path: shared/build/XCFrameworks/release/*.xcframework
+          path: shared/build/XCFrameworks/**/*.xcframework
 
   package-web:
     name: Package Interactive Web Showcase

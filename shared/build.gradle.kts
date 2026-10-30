@@ -10,6 +10,10 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -17,6 +21,7 @@ kotlin {
         }
     }
 
+    val xcf = XCFramework("shared")
     listOf(
         iosX64(),
         iosArm64(),
@@ -25,6 +30,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
+            xcf.add(this)
         }
     }
 
@@ -34,6 +40,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.animation)
@@ -65,11 +72,13 @@ kotlin {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.viewmodel)
 
-            // CameraX
+            // CameraX & Futures
             implementation(libs.camerax.core)
             implementation(libs.camerax.camera2)
             implementation(libs.camerax.lifecycle)
             implementation(libs.camerax.view)
+            implementation("androidx.concurrent:concurrent-futures:1.2.0")
+            implementation("com.google.guava:guava:33.2.1-android")
 
             // SQLDelight
             implementation(libs.sqldelight.android.driver)

@@ -34,7 +34,7 @@ class CertificateRepository {
             testDate = testDate,
             camScore = testResult.camScore,
             healthPercent = testResult.overallHealthPercent,
-            healthRating = testResult.healthRating.name,
+            healthRating = testResult.healthRating,
             afHealthPercent = testResult.afResult.healthPercent,
             oisHealthPercent = if (testResult.oisResult.isNonOisDevice) null else testResult.oisResult.healthPercent,
             lensHealthPercent = testResult.lensResult.healthPercent,

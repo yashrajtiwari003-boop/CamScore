@@ -302,14 +302,13 @@ class DiagnosticStateMachine(
         if (zoomTargets.isEmpty()) zoomTargets.add(2.0f)
 
         for ((index, zoom) in zoomTargets.withIndex()) {
-            val switchStart = System.currentTimeMillis()
+            val switchStart = kotlinx.datetime.Clock.System.now().toEpochMilliseconds()
 
             // Switch lens with timeout guard
             cameraController.setZoomRatio(zoom)
-            val switchDeadline = switchStart + LENS_SWITCH_TIMEOUT_MS
-            delay(500.coerceAtMost((switchDeadline - System.currentTimeMillis()).toInt().coerceAtLeast(100)))
+            delay(500L)
 
-            val switchLag = System.currentTimeMillis() - switchStart
+            val switchLag = kotlinx.datetime.Clock.System.now().toEpochMilliseconds() - switchStart
             totalSwitchLagMs += switchLag
 
             // Capture and measure CIE LAB color shift

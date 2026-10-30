@@ -2,14 +2,14 @@ package com.fischerlabs.camscore.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.CameraAlt
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -50,20 +50,20 @@ enum class BottomNavItem(
     ),
     DIAGNOSTIC(
         label = "Test",
-        selectedIcon = Icons.Filled.CameraAlt,
-        unselectedIcon = Icons.Outlined.CameraAlt,
+        selectedIcon = Icons.Filled.PlayArrow,
+        unselectedIcon = Icons.Outlined.PlayArrow,
         screen = Screen.Diagnostic
     ),
     HISTORY(
         label = "History",
-        selectedIcon = Icons.Filled.History,
-        unselectedIcon = Icons.Outlined.History,
+        selectedIcon = Icons.Filled.DateRange,
+        unselectedIcon = Icons.Outlined.DateRange,
         screen = Screen.History
     ),
     CERTIFICATE(
         label = "Certificate",
-        selectedIcon = Icons.Filled.Description,
-        unselectedIcon = Icons.Outlined.Description,
+        selectedIcon = Icons.Filled.Info,
+        unselectedIcon = Icons.Outlined.Info,
         screen = Screen.CertificateView("current")
     );
 }

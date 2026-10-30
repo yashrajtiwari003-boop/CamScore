@@ -2,8 +2,6 @@ package com.fischerlabs.camscore.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,11 +22,13 @@ fun CamScoreTopBar(
     title: String = "CamScore",
     showSubtitle: Boolean = true,
     isDarkMode: Boolean = false,
+    isDarkTheme: Boolean = isDarkMode,
     onThemeToggle: (() -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null,
     navigationIcon: @Composable (() -> Unit)? = null
 ) {
     val colors = CamScoreTheme.colors
+    val activeDark = isDarkMode || isDarkTheme
 
     CenterAlignedTopAppBar(
         title = {
@@ -60,10 +60,9 @@ fun CamScoreTopBar(
         actions = {
             if (onThemeToggle != null) {
                 IconButton(onClick = onThemeToggle) {
-                    Icon(
-                        imageVector = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
-                        contentDescription = if (isDarkMode) "Switch to light mode" else "Switch to dark mode",
-                        tint = colors.textSecondary
+                    Text(
+                        text = if (activeDark) "☀️" else "🌙",
+                        fontSize = 18.sp
                     )
                 }
             }

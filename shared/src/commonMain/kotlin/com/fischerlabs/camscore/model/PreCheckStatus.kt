@@ -15,12 +15,12 @@ package com.fischerlabs.camscore.model
  * @property errorMessage Optional human-readable error if a pre-check fails.
  */
 data class PreCheckStatus(
-    val lightingOk: Boolean,
-    val textureOk: Boolean,
-    val isReady: Boolean,
-    val ambientLux: Float,
-    val textureScore: Float,
-    val hasOis: Boolean,
+    val lightingOk: Boolean = false,
+    val textureOk: Boolean = false,
+    val isReady: Boolean = false,
+    val ambientLux: Float = 350f,
+    val textureScore: Float = 0.85f,
+    val hasOis: Boolean = true,
     val errorMessage: String? = null
 ) {
     companion object {

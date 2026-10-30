@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -85,13 +83,10 @@ fun ScoreCounter(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.EmojiEvents,
-                    contentDescription = null,
-                    tint = colors.goldRank,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .padding(end = 4.dp)
+                Text(
+                    text = "🏆",
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = "Monthly Rank #$monthlyRank",
