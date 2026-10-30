@@ -1,3 +1,4 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.fischerlabs.camscore.platform
 
 import com.fischerlabs.camscore.model.DeviceInfo

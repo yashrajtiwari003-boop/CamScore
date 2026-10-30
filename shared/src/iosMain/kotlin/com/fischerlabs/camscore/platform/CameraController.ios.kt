@@ -1,3 +1,4 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.fischerlabs.camscore.platform
 
 import platform.AVFoundation.*

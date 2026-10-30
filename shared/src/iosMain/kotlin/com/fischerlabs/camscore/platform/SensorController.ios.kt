@@ -1,5 +1,7 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.fischerlabs.camscore.platform
 
+import kotlinx.cinterop.useContents
 import platform.CoreMotion.CMMotionManager
 import platform.Foundation.NSOperationQueue
 import kotlin.math.sqrt
@@ -23,10 +25,11 @@ class IosSensorController(
 
         motionManager.startGyroUpdatesToQueue(NSOperationQueue.mainQueue) { data, _ ->
             data?.let {
+                val (gx, gy, gz) = it.rotationRate.useContents { Triple(x.toFloat(), y.toFloat(), z.toFloat()) }
                 val reading = GyroReading(
-                    x = it.rotationRate.x.toFloat(),
-                    y = it.rotationRate.y.toFloat(),
-                    z = it.rotationRate.z.toFloat(),
+                    x = gx,
+                    y = gy,
+                    z = gz,
                     timestampNanos = (it.timestamp * 1_000_000_000).toLong()
                 )
                 gyroReadings.add(reading)
@@ -51,10 +54,13 @@ class IosSensorController(
 
         motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue) { data, _ ->
             data?.let {
+                val (ax, ay, az) = it.acceleration.useContents {
+                    Triple(x.toFloat() * 9.81f, y.toFloat() * 9.81f, z.toFloat() * 9.81f)
+                }
                 val reading = AccelReading(
-                    x = it.acceleration.x.toFloat() * 9.81f,
-                    y = it.acceleration.y.toFloat() * 9.81f,
-                    z = it.acceleration.z.toFloat() * 9.81f,
+                    x = ax,
+                    y = ay,
+                    z = az,
                     timestampNanos = (it.timestamp * 1_000_000_000).toLong()
                 )
                 accelReadings.add(reading)
