@@ -3,6 +3,7 @@ package com.fischerlabs.camscore
 import androidx.compose.ui.window.ComposeUIViewController
 import com.fischerlabs.camscore.di.platformModule
 import com.fischerlabs.camscore.di.sharedModule
+import com.fischerlabs.camscore.platform.IosPlatformContext
 import com.fischerlabs.camscore.platform.PlatformContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -13,7 +14,7 @@ import platform.UIKit.UIViewController
  */
 fun initKoin() {
     val iosContextModule = module {
-        single { PlatformContext() }
+        single<PlatformContext> { IosPlatformContext() }
     }
     startKoin {
         modules(

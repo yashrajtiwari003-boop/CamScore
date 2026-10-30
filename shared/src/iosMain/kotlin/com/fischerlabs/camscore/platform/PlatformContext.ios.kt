@@ -5,6 +5,10 @@ import platform.UIKit.UIViewController
 /**
  * iOS PlatformContext wrapping the active UIViewController.
  */
-actual class PlatformContext(
-    val viewController: UIViewController? = null
-)
+actual abstract class PlatformContext {
+    open val viewController: UIViewController? = null
+}
+
+class IosPlatformContext(
+    override val viewController: UIViewController? = null
+) : PlatformContext()

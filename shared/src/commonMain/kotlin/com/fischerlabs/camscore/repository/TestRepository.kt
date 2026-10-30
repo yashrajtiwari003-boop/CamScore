@@ -38,17 +38,17 @@ class TestRepository(driverFactory: DatabaseDriverFactory) {
             af_peak_sharpness = result.afResult.peakSharpness,
             af_sharpness_variance = result.afResult.sharpnessVariance,
             af_health_percent = result.afResult.healthPercent.toDouble(),
-            af_uncapped_score = result.afResult.uncappedScore.toLong(),
+            af_uncapped_score = result.afResult.uncappedScore,
             ois_dampening_ratio = result.oisResult.dampeningRatio,
             ois_pixel_shake = result.oisResult.pixelShake,
             ois_gyro_shake = result.oisResult.gyroShake,
             ois_health_percent = result.oisResult.healthPercent.toDouble(),
-            ois_uncapped_score = result.oisResult.uncappedScore.toLong(),
+            ois_uncapped_score = result.oisResult.uncappedScore,
             ois_is_non_ois_device = if (result.oisResult.isNonOisDevice) 1L else 0L,
             lens_color_shift_delta_e = result.lensResult.colorShiftDeltaE,
             lens_switch_lag_ms = result.lensResult.switchLagMs,
             lens_health_percent = result.lensResult.healthPercent.toDouble(),
-            lens_uncapped_score = result.lensResult.uncappedScore.toLong(),
+            lens_uncapped_score = result.lensResult.uncappedScore,
             overall_health_percent = result.overallHealthPercent.toDouble(),
             cam_score = result.camScore.toLong(),
             health_rating = result.healthRating.name,
@@ -126,21 +126,21 @@ class TestRepository(driverFactory: DatabaseDriverFactory) {
                 peakSharpness = this.af_peak_sharpness,
                 sharpnessVariance = this.af_sharpness_variance,
                 healthPercent = this.af_health_percent.toFloat(),
-                uncappedScore = this.af_uncapped_score.toInt()
+                uncappedScore = this.af_uncapped_score
             ),
             oisResult = OisResult(
                 dampeningRatio = this.ois_dampening_ratio,
                 pixelShake = this.ois_pixel_shake,
                 gyroShake = this.ois_gyro_shake,
                 healthPercent = this.ois_health_percent.toFloat(),
-                uncappedScore = this.ois_uncapped_score.toInt(),
+                uncappedScore = this.ois_uncapped_score,
                 isNonOisDevice = this.ois_is_non_ois_device != 0L
             ),
             lensResult = LensSwitchResult(
                 colorShiftDeltaE = this.lens_color_shift_delta_e,
                 switchLagMs = this.lens_switch_lag_ms,
                 healthPercent = this.lens_health_percent.toFloat(),
-                uncappedScore = this.lens_uncapped_score.toInt()
+                uncappedScore = this.lens_uncapped_score
             ),
             overallHealthPercent = this.overall_health_percent.toFloat(),
             camScore = this.cam_score.toInt(),

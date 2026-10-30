@@ -1,3 +1,3 @@
 package com.fischerlabs.camscore.platform
 
-expect class PlatformContext
+expect abstract class PlatformContext
