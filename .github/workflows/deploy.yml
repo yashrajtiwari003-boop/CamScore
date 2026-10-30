@@ -20,16 +20,18 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Grant Execute Permission to Gradlew
         run: chmod +x gradlew
 
-      - name: Build Android Debug APK (Direct Phone Install)
-        run: ./gradlew :androidApp:assembleDebug
+      - name: Build Android Debug APK (Installable on Any Phone)
+        run: ./gradlew :androidApp:assembleDebug --stacktrace --no-daemon
 
       - name: Build Android Release Bundle (.aab for Play Store)
-        run: ./gradlew :androidApp:bundleRelease
+        run: ./gradlew :androidApp:bundleRelease --stacktrace --no-daemon
 
       - name: Upload Installable APK (Test Directly on Phone)
         uses: actions/upload-artifact@v4
@@ -55,13 +57,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Grant Execute Permission to Gradlew
         run: chmod +x gradlew
 
       - name: Assemble Shared XCFramework
-        run: ./gradlew :shared:assembleSharedXCFramework
+        run: ./gradlew :shared:assembleSharedXCFramework --stacktrace --no-daemon
 
       - name: Upload iOS Framework
         uses: actions/upload-artifact@v4

@@ -21,6 +21,7 @@ import com.fischerlabs.camscore.model.TestResult
 import com.fischerlabs.camscore.ui.components.BottomNavBar
 import com.fischerlabs.camscore.ui.screens.*
 import com.fischerlabs.camscore.viewmodel.DiagnosticViewModel
+import com.fischerlabs.camscore.viewmodel.LeaderboardViewModel.LeaderboardFilter
 
 // ── Route Definitions ─────────────────────────────────────────────────────────
 
@@ -76,10 +77,17 @@ fun CamScoreNavHost(
     diagnosticState: DiagnosticViewModel.DiagnosticUiState = DiagnosticViewModel.DiagnosticUiState(),
     testResult: TestResult? = null,
     certificate: Certificate? = null,
+    leaderboardEntries: List<LeaderboardEntry> = emptyList(),
     historyResults: List<TestResult> = emptyList(),
+    currentMonth: String = "2026-10",
+    leaderboardFilter: LeaderboardFilter = LeaderboardFilter.ALL,
     monthlyRank: Int? = 42,
     onStartDiagnostic: () -> Unit = {},
     onCancelDiagnostic: () -> Unit = {},
+    onRefreshLeaderboard: () -> Unit = {},
+    onFilterLeaderboard: (LeaderboardFilter) -> Unit = {},
+    onPreviousMonth: () -> Unit = {},
+    onNextMonth: () -> Unit = {},
     onClearHistory: () -> Unit = {},
     onExportCertificatePng: () -> Unit = {},
     onExportCertificatePdf: () -> Unit = {},
@@ -87,7 +95,8 @@ fun CamScoreNavHost(
     onShareResult: () -> Unit = {},
     isDarkMode: Boolean = true,
     onDarkModeToggle: () -> Unit = {},
-    isExportingCertificate: Boolean = false
+    isExportingCertificate: Boolean = false,
+    isLoadingLeaderboard: Boolean = false
 ) {
     var currentScreen by remember {
         mutableStateOf<Screen>(if (showOnboarding) Screen.Onboarding else Screen.Home)
