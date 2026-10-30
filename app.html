@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CamScore by Fischer Labs — Live Interactive Test Bench</title>
+    <title>CamScore by Fischer Labs — Official UI (Figure 3.1 Showcase)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Dark Theme of Project X */
             --bg-canvas: #0A192F;
             --surface: #112240;
             --surface-card: #172A45;
@@ -21,9 +21,11 @@
             --warn: #F59E0B;
             --fail: #EF4444;
             --border: rgba(255, 255, 255, 0.08);
+            --header-bg: #112240;
         }
 
-        .light-theme {
+        .white-theme {
+            /* White Theme of Project X */
             --bg-canvas: #F4F7FB;
             --surface: #FFFFFF;
             --surface-card: #FFFFFF;
@@ -35,6 +37,7 @@
             --warn: #F59E0B;
             --fail: #EF4444;
             --border: #E2E8F0;
+            --header-bg: #FFFFFF;
         }
 
         * {
@@ -42,7 +45,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
         body {
@@ -52,17 +55,97 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 16px;
+            padding: 20px 10px;
         }
 
+        /* Top Brand Banner matching Figure 3.1 */
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .showcase-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .app-emblem {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #0d47a1, #1976D2, #29B6F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4);
+        }
+
+        .showcase-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .showcase-title span {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: block;
+            margin-top: -3px;
+        }
+
+        .showcase-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Theme Toggle Banner */
+        .theme-switcher-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .theme-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+        }
+
+        /* Smartphone Container */
         .phone-frame {
             width: 100%;
-            max-width: 420px;
-            height: 880px;
+            max-width: 400px;
+            height: 820px;
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 40px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -70,48 +153,33 @@
         }
 
         /* Top Bar */
-        .top-bar {
-            height: 60px;
-            padding: 0 20px;
+        .app-top-bar {
+            height: 56px;
+            padding: 0 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--border);
-            background: var(--surface);
+            background: var(--header-bg);
             z-index: 10;
         }
 
-        .brand-title {
-            font-size: 17px;
+        .brand-text-header {
+            font-size: 15px;
             font-weight: 800;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .brand-sub {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .theme-toggle-btn {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
             color: var(--text-primary);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
         }
 
-        /* Screen Container */
-        .screen-container {
+        .brand-text-header span {
+            font-size: 10px;
+            color: var(--text-secondary);
+            display: block;
+            font-weight: 500;
+            margin-top: -2px;
+        }
+
+        /* Screens Manager */
+        .screen-body {
             flex: 1;
             overflow-y: auto;
             position: relative;
@@ -119,63 +187,62 @@
             flex-direction: column;
         }
 
-        .screen {
+        .screen-view {
             display: none;
-            padding: 18px;
+            padding: 16px;
             flex-direction: column;
             flex: 1;
         }
 
-        .screen.active {
+        .screen-view.active {
             display: flex;
         }
 
         /* Bottom Nav */
-        .bottom-nav {
-            height: 68px;
+        .app-bottom-nav {
+            height: 64px;
             border-top: 1px solid var(--border);
             display: flex;
             background: var(--surface);
             z-index: 10;
         }
 
-        .nav-item {
+        .nav-button {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
         }
 
-        .nav-item.active {
+        .nav-button.active {
             color: var(--primary);
         }
 
-        .nav-item span.icon {
-            font-size: 20px;
+        .nav-button span.nav-icon {
+            font-size: 18px;
         }
 
-        /* Card styles */
-        .card {
+        /* Common Elements */
+        .card-box {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
         }
 
-        /* Buttons */
-        .btn-primary {
+        .btn-royal-pill {
             background: linear-gradient(135deg, #1976D2 0%, #29B6F6 100%);
             color: #FFFFFF;
             border: none;
-            border-radius: 28px;
-            height: 52px;
+            border-radius: 100px;
+            height: 50px;
             width: 100%;
             font-size: 15px;
             font-weight: 700;
@@ -184,226 +251,330 @@
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(25, 118, 210, 0.35);
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 6px 18px rgba(25, 118, 210, 0.35);
         }
 
-        .btn-primary:active {
+        .btn-royal-pill:active {
             transform: scale(0.98);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--border);
+        /* ── SCREEN 1: HOME SCREEN ── */
+        .home-headline {
+            font-size: 20px;
+            font-weight: 800;
             color: var(--text-primary);
-            border-radius: 28px;
-            height: 48px;
-            width: 100%;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            line-height: 1.25;
+            margin-bottom: 2px;
         }
 
-        /* Readiness indicator */
-        .readiness-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+        .home-subheadline {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+
+        .home-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.45;
             margin-bottom: 14px;
         }
 
-        .readiness-item {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 8px;
-            text-align: center;
-        }
-
-        .readiness-item .emoji {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .readiness-item .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .readiness-item .val {
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 100px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--pass); }
-        .badge-info { background: rgba(41, 182, 246, 0.15); color: var(--primary-accent); }
-        .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warn); }
-        .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--fail); }
-
-        /* Camera Viewfinder */
-        .viewfinder {
-            height: 220px;
-            background: #000;
-            border-radius: 20px;
+        .living-room-preview {
+            width: 100%;
+            height: 180px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #24354a 0%, #152232 100%);
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
         }
 
-        video#camera-feed {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .preview-glow {
+            position: absolute;
+            top: 15px;
+            width: 120px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(255, 224, 130, 0.45) 0%, transparent 70%);
         }
 
-        .simulated-viewfinder {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #172A45 0%, #0A192F 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .preview-picture-frame {
+            position: absolute;
+            top: 25px;
+            width: 80px;
+            height: 48px;
+            border: 2px solid #D4AF37;
+            background: #1e3a5f;
+            border-radius: 4px;
+        }
+
+        .preview-sofa {
+            position: absolute;
+            bottom: 18px;
+            width: 200px;
+            height: 60px;
+            background: #4A6572;
+            border-radius: 14px 14px 6px 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .preview-pillow-left, .preview-pillow-right {
+            position: absolute;
+            bottom: 30px;
+            width: 70px;
+            height: 38px;
+            background: #5A7582;
+            border-radius: 8px;
+        }
+        .preview-pillow-left { left: 110px; }
+        .preview-pillow-right { right: 110px; }
+
+        .ois-cap-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--pass);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .readiness-trio {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
+            margin-bottom: 16px;
         }
 
-        /* 10-Second Countdown Ring */
-        .countdown-wrapper {
+        .readiness-cell {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+
+        .readiness-cell .icon { font-size: 18px; }
+        .readiness-cell .name { font-size: 10px; color: var(--text-secondary); margin: 2px 0; }
+        .readiness-cell .state { font-size: 11px; font-weight: 700; color: var(--pass); }
+
+        /* ── SCREEN 2: CAMERA TEST ── */
+        .countdown-gauge-wrap {
             position: relative;
-            width: 180px;
-            height: 180px;
-            margin: 20px auto;
+            width: 170px;
+            height: 170px;
+            margin: 16px auto 8px;
         }
 
-        .countdown-svg {
+        .gauge-svg {
             transform: rotate(-90deg);
             width: 100%;
             height: 100%;
         }
 
-        .countdown-bg {
+        .gauge-track {
             fill: none;
             stroke: var(--surface-card);
-            stroke-width: 10;
+            stroke-width: 9;
         }
 
-        .countdown-meter {
+        .gauge-bar {
             fill: none;
-            stroke: url(#ring-gradient);
-            stroke-width: 10;
+            stroke: url(#cyan-blue-grad);
+            stroke-width: 9;
             stroke-linecap: round;
-            stroke-dasharray: 502;
-            stroke-dashoffset: 0;
+            stroke-dasharray: 471;
+            stroke-dashoffset: 120;
             transition: stroke-dashoffset 0.1s linear;
         }
 
-        .countdown-content {
+        .gauge-inside {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        .countdown-seconds {
-            font-size: 34px;
+        .gauge-inside .camera-icon { font-size: 20px; }
+        .gauge-inside .time-num { font-size: 32px; font-weight: 800; color: var(--text-primary); }
+        .gauge-inside .scan-msg { font-size: 9px; color: var(--text-secondary); text-align: center; }
+
+        .phase-list-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .phase-header-title {
+            font-size: 12px;
             font-weight: 800;
             color: var(--text-primary);
-        }
-
-        .countdown-phase-tag {
-            font-size: 11px;
-            color: var(--primary-accent);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Phase Checklist */
-        .phase-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.03);
             margin-bottom: 8px;
         }
 
-        .phase-row.active {
+        .phase-item-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 10px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .phase-item-row.active {
             background: rgba(25, 118, 210, 0.15);
             border: 1px solid rgba(41, 182, 246, 0.3);
         }
 
-        .phase-bar {
-            flex: 1;
-            height: 6px;
+        .progress-thin-track {
+            width: 100%;
+            height: 5px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
+            margin-top: 4px;
             overflow: hidden;
         }
 
-        .phase-bar-fill {
+        .progress-thin-fill {
             height: 100%;
-            width: 0%;
             background: var(--primary-accent);
             border-radius: 3px;
-            transition: width 0.1s linear;
         }
 
-        /* Waveform Canvas */
-        canvas#waveform-canvas {
+        canvas#sensor-waveform {
             width: 100%;
-            height: 70px;
+            height: 60px;
             background: #060e1a;
             border-radius: 12px;
             display: block;
         }
 
-        /* Result Health Gauge */
-        .health-circle {
-            position: relative;
+        /* ── SCREEN 3: RESULTS ── */
+        .result-big-circle {
             width: 160px;
             height: 160px;
             margin: 10px auto;
+            border-radius: 50%;
+            border: 8px solid var(--primary-accent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-card);
+            box-shadow: 0 0 25px rgba(41, 182, 246, 0.2);
         }
 
-        .score-display-box {
-            text-align: center;
-            margin: 10px 0;
+        .score-val-big {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1;
         }
 
-        .score-number {
-            font-size: 44px;
+        .score-sub-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .pass-pill-badge {
+            background: var(--pass);
+            color: #FFFFFF;
+            padding: 5px 16px;
+            border-radius: 100px;
+            font-size: 12px;
             font-weight: 800;
-            color: var(--primary-accent);
-            line-height: 1.1;
+            display: inline-block;
+            margin: 8px auto 4px;
         }
 
-        /* Sub Score Cards */
-        .sub-score-row {
+        .verdict-tagline {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        /* ── SCREEN 4: HEALTH CERTIFICATE ── */
+        .cert-paper {
+            background: #FFFFFF;
+            color: #0D233A;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            margin-bottom: 12px;
+        }
+
+        .cert-royal-banner {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976D2 50%, #29B6F6 100%);
+            color: #FFFFFF;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .cert-royal-banner .t1 { font-size: 11px; opacity: 0.9; font-weight: 700; letter-spacing: 0.5px; }
+        .cert-royal-banner .t2 { font-size: 16px; font-weight: 800; margin: 2px 0; }
+        .cert-royal-banner .t3 { font-size: 9px; opacity: 0.8; }
+
+        .cert-body-content {
+            padding: 16px;
+            text-align: center;
+        }
+
+        .qr-render-box {
+            width: 120px;
+            height: 120px;
+            margin: 10px auto;
+            border: 2px dashed #CBD5E1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F8FAFC;
+        }
+
+        /* ── SCREEN 5: TEST HISTORY ── */
+        .history-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px;
+            border-radius: 14px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        /* ── SCREEN 6: ONBOARDING ── */
+        .onboarding-illu {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: rgba(25, 118, 210, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 54px;
+            margin: 10px auto 16px;
+        }
+
+        .onboarding-step-card {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -413,718 +584,603 @@
             border-radius: 14px;
             margin-bottom: 10px;
         }
-
-        .sub-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            background: rgba(25, 118, 210, 0.12);
-        }
-
-        /* Certificate */
-        .cert-container {
-            background: #FFFFFF;
-            color: #0D233A;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            margin-bottom: 14px;
-        }
-
-        .cert-header {
-            background: linear-gradient(135deg, #1565C0 0%, #1976D2 50%, #29B6F6 100%);
-            color: #FFFFFF;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .cert-body {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .qr-placeholder {
-            width: 130px;
-            height: 130px;
-            margin: 14px auto;
-            border: 2px dashed #94A3B8;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #F8FAFC;
-        }
-
-        /* Device selector pill */
-        .device-selector-bar {
-            display: flex;
-            gap: 8px;
-            background: var(--surface-card);
-            padding: 4px;
-            border-radius: 100px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .device-pill {
-            flex: 1;
-            padding: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            text-align: center;
-            border-radius: 100px;
-            cursor: pointer;
-            color: var(--text-secondary);
-        }
-
-        .device-pill.active {
-            background: var(--primary);
-            color: #FFFFFF;
-        }
     </style>
 </head>
 <body>
 
-    <div class="phone-frame">
-        <!-- Top App Bar -->
-        <div class="top-bar">
-            <div>
-                <div class="brand-title">📷 CamScore</div>
-                <div class="brand-sub">by Fischer Labs</div>
+    <!-- Showcase Header matching Figure 3.1 -->
+    <div class="showcase-header">
+        <div class="showcase-logo-row">
+            <div class="app-emblem">📷</div>
+            <div class="showcase-title">
+                CamScore
+                <span>by Fischer Labs</span>
             </div>
-            <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">🌙</button>
+        </div>
+        <div class="showcase-subtitle">
+            10-Second Automated Camera Hardware Diagnostic Benchmark & Anti-Fraud Health Certificate
+        </div>
+    </div>
+
+    <!-- Dual Theme Toggle Bar (White Theme vs Dark Theme of Project X) -->
+    <div class="theme-switcher-bar">
+        <button class="theme-btn" id="btn-white-theme" onclick="switchTheme('white')">☀️ White Theme</button>
+        <button class="theme-btn active" id="btn-dark-theme" onclick="switchTheme('dark')">🌙 Dark Theme</button>
+    </div>
+
+    <!-- Smartphone Mockup Frame -->
+    <div class="phone-frame">
+
+        <!-- App Top Bar -->
+        <div class="app-top-bar">
+            <div class="showcase-logo-row" style="gap: 8px;">
+                <div class="app-emblem" style="width: 26px; height: 26px; font-size: 13px;">📷</div>
+                <div class="brand-text-header">
+                    CamScore
+                    <span>by Fischer Labs</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button onclick="setHardwareMode()" id="hw-mode-pill" style="font-size: 10px; font-weight: 800; background: rgba(25,118,210,0.15); color: var(--primary-accent); border: 1px solid var(--border); padding: 4px 8px; border-radius: 100px; cursor: pointer;">
+                    OIS Phone
+                </button>
+            </div>
         </div>
 
-        <!-- Screen Container -->
-        <div class="screen-container">
-            <!-- ═════════ SCREEN 1: HOME ═════════ -->
-            <div class="screen active" id="screen-home">
-                <!-- Device Mode Toggle -->
-                <div class="device-selector-bar">
-                    <div class="device-pill active" id="pill-ois" onclick="setDeviceType(true)">Pixel 8 Pro (OIS)</div>
-                    <div class="device-pill" id="pill-non-ois" onclick="setDeviceType(false)">Redmi Note 13 (Non-OIS)</div>
+        <!-- Screens Body -->
+        <div class="screen-body">
+
+            <!-- ═════════ 1. HOME SCREEN (Figure 3.1 Screen 1) ═════════ -->
+            <div class="screen-view active" id="view-1">
+                <div class="home-headline">Know Your Camera.</div>
+                <div class="home-subheadline">In 10 Seconds.</div>
+                <div class="home-desc">
+                    Get an instant hardware health check with a 0-100% CamScore and a tamper-proof certificate.
                 </div>
 
-                <!-- Viewfinder -->
-                <div class="viewfinder">
-                    <video id="camera-feed" autoplay playsinline muted style="display: none;"></video>
-                    <div class="simulated-viewfinder" id="simulated-vf">
-                        <span style="font-size: 36px;">📷</span>
-                        <div style="font-size: 13px; font-weight: 700; color: #FFFFFF;">Hardware Diagnostic Viewfinder</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.7);">Point at textured, well-lit scene</div>
-                        <div id="ois-flag-badge" class="badge badge-success" style="margin-top: 6px;">OIS Supported ✓</div>
-                    </div>
+                <!-- Living Room Viewfinder Card matching Figure 3.1 -->
+                <div class="living-room-preview">
+                    <div class="preview-glow"></div>
+                    <div class="preview-picture-frame"></div>
+                    <div class="preview-sofa"></div>
+                    <div class="preview-pillow-left"></div>
+                    <div class="preview-pillow-right"></div>
+                    <div class="ois-cap-badge" id="viewfinder-ois-badge">OIS Supported ✓</div>
                 </div>
 
-                <!-- Readiness Indicators -->
-                <div class="readiness-grid">
-                    <div class="readiness-item">
-                        <div class="emoji">☀\uFE0F</div>
-                        <div class="label">Lighting</div>
-                        <div class="val" id="val-light" style="color: var(--pass);">380 Lux (Good)</div>
+                <!-- 3-Column Readiness Indicators -->
+                <div class="readiness-trio">
+                    <div class="readiness-cell">
+                        <div class="icon">💡</div>
+                        <div class="name">Lighting</div>
+                        <div class="state">Good</div>
                     </div>
-                    <div class="readiness-item">
-                        <div class="emoji">🧱</div>
-                        <div class="label">Texture</div>
-                        <div class="val" id="val-texture" style="color: var(--pass);">88% (Good)</div>
+                    <div class="readiness-cell">
+                        <div class="icon">🖼️</div>
+                        <div class="name">Texture</div>
+                        <div class="state">Good</div>
                     </div>
-                    <div class="readiness-item">
-                        <div class="emoji">✅</div>
-                        <div class="label">Readiness</div>
-                        <div class="val" id="val-ready" style="color: var(--pass);">Ready</div>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-bottom: 16px;">
-                    <div style="font-size: 12px; font-weight: 700; margin-bottom: 4px;">Hands-Off 10-Second Benchmark</div>
-                    <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;">
-                        Evaluates physical Autofocus motors, OIS dampening springs, and multi-lens color shift across 1x–10x zoom.
+                    <div class="readiness-cell">
+                        <div class="icon">🛡️</div>
+                        <div class="name">Readiness</div>
+                        <div class="state">Ready</div>
                     </div>
                 </div>
 
-                <button class="btn-primary" onclick="startBenchmark()">
-                    ▶ Start 10-Second Diagnostic
+                <!-- Start Test Button -->
+                <button class="btn-royal-pill" onclick="triggerTestExecution()">
+                    Start Test →
                 </button>
 
-                <div style="margin-top: 14px; text-align: center;">
-                    <a href="javascript:void(0)" onclick="switchNav('ranking')" style="color: var(--primary-accent); font-size: 12px; font-weight: 700; text-decoration: none;">
-                        🏆 View Monthly Global Rankings →
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="javascript:void(0)" onclick="openScreen(6)" style="font-size: 11px; color: var(--text-secondary); text-decoration: underline;">
+                        How to prepare? (View Onboarding Tutorial)
                     </a>
                 </div>
             </div>
 
-            <!-- ═════════ SCREEN 2: 10S SCANNER ═════════ -->
-            <div class="screen" id="screen-diagnostic">
-                <!-- Non-OIS Banner -->
-                <div id="non-ois-scan-banner" class="card" style="display: none; background: rgba(25, 118, 210, 0.2); border-color: var(--primary-accent);">
-                    <div style="font-size: 11px; color: var(--primary-accent); line-height: 1.4;">
-                        ℹ <strong>Hardware Note:</strong> No physical OIS motor exists on this device model. Running Digital Sensor & Frame Stability Check (No OIS Penalty Applied).
+            <!-- ═════════ 2. CAMERA TEST SCREEN (Figure 3.1 Screen 2) ═════════ -->
+            <div class="screen-view" id="view-2">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="cursor: pointer; font-size: 16px;" onclick="openScreen(1)">←</span>
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; font-weight: 800; color: var(--text-primary);">Camera Test</div>
+                        <div style="font-size: 10px; color: var(--primary-accent);">10-Second Diagnostic</div>
                     </div>
+                    <span style="font-size: 16px;">⚡</span>
                 </div>
 
-                <!-- Circular Countdown Ring -->
-                <div class="countdown-wrapper">
-                    <svg class="countdown-svg" viewBox="0 0 180 180">
+                <!-- Circular Countdown Ring Gauge -->
+                <div class="countdown-gauge-wrap">
+                    <svg class="gauge-svg" viewBox="0 0 170 170">
                         <defs>
-                            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="cyan-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="#1976D2" />
                                 <stop offset="100%" stop-color="#29B6F6" />
                             </linearGradient>
                         </defs>
-                        <circle class="countdown-bg" cx="90" cy="90" r="80" />
-                        <circle class="countdown-meter" id="countdown-circle" cx="90" cy="90" r="80" />
+                        <circle class="gauge-track" cx="85" cy="85" r="75" />
+                        <circle class="gauge-bar" id="scanner-gauge-circle" cx="85" cy="85" r="75" />
                     </svg>
-                    <div class="countdown-content">
-                        <div style="font-size: 22px;">📷</div>
-                        <div class="countdown-seconds" id="timer-display">10.0s</div>
-                        <div class="countdown-phase-tag" id="phase-tag">Phase 1 / 3</div>
+                    <div class="gauge-inside">
+                        <div class="camera-icon">📷</div>
+                        <div class="time-num" id="countdown-readout">6.8s</div>
+                        <div class="scan-msg">Scanning your camera hardware...</div>
                     </div>
                 </div>
 
-                <!-- Phase Checklist -->
-                <div class="card" style="padding: 12px;">
-                    <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px;">Diagnostic Execution</div>
+                <!-- Diagnostic Phases Checklist -->
+                <div class="phase-list-card">
+                    <div class="phase-header-title">Diagnostic Phases</div>
 
-                    <div class="phase-row active" id="phase-row-1">
-                        <span id="phase-icon-1">🎯</span>
+                    <div class="phase-item-row active" id="phase-card-1">
+                        <span style="font-size: 18px;">🎯</span>
                         <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
-                                <span>1. Autofocus Speed (0.0s–3.5s)</span>
-                                <span id="p1-pct">0%</span>
+                                <span>1. Autofocus Speed</span>
+                                <span id="p1-text-status" style="color: var(--primary-accent);">120ms (Fast)</span>
                             </div>
-                            <div class="phase-bar"><div class="phase-bar-fill" id="p1-bar"></div></div>
+                            <div class="progress-thin-track"><div class="progress-thin-fill" id="p1-meter-fill" style="width: 85%;"></div></div>
                         </div>
                     </div>
 
-                    <div class="phase-row" id="phase-row-2">
-                        <span id="phase-icon-2">📐</span>
+                    <div class="phase-item-row" id="phase-card-2">
+                        <span style="font-size: 18px;">📐</span>
                         <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
-                                <span id="p2-name">2. OIS Stabilization (3.5s–7.0s)</span>
-                                <span id="p2-pct">0%</span>
+                                <span id="p2-title-label">2. OIS Stabilization</span>
+                                <span id="p2-text-status" style="color: var(--primary-accent);">High Dampening</span>
                             </div>
-                            <div class="phase-bar"><div class="phase-bar-fill" id="p2-bar"></div></div>
+                            <div class="progress-thin-track"><div class="progress-thin-fill" id="p2-meter-fill" style="width: 50%;"></div></div>
                         </div>
                     </div>
 
-                    <div class="phase-row" id="phase-row-3">
-                        <span id="phase-icon-3">🔍</span>
+                    <div class="phase-item-row" id="phase-card-3">
+                        <span style="font-size: 18px;">🔍</span>
                         <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
-                                <span>3. Lens Switching & Color (7.0s–10.0s)</span>
-                                <span id="p3-pct">0%</span>
+                                <span>3. Lens & Colour</span>
+                                <span id="p3-text-status" style="color: var(--primary-accent);">ΔE: 1.2 (Accurate)</span>
                             </div>
-                            <div class="phase-bar"><div class="phase-bar-fill" id="p3-bar"></div></div>
+                            <div class="progress-thin-track"><div class="progress-thin-fill" id="p3-meter-fill" style="width: 15%;"></div></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Live Waveform -->
+                <!-- Live Sinusoidal Sensor Fusion Waveform Footer -->
                 <div style="margin-top: auto;">
-                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-secondary); margin-bottom: 4px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-secondary); margin-bottom: 4px;">
                         <span>100Hz Sensor Fusion (Gyro vs Optical Flow)</span>
-                        <span style="color: var(--primary-accent);">Live Telemetry</span>
+                        <span style="color: var(--primary-accent);">Live 100Hz</span>
                     </div>
-                    <canvas id="waveform-canvas" width="380" height="70"></canvas>
+                    <canvas id="sensor-waveform" width="360" height="60"></canvas>
                 </div>
             </div>
 
-            <!-- ═════════ SCREEN 3: RESULTS ═════════ -->
-            <div class="screen" id="screen-result">
-                <div class="score-display-box">
-                    <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">Uncapped CamScore</div>
-                    <div class="score-number" id="result-camscore">14,850</div>
-                    <div class="badge badge-success" id="result-rating-badge" style="font-size: 12px; padding: 6px 14px;">PASS — Hardware Healthy</div>
+            <!-- ═════════ 3. RESULTS SCREEN (Figure 3.1 Screen 3) ═════════ -->
+            <div class="screen-view" id="view-3">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="cursor: pointer; font-size: 16px;" onclick="openScreen(1)">←</span>
+                    <span style="font-size: 14px; font-weight: 800; color: var(--text-primary);">Test Results</span>
+                    <span style="font-size: 16px; cursor: pointer;" onclick="openScreen(4)">↗</span>
                 </div>
 
-                <!-- Circular Health Gauge -->
-                <div class="card" style="text-align: center; padding: 18px;">
-                    <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">Overall Hardware Health</div>
-                    <div style="font-size: 44px; font-weight: 800; color: var(--pass); margin: 6px 0;" id="result-health-pct">96%</div>
-                    <div style="font-size: 11px; color: var(--text-secondary);" id="health-spec-text">Evaluated against factory specification</div>
+                <!-- Large Circular Score Gauge matching Figure 3.1 -->
+                <div class="result-big-circle">
+                    <div class="score-val-big" id="result-score-number">862</div>
+                    <div class="score-sub-label">/ 1000</div>
+                    <div style="font-size: 10px; color: var(--primary); font-weight: 700;">CamScore</div>
                 </div>
 
-                <!-- Sub Score Breakdown Cards -->
-                <div class="sub-score-row">
-                    <div class="sub-icon">🎯</div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;">
-                            <span>Autofocus Motor</span>
-                            <span id="sub-af-pct" style="color: var(--pass);">98%</span>
+                <div style="text-align: center;">
+                    <div class="pass-pill-badge" id="result-pill-badge">✓ PASS</div>
+                    <div class="verdict-tagline" id="result-verdict-text">Camera Hardware Healthy</div>
+                </div>
+
+                <!-- Diagnostic Subscores Section matching Figure 3.1 -->
+                <div class="card-box" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 12px; font-weight: 800; margin-bottom: 10px; color: var(--text-primary);">Diagnostic Subscores</div>
+
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
+                            <span>Autofocus Speed</span>
+                            <span id="sub-af-num" style="color: var(--primary-accent);">Score: 298 / 300</span>
                         </div>
-                        <div style="font-size: 10px; color: var(--text-secondary);" id="sub-af-desc">Lock Time: 132ms | Laplacian σ²: 1680</div>
+                        <div class="progress-thin-track"><div class="progress-thin-fill" style="width: 98%;"></div></div>
+                    </div>
+
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
+                            <span id="sub-ois-lbl">OIS Stabilization</span>
+                            <span id="sub-ois-num" style="color: var(--primary-accent);">Score: 345 / 400</span>
+                        </div>
+                        <div class="progress-thin-track"><div class="progress-thin-fill" id="sub-ois-bar" style="width: 86%;"></div></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
+                            <span>Lens & Colour</span>
+                            <span style="color: var(--primary-accent);">Score: 219 / 300</span>
+                        </div>
+                        <div class="progress-thin-track"><div class="progress-thin-fill" style="width: 73%;"></div></div>
                     </div>
                 </div>
 
-                <div class="sub-score-row">
-                    <div class="sub-icon">📐</div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;">
-                            <span id="sub-ois-title">OIS Stabilization</span>
-                            <span id="sub-ois-pct" style="color: var(--pass);">94%</span>
-                        </div>
-                        <div style="font-size: 10px; color: var(--text-secondary);" id="sub-ois-desc">Dampening Ratio: 89% vs 100Hz Gyro</div>
-                    </div>
-                </div>
-
-                <div class="sub-score-row">
-                    <div class="sub-icon">🔍</div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;">
-                            <span>Lens Switch & Color</span>
-                            <span id="sub-lens-pct" style="color: var(--pass);">96%</span>
-                        </div>
-                        <div style="font-size: 10px; color: var(--text-secondary);" id="sub-lens-desc">ΔE Color Shift: 1.4 | Switch Lag: 96ms</div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div style="display: flex; gap: 10px; margin-top: 14px;">
-                    <button class="btn-primary" style="flex: 1;" onclick="switchNav('cert')">📜 View Certificate</button>
-                    <button class="btn-outline" style="flex: 1;" onclick="startBenchmark()">🔄 Retest</button>
-                </div>
+                <!-- View Certificate Button matching Figure 3.1 -->
+                <button class="btn-royal-pill" onclick="openScreen(4)">
+                    📜 View Certificate
+                </button>
             </div>
 
-            <!-- ═════════ SCREEN 4: CERTIFICATE ═════════ -->
-            <div class="screen" id="screen-cert">
-                <div class="cert-container" id="cert-card-export">
-                    <div class="cert-header">
-                        <div style="font-size: 24px;">📷</div>
-                        <div style="font-size: 16px; font-weight: 800; margin-top: 4px;">CamScore Hardware Certificate</div>
-                        <div style="font-size: 11px; opacity: 0.9;">Fischer Labs Anti-Fraud Verification</div>
+            <!-- ═════════ 4. HEALTH CERTIFICATE SCREEN (Figure 3.1 Screen 4) ═════════ -->
+            <div class="screen-view" id="view-4">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="cursor: pointer; font-size: 16px;" onclick="openScreen(3)">←</span>
+                    <span style="font-size: 14px; font-weight: 800; color: var(--text-primary);">Health Certificate</span>
+                    <span style="font-size: 16px; cursor: pointer;">📥</span>
+                </div>
+
+                <!-- Digital Certificate Paper Card matching Figure 3.1 -->
+                <div class="cert-paper">
+                    <div class="cert-royal-banner">
+                        <div class="t1">📷 CamScore by Fischer Labs</div>
+                        <div class="t2">Camera Health Certificate</div>
+                        <div class="t3">Authentic Hardware Diagnostic Verification</div>
                     </div>
-                    <div class="cert-body">
-                        <div style="font-size: 18px; font-weight: 800;" id="cert-device-name">Google Pixel 8 Pro</div>
-                        <div style="font-size: 11px; color: #64748B; margin-top: 2px;" id="cert-date-text">Oct 30, 2026 • Test ID: #CS-8921</div>
-
-                        <div style="margin: 16px 0; padding: 12px; background: #F8FAFC; border-radius: 12px;">
-                            <div style="font-size: 11px; color: #64748B;">Uncapped CamScore</div>
-                            <div style="font-size: 36px; font-weight: 800; color: #1976D2;" id="cert-score">14,850</div>
-                            <div class="badge badge-success" id="cert-health-stamp" style="font-size: 12px;">MINT HEALTH (96%)</div>
-                        </div>
-
-                        <div style="font-size: 11px; text-align: left; margin-bottom: 8px;">
-                            <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #E2E8F0;">
-                                <span>Focus Motor Health</span>
-                                <strong id="cert-af-val">98%</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #E2E8F0;">
-                                <span>OIS Mechanism</span>
-                                <strong id="cert-ois-val">94% (OIS Equipped)</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-                                <span>Multi-Lens Switching</span>
-                                <strong id="cert-lens-val">96%</strong>
+                    <div class="cert-body-content">
+                        <div style="display: flex; align-items: center; gap: 10px; text-align: left; margin-bottom: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-size: 20px;">📱</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 800; color: #0D233A;" id="cert-phone-model">Samsung Galaxy S23</div>
+                                <div style="font-size: 10px; color: #64748B;">Apr 24, 2024 • 10:24 AM • #CS-94821</div>
                             </div>
                         </div>
 
-                        <!-- QR Box -->
-                        <div class="qr-placeholder">
-                            <canvas id="qr-code-canvas" width="110" height="110"></canvas>
+                        <div style="background: #F8FAFC; border-radius: 12px; padding: 10px; border: 1px solid #E2E8F0; margin-bottom: 12px;">
+                            <div style="font-size: 10px; color: #64748B; font-weight: 700;">CamScore</div>
+                            <div style="font-size: 28px; font-weight: 900; color: #1976D2;" id="cert-score-main">862 / 1000</div>
+                            <span class="pass-pill-badge" style="font-size: 10px; padding: 3px 12px; margin: 4px 0 0;">VERIFIED PASS</span>
                         </div>
-                        <div style="font-size: 10px; color: #64748B;">Scan QR to verify on fischerlabs.com</div>
+
+                        <div style="font-size: 11px; text-align: left; color: #475569; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #F1F5F9;">
+                                <span>Focus Motor Health:</span>
+                                <strong>98%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #F1F5F9;">
+                                <span>OIS Mechanism:</span>
+                                <strong id="cert-ois-val">92% (OIS Equipped)</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 3px 0;">
+                                <span>Lens Calibration:</span>
+                                <strong>95%</strong>
+                            </div>
+                        </div>
+
+                        <!-- QR Code matching Figure 3.1 -->
+                        <div class="qr-render-box">
+                            <canvas id="cert-qr-canvas" width="100" height="100"></canvas>
+                        </div>
+                        <div style="font-size: 9px; color: #64748B;">Scan QR to verify on fischerlabs.com • Powered by Firebase</div>
                     </div>
                 </div>
 
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn-primary" style="flex: 1;" onclick="downloadCertificate()">📥 Save PNG</button>
-                    <button class="btn-outline" style="flex: 1;" onclick="openVerificationBadge()">🌐 View QR Badge</button>
+                    <button class="btn-royal-pill" style="height: 44px; font-size: 13px;" onclick="alert('✓ PNG Certificate Saved!')">Download PNG</button>
+                    <button class="btn-royal-pill" style="height: 44px; font-size: 13px; background: #0D47A1;" onclick="openScreen(5)">View History</button>
                 </div>
             </div>
 
-            <!-- ═════════ SCREEN 5: LEADERBOARD ═════════ -->
-            <div class="screen" id="screen-ranking">
+            <!-- ═════════ 5. TEST HISTORY SCREEN (Figure 3.1 Screen 5) ═════════ -->
+            <div class="screen-view" id="view-5">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div>
-                        <div style="font-size: 16px; font-weight: 800;">Monthly Global Ranking</div>
-                        <div style="font-size: 11px; color: var(--text-secondary);">October 2026 Leaderboard</div>
+                    <span style="cursor: pointer; font-size: 16px;" onclick="openScreen(1)">←</span>
+                    <span style="font-size: 14px; font-weight: 800; color: var(--text-primary);">Test History</span>
+                    <span style="font-size: 16px;">🔍</span>
+                </div>
+
+                <!-- 5 Mock History Cards matching Figure 3.1 -->
+                <div class="history-list-item" onclick="openScreen(4)">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Samsung Galaxy S23</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Apr 24, 2024 • 10:24 AM</div>
                     </div>
-                    <span class="badge badge-info">Oct 2026</span>
+                    <div style="text-align: right;">
+                        <div style="font-size: 13px; font-weight: 800; color: var(--primary-accent);">862 / 1000</div>
+                        <span class="pass-pill-badge" style="font-size: 9px; padding: 2px 8px; margin: 0;">PASS</span>
+                    </div>
                 </div>
 
-                <!-- Filter Chips -->
-                <div style="display: flex; gap: 6px; margin-bottom: 12px;">
-                    <button class="badge badge-info" style="cursor: pointer; padding: 6px 12px;" onclick="filterBoard('all')">All Phones</button>
-                    <button class="badge" style="cursor: pointer; padding: 6px 12px; background: var(--surface-card); color: var(--text-secondary);" onclick="filterBoard('ois')">OIS Flagships</button>
-                    <button class="badge" style="cursor: pointer; padding: 6px 12px; background: var(--surface-card); color: var(--text-secondary);" onclick="filterBoard('non-ois')">Budget / Non-OIS</button>
+                <div class="history-list-item" onclick="openScreen(4)">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">iPhone 15 Pro</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Apr 18, 2024 • 03:45 PM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 13px; font-weight: 800; color: var(--warn);">734 / 1000</div>
+                        <span class="pass-pill-badge" style="background: var(--warn); font-size: 9px; padding: 2px 8px; margin: 0;">WARN</span>
+                    </div>
                 </div>
 
-                <!-- List items -->
-                <div id="leaderboard-list">
-                    <!-- Populated via JS -->
+                <div class="history-list-item" onclick="openScreen(4)">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Google Pixel 7</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Mar 29, 2024 • 11:15 AM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 13px; font-weight: 800; color: var(--primary-accent);">912 / 1000</div>
+                        <span class="pass-pill-badge" style="font-size: 9px; padding: 2px 8px; margin: 0;">PASS</span>
+                    </div>
+                </div>
+
+                <div class="history-list-item" onclick="openScreen(4)">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Xiaomi 13 Pro</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Mar 12, 2024 • 04:30 PM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 13px; font-weight: 800; color: var(--warn);">756 / 1000</div>
+                        <span class="pass-pill-badge" style="background: var(--warn); font-size: 9px; padding: 2px 8px; margin: 0;">WARN</span>
+                    </div>
+                </div>
+
+                <div class="history-list-item" onclick="openScreen(4)">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Samsung S20</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Feb 04, 2024 • 09:10 AM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 13px; font-weight: 800; color: var(--fail);">601 / 1000</div>
+                        <span class="pass-pill-badge" style="background: var(--fail); font-size: 9px; padding: 2px 8px; margin: 0;">FAIL</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- ═════════ SCREEN 6: HISTORY ═════════ -->
-            <div class="screen" id="screen-history">
-                <div style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Test History</div>
-                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">Hardware Health Degradation over time</div>
-
-                <div class="card" style="padding: 12px;">
-                    <div style="font-size: 11px; font-weight: 700; margin-bottom: 6px;">Health Degradation Curve</div>
-                    <canvas id="history-chart" width="360" height="100" style="width: 100%; height: 100px; display: block;"></canvas>
+            <!-- ═════════ 6. ONBOARDING SCREEN (Figure 3.1 Screen 6) ═════════ -->
+            <div class="screen-view" id="view-6">
+                <div style="display: flex; justify-content: flex-end;">
+                    <span style="font-size: 12px; color: var(--text-secondary); cursor: pointer;" onclick="openScreen(1)">Skip</span>
                 </div>
 
-                <div id="history-items">
-                    <!-- Populated via JS -->
+                <div class="onboarding-illu">🤳</div>
+
+                <div style="font-size: 17px; font-weight: 800; text-align: center; color: var(--text-primary); margin-bottom: 16px;">
+                    Get Ready for Your Camera Test
+                </div>
+
+                <div class="onboarding-step-card">
+                    <span style="font-size: 22px;">💡</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Find good lighting</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Natural daylight or bright indoor lighting works best.</div>
+                    </div>
+                </div>
+
+                <div class="onboarding-step-card">
+                    <span style="font-size: 22px;">🧱</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Look for texture</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Aim at a textured surface, book, or detailed pattern (avoid blank walls).</div>
+                    </div>
+                </div>
+
+                <div class="onboarding-step-card">
+                    <span style="font-size: 22px;">📱</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 800; color: var(--text-primary);">Keep your phone steady</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Hold firmly with both hands during the 10-second test.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <button class="btn-royal-pill" onclick="openScreen(1)">
+                        Start Test →
+                    </button>
                 </div>
             </div>
+
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="bottom-nav">
-            <div class="nav-item active" id="nav-home" onclick="switchNav('home')">
-                <span class="icon">🏠</span>
+        <!-- App Bottom Navigation Bar matching Figure 3.1 -->
+        <div class="app-bottom-nav">
+            <div class="nav-button active" id="nav-btn-1" onclick="openScreen(1)">
+                <span class="nav-icon">🏠</span>
                 <span>Home</span>
             </div>
-            <div class="nav-item" id="nav-ranking" onclick="switchNav('ranking')">
-                <span class="icon">🏆</span>
-                <span>Ranking</span>
+            <div class="nav-button" id="nav-btn-2" onclick="triggerTestExecution()">
+                <span class="nav-icon">📷</span>
+                <span>Test</span>
             </div>
-            <div class="nav-item" id="nav-history" onclick="switchNav('history')">
-                <span class="icon">📊</span>
+            <div class="nav-button" id="nav-btn-5" onclick="openScreen(5)">
+                <span class="nav-icon">⏱️</span>
                 <span>History</span>
             </div>
-            <div class="nav-item" id="nav-cert" onclick="switchNav('cert')">
-                <span class="icon">📜</span>
+            <div class="nav-button" id="nav-btn-4" onclick="openScreen(4)">
+                <span class="nav-icon">📜</span>
                 <span>Certificate</span>
             </div>
         </div>
+
     </div>
 
     <script>
-        // State
-        let isDark = true;
-        let hasOis = true;
-        let isTesting = false;
-        let testProgress = 0;
-        let waveformPoints = [];
-        let animId = null;
+        let currentScreen = 1;
+        let isOisPhone = true;
+        let wavePts = [];
 
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
-            document.body.classList.toggle('light-theme', !isDark);
-            themeToggle.textContent = isDark ? '🌙' : '☀️';
-            drawWaveform();
-            drawHistoryChart();
-        });
+        function switchTheme(theme) {
+            document.body.classList.toggle('white-theme', theme === 'white');
+            document.getElementById('btn-white-theme').classList.toggle('active', theme === 'white');
+            document.getElementById('btn-dark-theme').classList.toggle('active', theme === 'dark');
+            drawWave();
+        }
 
-        function setDeviceType(oisSupported) {
-            hasOis = oisSupported;
-            document.getElementById('pill-ois').classList.toggle('active', oisSupported);
-            document.getElementById('pill-non-ois').classList.toggle('active', !oisSupported);
+        function setHardwareMode() {
+            isOisPhone = !isOisPhone;
+            const btn = document.getElementById('hw-mode-pill');
+            const badge = document.getElementById('viewfinder-ois-badge');
+            const oisLbl = document.getElementById('p2-title-label');
+            const certOis = document.getElementById('cert-ois-val');
+            const subOisLbl = document.getElementById('sub-ois-lbl');
+            const subOisNum = document.getElementById('sub-ois-num');
+            const certPhone = document.getElementById('cert-phone-model');
 
-            const badge = document.getElementById('ois-flag-badge');
-            if (hasOis) {
-                badge.className = 'badge badge-success';
+            if (isOisPhone) {
+                btn.textContent = 'OIS Phone';
                 badge.textContent = 'OIS Supported ✓';
+                badge.style.color = 'var(--pass)';
+                oisLbl.textContent = '2. OIS Stabilization';
+                certOis.textContent = '92% (OIS Equipped)';
+                subOisLbl.textContent = 'OIS Stabilization';
+                subOisNum.textContent = 'Score: 345 / 400';
+                certPhone.textContent = 'Samsung Galaxy S23';
             } else {
-                badge.className = 'badge badge-info';
-                badge.textContent = 'Non-OIS Fair Mode Active';
+                btn.textContent = 'Non-OIS (Fair Mode)';
+                badge.textContent = 'Non-OIS Fair Mode';
+                badge.style.color = 'var(--primary-accent)';
+                oisLbl.textContent = '2. Sensor Stability (Non-OIS)';
+                certOis.textContent = 'N/A (Fair Non-OIS Protocol)';
+                subOisLbl.textContent = 'Sensor Stability (Non-OIS)';
+                subOisNum.textContent = 'N/A (Zero Penalty)';
+                certPhone.textContent = 'Redmi Note 13 (Non-OIS)';
             }
         }
 
-        function switchNav(screenName) {
-            if (isTesting && screenName !== 'diagnostic') return;
+        function openScreen(num) {
+            currentScreen = num;
+            document.querySelectorAll('.screen-view').forEach((s, idx) => {
+                s.classList.toggle('active', (idx + 1) === num);
+            });
 
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            if (num === 1 && document.getElementById('nav-btn-1')) document.getElementById('nav-btn-1').classList.add('active');
+            if (num === 2 && document.getElementById('nav-btn-2')) document.getElementById('nav-btn-2').classList.add('active');
+            if (num === 5 && document.getElementById('nav-btn-5')) document.getElementById('nav-btn-5').classList.add('active');
+            if (num === 4 && document.getElementById('nav-btn-4')) document.getElementById('nav-btn-4').classList.add('active');
 
-            const targetScreen = document.getElementById(`screen-${screenName}`);
-            if (targetScreen) targetScreen.classList.add('active');
-
-            const targetNav = document.getElementById(`nav-${screenName}`);
-            if (targetNav) targetNav.classList.add('active');
-
-            if (screenName === 'cert') drawFakeQR();
-            if (screenName === 'ranking') renderLeaderboard('all');
-            if (screenName === 'history') { renderHistory(); drawHistoryChart(); }
+            if (num === 4) drawQr();
         }
 
-        // Benchmark Flow
-        function startBenchmark() {
-            isTesting = true;
-            testProgress = 0;
-            switchNav('diagnostic');
-
-            const banner = document.getElementById('non-ois-scan-banner');
-            banner.style.display = hasOis ? 'none' : 'block';
-
-            const p2Name = document.getElementById('p2-name');
-            p2Name.textContent = hasOis ? '2. OIS Stabilization (3.5s–7.0s)' : '2. Sensor Stability (Non-OIS)';
-
-            const timerDisplay = document.getElementById('timer-display');
-            const phaseTag = document.getElementById('phase-tag');
-            const circle = document.getElementById('countdown-circle');
-
+        function triggerTestExecution() {
+            openScreen(2);
             const totalMs = 10000;
-            const startMs = Date.now();
+            const start = Date.now();
+            const readout = document.getElementById('countdown-readout');
+            const gauge = document.getElementById('scanner-gauge-circle');
 
-            function tick() {
-                const elapsed = Date.now() - startMs;
-                const remaining = Math.max(0, (totalMs - elapsed) / 1000);
-                timerDisplay.textContent = `${remaining.toFixed(1)}s`;
+            function step() {
+                const elapsed = Date.now() - start;
+                const rem = Math.max(0, (totalMs - elapsed) / 1000);
+                readout.textContent = rem.toFixed(1) + 's';
 
-                // Update Ring stroke
-                const fraction = Math.min(1, elapsed / totalMs);
-                circle.style.strokeDashoffset = (502 * fraction).toString();
+                const frac = Math.min(1, elapsed / totalMs);
+                gauge.style.strokeDashoffset = (471 * frac).toString();
 
-                // Phase logic
+                // Phase updates
                 if (elapsed < 3500) {
-                    phaseTag.textContent = 'Phase 1: Autofocus';
-                    const p1Progress = (elapsed / 3500) * 100;
-                    document.getElementById('p1-bar').style.width = `${p1Progress}%`;
-                    document.getElementById('p1-pct').textContent = `${Math.round(p1Progress)}%`;
-                    document.getElementById('phase-row-1').classList.add('active');
+                    const p1 = (elapsed / 3500) * 100;
+                    document.getElementById('p1-meter-fill').style.width = p1 + '%';
+                    document.getElementById('phase-card-1').classList.add('active');
+                    document.getElementById('phase-card-2').classList.remove('active');
                 } else if (elapsed < 7000) {
-                    phaseTag.textContent = hasOis ? 'Phase 2: OIS Dampening' : 'Phase 2: Sensor Stability';
-                    document.getElementById('p1-bar').style.width = '100%';
-                    document.getElementById('p1-pct').textContent = '100%';
-                    document.getElementById('phase-icon-1').textContent = '✓';
-                    document.getElementById('phase-row-1').classList.remove('active');
-
-                    const p2Progress = ((elapsed - 3500) / 3500) * 100;
-                    document.getElementById('p2-bar').style.width = `${p2Progress}%`;
-                    document.getElementById('p2-pct').textContent = `${Math.round(p2Progress)}%`;
-                    document.getElementById('phase-row-2').classList.add('active');
+                    document.getElementById('p1-meter-fill').style.width = '100%';
+                    const p2 = ((elapsed - 3500) / 3500) * 100;
+                    document.getElementById('p2-meter-fill').style.width = p2 + '%';
+                    document.getElementById('phase-card-1').classList.remove('active');
+                    document.getElementById('phase-card-2').classList.add('active');
+                    document.getElementById('phase-card-3').classList.remove('active');
                 } else if (elapsed < 10000) {
-                    phaseTag.textContent = 'Phase 3: Lens & Color';
-                    document.getElementById('p2-bar').style.width = '100%';
-                    document.getElementById('p2-pct').textContent = '100%';
-                    document.getElementById('phase-icon-2').textContent = '✓';
-                    document.getElementById('phase-row-2').classList.remove('active');
-
-                    const p3Progress = ((elapsed - 7000) / 3000) * 100;
-                    document.getElementById('p3-bar').style.width = `${p3Progress}%`;
-                    document.getElementById('p3-pct').textContent = `${Math.round(p3Progress)}%`;
-                    document.getElementById('phase-row-3').classList.add('active');
+                    document.getElementById('p2-meter-fill').style.width = '100%';
+                    const p3 = ((elapsed - 7000) / 3000) * 100;
+                    document.getElementById('p3-meter-fill').style.width = p3 + '%';
+                    document.getElementById('phase-card-2').classList.remove('active');
+                    document.getElementById('phase-card-3').classList.add('active');
                 }
 
-                // Add waveform jitter
-                waveformPoints.push({
-                    gyro: Math.sin(elapsed * 0.02) * (hasOis ? 10 : 25) + (Math.random() - 0.5) * 8,
-                    optical: Math.cos(elapsed * 0.015) * 15 + (Math.random() - 0.5) * 6
+                // Waveform jitter
+                wavePts.push({
+                    gyro: Math.sin(elapsed * 0.02) * (isOisPhone ? 7 : 18) + (Math.random() - 0.5) * 5,
+                    flow: Math.cos(elapsed * 0.015) * 9 + (Math.random() - 0.5) * 4
                 });
-                if (waveformPoints.length > 50) waveformPoints.shift();
-                drawWaveform();
+                if (wavePts.length > 50) wavePts.shift();
+                drawWave();
 
                 if (elapsed < totalMs) {
-                    requestAnimationFrame(tick);
+                    requestAnimationFrame(step);
                 } else {
-                    finishBenchmark();
+                    openScreen(3);
                 }
             }
-
-            requestAnimationFrame(tick);
+            requestAnimationFrame(step);
         }
 
-        function finishBenchmark() {
-            isTesting = false;
-            if (window.confetti) confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-
-            // Compute scores
-            let score, health;
-            if (hasOis) {
-                score = 14850;
-                health = 96;
-                document.getElementById('result-camscore').textContent = '14,850';
-                document.getElementById('cert-score').textContent = '14,850';
-                document.getElementById('result-health-pct').textContent = '96%';
-                document.getElementById('cert-device-name').textContent = 'Google Pixel 8 Pro';
-                document.getElementById('sub-ois-title').textContent = 'OIS Stabilization';
-                document.getElementById('sub-ois-pct').textContent = '94%';
-                document.getElementById('sub-ois-desc').textContent = 'Dampening Ratio: 89% vs 100Hz Gyro';
-                document.getElementById('cert-ois-val').textContent = '94% (OIS Equipped)';
-                document.getElementById('health-spec-text').textContent = 'Evaluated with OIS Motor dampening check';
-            } else {
-                score = 11200;
-                health = 98; // Healthy Non-OIS gets mint health!
-                document.getElementById('result-camscore').textContent = '11,200';
-                document.getElementById('cert-score').textContent = '11,200';
-                document.getElementById('result-health-pct').textContent = '98%';
-                document.getElementById('cert-device-name').textContent = 'Redmi Note 13 (Non-OIS)';
-                document.getElementById('sub-ois-title').textContent = 'OIS Status: N/A (Factory Spec)';
-                document.getElementById('sub-ois-pct').textContent = 'N/A';
-                document.getElementById('sub-ois-desc').textContent = 'Fair Mode: Excluded from penalty (60% AF / 40% Lens)';
-                document.getElementById('cert-ois-val').textContent = 'N/A (Fair Non-OIS Protocol)';
-                document.getElementById('health-spec-text').textContent = '100% Fair Non-OIS Redistribution: AF & Lens only';
-            }
-
-            switchNav('result');
-        }
-
-        // Canvas Waveform
-        function drawWaveform() {
-            const canvas = document.getElementById('waveform-canvas');
+        function drawWave() {
+            const canvas = document.getElementById('sensor-waveform');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
+            const w = canvas.width, h = canvas.height;
             ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = '#060e1a';
             ctx.fillRect(0, 0, w, h);
 
-            if (waveformPoints.length < 2) return;
+            if (wavePts.length < 2) return;
 
-            // Draw Gyro line (Blue)
+            // Gyro (Blue)
             ctx.strokeStyle = '#1976D2';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.8;
             ctx.beginPath();
-            waveformPoints.forEach((pt, i) => {
-                const x = (i / (waveformPoints.length - 1)) * w;
-                const y = (h / 2) + pt.gyro;
+            wavePts.forEach((p, i) => {
+                const x = (i / (wavePts.length - 1)) * w;
+                const y = h / 2 + p.gyro;
                 if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             });
             ctx.stroke();
 
-            // Draw Optical Flow line (Cyan)
+            // Optical Flow (Cyan)
             ctx.strokeStyle = '#29B6F6';
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.4;
             ctx.beginPath();
-            waveformPoints.forEach((pt, i) => {
-                const x = (i / (waveformPoints.length - 1)) * w;
-                const y = (h / 2) + pt.optical;
+            wavePts.forEach((p, i) => {
+                const x = (i / (wavePts.length - 1)) * w;
+                const y = h / 2 + p.flow;
                 if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             });
             ctx.stroke();
         }
 
-        // Fake QR Code
-        function drawFakeQR() {
-            const canvas = document.getElementById('qr-code-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+        function drawQr() {
+            const c = document.getElementById('cert-qr-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, 100, 100);
             ctx.fillStyle = '#0D233A';
-            ctx.clearRect(0, 0, 110, 110);
 
-            // Draw corner finder patterns
-            function finder(x, y) {
-                ctx.fillRect(x, y, 28, 28);
-                ctx.clearRect(x + 4, y + 4, 20, 20);
-                ctx.fillRect(x + 8, y + 8, 12, 12);
+            function corner(x, y) {
+                ctx.fillRect(x, y, 24, 24);
+                ctx.clearRect(x + 3, y + 3, 18, 18);
+                ctx.fillRect(x + 6, y + 6, 12, 12);
             }
-            finder(4, 4);
-            finder(78, 4);
-            finder(4, 78);
+            corner(2, 2);
+            corner(74, 2);
+            corner(2, 74);
 
-            // Random dots
             for (let r = 0; r < 14; r++) {
-                for (let c = 0; c < 14; c++) {
-                    if ((r < 5 && c < 5) || (r < 5 && c > 9) || (r > 9 && c < 5)) continue;
-                    if ((r * 13 + c * 7) % 3 === 0) {
-                        ctx.fillRect(10 + c * 6, 10 + r * 6, 4, 4);
+                for (let col = 0; col < 14; col++) {
+                    if ((r < 5 && col < 5) || (r < 5 && col > 8) || (r > 8 && col < 5)) continue;
+                    if ((r * 11 + col * 7) % 3 === 0) {
+                        ctx.fillRect(10 + col * 5.5, 10 + r * 5.5, 3.5, 3.5);
                     }
                 }
             }
         }
 
-        // Leaderboard
-        const mockLeaderboard = [
-            { rank: 1, name: 'Samsung Galaxy S24 Ultra', score: 16420, ois: true, platform: 'Android' },
-            { rank: 2, name: 'iPhone 16 Pro Max', score: 16180, ois: true, platform: 'iOS' },
-            { rank: 3, name: 'Google Pixel 8 Pro', score: 14850, ois: true, platform: 'Android' },
-            { rank: 4, name: 'Xiaomi 14 Ultra', score: 14610, ois: true, platform: 'Android' },
-            { rank: 5, name: 'iPhone 15 Pro', score: 14200, ois: true, platform: 'iOS' },
-            { rank: 6, name: 'OnePlus 12', score: 13950, ois: true, platform: 'Android' },
-            { rank: 7, name: 'Redmi Note 13 (Non-OIS)', score: 11200, ois: false, platform: 'Android' },
-            { rank: 8, name: 'Realme 12 (Non-OIS)', score: 10840, ois: false, platform: 'Android' }
-        ];
-
-        function renderLeaderboard(filter) {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '';
-
-            const filtered = mockLeaderboard.filter(item => {
-                if (filter === 'ois') return item.ois;
-                if (filter === 'non-ois') return !item.ois;
-                return true;
-            });
-
-            filtered.forEach(item => {
-                const medal = item.rank === 1 ? '🥇' : item.rank === 2 ? '🥈' : item.rank === 3 ? '🥉' : `#${item.rank}`;
-                const row = document.createElement('div');
-                row.className = 'sub-score-row';
-                row.style.marginBottom = '8px';
-                row.innerHTML = `
-                    <div style="font-size: 16px; font-weight: 800; width: 28px; text-align: center;">${medal}</div>
-                    <div style="flex: 1;">
-                        <div style="font-size: 12px; font-weight: 700;">${item.name}</div>
-                        <div style="font-size: 10px; color: var(--text-secondary);">${item.platform} • ${item.ois ? 'OIS Equipped' : 'Non-OIS Fair Mode'}</div>
-                    </div>
-                    <div style="font-size: 13px; font-weight: 800; color: var(--primary);">${item.score.toLocaleString()} pts</div>
-                `;
-                list.appendChild(row);
-            });
-        }
-
-        // History
-        function renderHistory() {
-            const list = document.getElementById('history-items');
-            list.innerHTML = `
-                <div class="sub-score-row" style="margin-bottom: 6px;">
-                    <div class="sub-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--pass); font-weight: 800;">96%</div>
-                    <div style="flex: 1;">
-                        <div style="font-size: 12px; font-weight: 700;">Oct 30, 2026 • 14,850 pts</div>
-                        <div style="font-size: 10px; color: var(--text-secondary);">Pixel 8 Pro • Pass (Mint Health)</div>
-                    </div>
-                </div>
-                <div class="sub-score-row" style="margin-bottom: 6px;">
-                    <div class="sub-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--pass); font-weight: 800;">98%</div>
-                    <div style="flex: 1;">
-                        <div style="font-size: 12px; font-weight: 700;">Oct 12, 2026 • 11,200 pts</div>
-                        <div style="font-size: 10px; color: var(--text-secondary);">Redmi Note 13 • Non-OIS Fair Mode</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function drawHistoryChart() {
-            const canvas = document.getElementById('history-chart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            ctx.strokeStyle = '#1976D2';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            const points = [
-                { x: 30, y: 20 },
-                { x: 120, y: 22 },
-                { x: 210, y: 25 },
-                { x: 330, y: 28 }
-            ];
-            points.forEach((pt, i) => {
-                if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
-            });
-            ctx.stroke();
-
-            points.forEach(pt => {
-                ctx.fillStyle = '#FFFFFF';
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        function downloadCertificate() {
-            alert('✓ PNG Certificate downloaded! Ready for OLX, WhatsApp, or Instagram flex.');
-        }
-
-        function openVerificationBadge() {
-            window.open('verify.html', '_blank');
-        }
-
-        // Initialize
-        drawFakeQR();
+        // Init
+        drawQr();
     </script>
 </body>
 </html>
