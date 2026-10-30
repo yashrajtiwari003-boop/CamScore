@@ -4,12 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,8 +21,13 @@ import com.fischerlabs.camscore.ui.components.*
 import com.fischerlabs.camscore.viewmodel.DiagnosticViewModel
 
 /**
- * Screen 02/04 — The 10-Second Live Testing Screen (Scanner View).
- * Shows countdown ring, phase checklist, sensor waveform, and Non-OIS banner.
+ * Screen 02/06 — Camera Test Screen.
+ * Faithfully matches Figure 3.1:
+ *  - "Camera Test" title with "10-Second Diagnostic" subtitle
+ *  - Circular countdown ring showing "6.8s" and camera aperture icon
+ *  - "Scanning your camera hardware..." prompt
+ *  - 3 Diagnostic Phases with real-time progress bars & status indicators
+ *  - 100Hz Gyroscope vs Optical Flow waveform graph footer
  */
 @Composable
 fun DiagnosticScreen(
@@ -29,154 +35,132 @@ fun DiagnosticScreen(
     onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0A192F))
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Camera feed background placeholder
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF0A192F),
-                            Color(0xFF112240),
-                            Color(0xFF0A192F)
-                        )
-                    )
-                )
-        )
-
-        // Semi-transparent overlay for readability
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f))
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Top App Bar matching Figure 3.1
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Top bar: Cancel button + Non-OIS banner
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            IconButton(
+                onClick = onCancel,
+                modifier = Modifier.size(36.dp)
             ) {
-                // Cancel button
-                IconButton(
-                    onClick = onCancel,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.15f))
-                ) {
-                    Text("✕", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                }
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
 
-                // Phase label
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = uiState.statusMessage,
-                    style = MaterialTheme.typography.bodySmall,
+                    text = "Camera Test",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "10-Second Diagnostic",
+                    style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF29B6F6),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 12.sp
+                    fontSize = 11.sp
                 )
             }
 
-            // Non-OIS info banner
-            if (!uiState.hasOis && uiState.currentPhase == DiagnosticPhase.OIS_STABILITY) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF1976D2).copy(alpha = 0.2f)
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text("ℹ\uFE0F", fontSize = 16.sp)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Hardware Note: No physical OIS motor detected. " +
-                                "Running Digital Sensor & Frame Stability Check (No OIS Penalty Applied).",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF29B6F6),
-                            fontSize = 11.sp,
-                            lineHeight = 16.sp
-                        )
-                    }
-                }
+            // Info or Flash icon
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("⚡", fontSize = 16.sp)
             }
+        }
 
-            Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(10.dp))
 
-            // Countdown Ring (centered)
-            CountdownRing(
-                totalSeconds = 10f,
-                elapsedSeconds = uiState.elapsedSeconds,
-                currentPhase = when (uiState.currentPhase) {
-                    DiagnosticPhase.AUTOFOCUS -> "Autofocus"
-                    DiagnosticPhase.OIS_STABILITY -> if (uiState.hasOis) "OIS Check" else "Stability"
-                    DiagnosticPhase.LENS_SWITCH -> "Lens Switch"
-                    DiagnosticPhase.COMPLETED -> "Done!"
-                    else -> "Preparing..."
-                },
-                isRunning = uiState.isRunning
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Phase Checklist
+        // Non-OIS notification banner if applicable
+        if (!uiState.hasOis && uiState.currentPhase == DiagnosticPhase.OIS_STABILITY) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF172A45).copy(alpha = 0.9f)
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Diagnostic Phases",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    PhaseChecklist(
-                        currentPhase = uiState.currentPhase,
-                        phaseProgress = uiState.phaseProgress,
-                        hasOis = uiState.hasOis
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Waveform Graph
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF172A45)
+                    containerColor = Color(0xFF1976D2).copy(alpha = 0.15f)
                 )
             ) {
-                WaveformGraph(
-                    gyroData = uiState.gyroData,
-                    opticalFlowData = uiState.opticalFlowData,
-                    modifier = Modifier.fillMaxSize()
+                Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("ℹ", fontSize = 16.sp, color = Color(0xFF29B6F6))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Non-OIS Fair Mode: Checking Digital Frame Stability (No OIS Penalty Applied).",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF29B6F6),
+                        fontSize = 11.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        // Circular Countdown Ring Gauge with Aperture Icon & "Scanning your camera hardware..."
+        CountdownRing(
+            totalSeconds = 10f,
+            elapsedSeconds = uiState.elapsedSeconds,
+            currentPhase = "Scanning your camera hardware...",
+            isRunning = uiState.isRunning
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // Diagnostic Phases Checklist matching Figure 3.1
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Diagnostic Phases",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                PhaseChecklist(
+                    currentPhase = uiState.currentPhase,
+                    phaseProgress = uiState.phaseProgress,
+                    hasOis = uiState.hasOis
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Live Sinusoidal Waveform Graph Footer matching Figure 3.1
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            WaveformGraph(
+                gyroData = uiState.gyroData,
+                opticalFlowData = uiState.opticalFlowData,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

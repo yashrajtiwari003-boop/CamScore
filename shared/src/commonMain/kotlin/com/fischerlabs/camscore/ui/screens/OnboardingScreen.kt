@@ -1,7 +1,5 @@
 package com.fischerlabs.camscore.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -18,44 +16,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * 3-slide illustrated Onboarding Tutorial.
- * Introduces users to the 10-second automated diagnostic, 0%–100% health tracking, and anti-fraud certificates.
+ * Screen 06/06 — Onboarding Screen.
+ * Faithfully matches Figure 3.1:
+ *  - Skip button on top right
+ *  - Friendly illustration of hands holding a smartphone
+ *  - "Get Ready for Your Camera Test" title
+ *  - 3 visual pre-test steps (Lighting, Texture, Steady hands)
+ *  - "Start Test →" button
  */
 @Composable
 fun OnboardingScreen(
     onComplete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var currentSlide by remember { mutableStateOf(0) }
-
-    val slides = listOf(
-        OnboardingSlide(
-            emoji = "⚡",
-            title = "10-Second Hardware Benchmark",
-            subtitle = "Zero Lab Equipment Required",
-            description = "In a single 10-second hands-off test, CamScore sweeps zoom 1x–10x, tests Autofocus speed, and measures OIS motor stability directly on your device."
-        ),
-        OnboardingSlide(
-            emoji = "🛡\uFE0F",
-            title = "0%–100% Camera Health",
-            subtitle = "Catch Hidden Mechanical Damage",
-            description = "Motorcycle handlebar vibrations shatter OIS springs and accidental drops misalign focus motors. Track your camera's true physical condition over time."
-        ),
-        OnboardingSlide(
-            emoji = "📜",
-            title = "Anti-Fraud Health Certificate",
-            subtitle = "Tamper-Proof Used Phone Proof",
-            description = "Generate an official QR-verifiable Hardware Health Certificate backed by Firebase Firestore. Prove your camera is 100% authentic before buying or selling."
-        )
-    )
-
-    val slide = slides[currentSlide]
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp),
+            .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Skip Button
@@ -72,107 +50,116 @@ fun OnboardingScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(0.6f))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Slide Icon
+        // Center Illustration matching Figure 3.1
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(130.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF1976D2).copy(alpha = 0.1f)),
+                .background(Color(0xFF1976D2).copy(alpha = 0.12f)),
             contentAlignment = Alignment.Center
         ) {
-            Text(slide.emoji, fontSize = 54.sp)
+            Text("🤳", fontSize = 64.sp)
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Title
         Text(
-            text = slide.title,
-            style = MaterialTheme.typography.headlineSmall,
+            text = "Get Ready for Your Camera Test",
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Subtitle
-        Text(
-            text = slide.subtitle,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF1976D2),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Description
-        Text(
-            text = slide.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            lineHeight = 22.sp,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Slide Indicators
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            slides.indices.forEach { index ->
-                val isActive = index == currentSlide
-                Box(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .width(if (isActive) 24.dp else 8.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(
-                            if (isActive) Color(0xFF1976D2)
-                            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
-                        )
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Action Button
-        Button(
-            onClick = {
-                if (currentSlide < slides.size - 1) {
-                    currentSlide++
-                } else {
-                    onComplete()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp),
-            shape = RoundedCornerShape(27.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
-        ) {
-            Text(
-                text = if (currentSlide == slides.size - 1) "Get Started 🚀" else "Continue →",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+        // 3 Visual Instruction Steps matching Figure 3.1
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            OnboardingStepRow(
+                icon = "💡",
+                title = "Find good lighting",
+                description = "Natural daylight or bright indoor lighting works best."
+            )
+            OnboardingStepRow(
+                icon = "🧱",
+                title = "Look for texture",
+                description = "Aim at a textured surface, book, or detailed pattern (avoid blank walls)."
+            )
+            OnboardingStepRow(
+                icon = "📱",
+                title = "Keep your phone steady",
+                description = "Hold firmly with both hands during the 10-second test."
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Action Button
+        Button(
+            onClick = onComplete,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(26.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
+        ) {
+            Text("Start Test →", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
-private data class OnboardingSlide(
-    val emoji: String,
-    val title: String,
-    val subtitle: String,
-    val description: String
-)
+@Composable
+private fun OnboardingStepRow(
+    icon: String,
+    title: String,
+    description: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFF1976D2).copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(icon, fontSize = 20.sp)
+            }
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp
+                )
+            }
+        }
+    }
+}
