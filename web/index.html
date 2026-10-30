@@ -66,6 +66,55 @@
             flex-direction: column;
             align-items: center;
             padding: 16px 8px 30px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Full Screen Green Fade Blink Overlay */
+        #ready-blink-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0.18) 55%, transparent 95%);
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #ready-blink-overlay.blink-active {
+            animation: green-flash-pulse 0.75s ease-out forwards;
+        }
+
+        @keyframes green-flash-pulse {
+            0% { opacity: 0; transform: scale(0.95); }
+            30% { opacity: 1; transform: scale(1.0); }
+            70% { opacity: 0.9; }
+            100% { opacity: 0; transform: scale(1.05); }
+        }
+
+        .ready-floating-badge {
+            background: rgba(16, 185, 129, 0.95);
+            color: #FFFFFF;
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.8), 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: scale(0.9);
+            animation: ready-pop 0.75s ease-out forwards;
+        }
+
+        @keyframes ready-pop {
+            0% { transform: scale(0.7); opacity: 0; }
+            35% { transform: scale(1.1); opacity: 1; }
+            55% { transform: scale(1.0); opacity: 1; }
+            100% { transform: scale(1.05); opacity: 0; }
         }
 
         /* Top Brand Showcase Header */
@@ -175,7 +224,7 @@
         .phone-frame {
             width: 100%;
             max-width: 410px;
-            height: 835px;
+            height: 840px;
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 40px;
@@ -372,7 +421,7 @@
         /* Viewfinder preview card */
         .viewfinder-card {
             width: 100%;
-            height: 180px;
+            height: 185px;
             background: #060e1a;
             border-radius: 20px;
             border: 1px solid var(--border);
@@ -420,7 +469,7 @@
         }
 
         .vf-pill {
-            background: rgba(10, 25, 47, 0.8);
+            background: rgba(10, 25, 47, 0.85);
             backdrop-filter: blur(6px);
             padding: 4px 10px;
             border-radius: 100px;
@@ -447,6 +496,56 @@
             0% { transform: scale(0.96); opacity: 0.7; }
             50% { transform: scale(1.04); opacity: 1; }
             100% { transform: scale(0.96); opacity: 0.7; }
+        }
+
+        /* In-Viewfinder Guidance & Obstruction Alert Banner */
+        .vf-guidance-banner {
+            width: 100%;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .vf-guidance-banner.alert-covered {
+            background: rgba(239, 68, 68, 0.85);
+            color: #FFFFFF;
+            border: 1px solid #EF4444;
+            animation: shake-banner 0.4s ease;
+        }
+
+        .vf-guidance-banner.alert-dark {
+            background: rgba(245, 158, 11, 0.85);
+            color: #FFFFFF;
+            border: 1px solid #F59E0B;
+        }
+
+        .vf-guidance-banner.alert-wall {
+            background: rgba(245, 158, 11, 0.85);
+            color: #FFFFFF;
+            border: 1px solid #F59E0B;
+        }
+
+        .vf-guidance-banner.alert-shaking {
+            background: rgba(245, 158, 11, 0.85);
+            color: #FFFFFF;
+            border: 1px solid #F59E0B;
+        }
+
+        .vf-guidance-banner.alert-ready {
+            background: rgba(16, 185, 129, 0.85);
+            color: #FFFFFF;
+            border: 1px solid #10B981;
+        }
+
+        @keyframes shake-banner {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
         }
 
         .vf-bottom-row {
@@ -522,6 +621,7 @@
             font-size: 11px;
             font-weight: 800;
             color: var(--pass);
+            transition: color 0.2s ease;
         }
 
         .rb-val.warn { color: var(--warn); }
@@ -897,11 +997,12 @@
         .ssc-non-ois-expl {
             font-size: 9px;
             color: #38bdf8;
-            line-height: 1.3;
-            margin-top: 2px;
-            background: rgba(2, 132, 199, 0.1);
-            padding: 5px;
-            border-radius: 6px;
+            line-height: 1.35;
+            margin-top: 3px;
+            background: rgba(2, 132, 199, 0.12);
+            border: 1px solid rgba(2, 132, 199, 0.3);
+            padding: 6px 8px;
+            border-radius: 8px;
         }
 
         .white-theme .ssc-non-ois-expl {
@@ -1598,6 +1699,13 @@
 </head>
 <body class="antialiased">
 
+    <!-- Full Screen Green Fade Blink with Flashing "READY" -->
+    <div id="ready-blink-overlay">
+        <div class="ready-floating-badge">
+            <span>✓</span> READY
+        </div>
+    </div>
+
     <!-- Top Brand Showcase Header -->
     <header class="showcase-header">
         <div class="showcase-logo-row">
@@ -1660,7 +1768,7 @@
                     <div class="ddc-left">
                         <span class="ddc-tag">Detected Smartphone</span>
                         <span class="ddc-name" id="home-device-name">Detecting Device...</span>
-                        <span class="ddc-sub" id="home-device-sub">Scanning Hardware Sensors...</span>
+                        <span class="ddc-sub" id="home-device-sub">Scanning Hardware Sensors & OIS...</span>
                     </div>
                     <button class="ddc-edit-btn" onclick="openDeviceModal()">
                         <span>✏️</span> Edit
@@ -1670,7 +1778,7 @@
                 <!-- Viewfinder Card -->
                 <div class="viewfinder-card">
                     <video id="webcam-feed" class="camera-video-elem" autoplay playsinline muted></video>
-                    <canvas id="sim-scene-canvas" class="scene-canvas" width="380" height="180"></canvas>
+                    <canvas id="sim-scene-canvas" class="scene-canvas" width="380" height="185"></canvas>
                     
                     <div class="viewfinder-overlay">
                         <div class="vf-top-row">
@@ -1681,6 +1789,11 @@
                             <div class="vf-pill" id="live-ois-pill" style="color: #34d399;">
                                 OIS Active ✓
                             </div>
+                        </div>
+
+                        <!-- Live In-Viewfinder Guidance & Obstruction Alert Banner -->
+                        <div id="vf-guidance-banner" class="vf-guidance-banner alert-ready">
+                            ✓ Scene Optimal: Lighting, texture & framing ready
                         </div>
 
                         <div class="vf-crosshair"></div>
@@ -1705,7 +1818,7 @@
                     <button class="scene-btn" id="sc-btn-wall" onclick="setScene('wall')">🧱 Blank Wall</button>
                 </div>
 
-                <!-- 3-Column Readiness Grid -->
+                <!-- 3-Column Readiness Grid (Constantly Dynamic as per Visuals) -->
                 <div class="readiness-grid">
                     <div class="readiness-box">
                         <span class="rb-icon">☀️</span>
@@ -1720,16 +1833,16 @@
                     <div class="readiness-box">
                         <span class="rb-icon">✅</span>
                         <span class="rb-label">Readiness</span>
-                        <span class="rb-val" id="rb-ready-val">Ready</span>
+                        <span class="rb-val" id="rb-ready-val">Ready ✓</span>
                     </div>
                 </div>
 
                 <!-- Start Button -->
-                <button class="btn-start-diagnostic" onclick="start10sDiagnostic()">
+                <button class="btn-start-diagnostic" id="btn-start-test-elem" onclick="attemptStartDiagnostic()">
                     <span>▶</span>
                     <span>Start 10-Second Diagnostic</span>
                 </button>
-                <p class="home-footnote">
+                <p class="home-footnote" id="home-footnote-msg">
                     Point at textured scene • Real-time OpenCV & sensor evaluation
                 </p>
             </section>
@@ -1744,6 +1857,7 @@
                     <div class="scanner-subtitle" id="scanner-zoom-info">Auto-Zoom Sweep 1x → 10x</div>
                 </div>
 
+                <!-- Non-OIS Fair Mode Live Banner (Section 2.8) -->
                 <div class="non-ois-live-banner" id="non-ois-banner">
                     ℹ️ <strong>Hardware Note:</strong> No physical OIS motor exists on this device model. Running Digital Sensor & Frame Stability Check (No OIS Penalty Applied).
                 </div>
@@ -2092,7 +2206,7 @@
                 <button class="quick-model-btn" onclick="selectQuickModel('Google Pixel 9 Pro (GEC77)')">Pixel 9 Pro</button>
                 <button class="quick-model-btn" onclick="selectQuickModel('OnePlus 12 (CPH2581)')">OnePlus 12</button>
                 <button class="quick-model-btn" onclick="selectQuickModel('Xiaomi 14 Ultra (24030PN60G)')">Xiaomi 14 Ultra</button>
-                <button class="quick-model-btn" onclick="selectQuickModel('Redmi Note 13 (2312DRAABG)')">Redmi Note 13</button>
+                <button class="quick-model-btn" onclick="selectQuickModel('Redmi Note 13 (2312DRAABG)')">Redmi Note 13 (Non-OIS)</button>
             </div>
 
             <div class="modal-actions">
@@ -2161,7 +2275,7 @@
     </section>
 
     <!-- Offscreen Analysis Canvas -->
-    <canvas id="cv-analysis-canvas" width="320" height="180" style="display:none;"></canvas>
+    <canvas id="cv-analysis-canvas" width="160" height="90" style="display:none;"></canvas>
 
     <!-- ======================================================= -->
     <!-- Application Logic & Diagnostics State Machine           -->
@@ -2205,9 +2319,18 @@
         let waveData = [];
 
         // Real Sensor Streams
-        let realGyroShake = 0.05; // rad/s
+        let realGyroShake = 0.05;
         let realAccelShake = 0.0;
         let motionListenerAttached = false;
+
+        // Continuous Visual Evaluation State
+        let liveLux = 380;
+        let liveTexturePct = 89;
+        let liveLuminance = 120;
+        let liveIsReady = true;
+        let lastReadyState = false;
+        let obstructionReason = "READY";
+        let isAnalysisLoopRunning = false;
 
         // Web Audio Synthesizer Context
         let audioCtx = null;
@@ -2258,14 +2381,19 @@
             setTimeout(() => playTone(1046.50, 400, 'sine', 0.3), 320);
         }
 
+        function playReadyFlashChime() {
+            playTone(880, 90, 'sine', 0.2);
+            setTimeout(() => playTone(1318.5, 140, 'triangle', 0.25), 70);
+        }
+
         // ==========================================
-        // SMARTPHONE HARDWARE & MODEL DETECTION
+        // SMARTPHONE HARDWARE & OIS DETECTION ENGINE
         // ==========================================
         async function detectRealSmartphone() {
-            // Check if user previously saved a custom device model
             const savedCustom = localStorage.getItem('camscore_custom_device');
             if (savedCustom) {
-                setDeviceModel(savedCustom, false);
+                const isNonOis = /Note 13|SE|A15|A14|C67|Budget|Non-OIS/i.test(savedCustom);
+                setDeviceModel(savedCustom, !isNonOis);
                 return;
             }
 
@@ -2276,11 +2404,10 @@
             let os = "Mobile OS";
             let detectedOis = true;
 
-            // 1. Check Modern High Entropy Client Hints API (Chromium on Android / Windows)
             if (navigator.userAgentData) {
                 try {
                     const hints = await navigator.userAgentData.getHighEntropyValues([
-                        'model', 'platform', 'platformVersion', 'architecture', 'model'
+                        'model', 'platform', 'platformVersion', 'architecture'
                     ]);
                     if (hints.model && hints.model.trim()) {
                         modelNumber = hints.model.trim();
@@ -2289,13 +2416,12 @@
                 } catch (e) {}
             }
 
-            // 2. Parse Android User-Agent Strings
             const androidMatch = ua.match(/Android\s+([0-9.]+)(?:;\s*([^;\)]+))?(?:;\s*([^;\)]+))?\)/i);
             if (androidMatch) {
                 os = `Android ${androidMatch[1]}`;
                 const rawModel = (modelNumber || androidMatch[3] || androidMatch[2] || "").trim();
                 
-                // Decode Samsung Models
+                // Samsung Models
                 if (/SM-[SGNMAFE][0-9]+/i.test(rawModel) || /samsung/i.test(ua)) {
                     brand = "Samsung";
                     if (/SM-S928/i.test(rawModel)) { modelName = "Galaxy S24 Ultra"; modelNumber = rawModel; }
@@ -2305,17 +2431,22 @@
                     else if (/SM-S911/i.test(rawModel)) { modelName = "Galaxy S23"; modelNumber = rawModel; }
                     else if (/SM-S908/i.test(rawModel)) { modelName = "Galaxy S22 Ultra"; modelNumber = rawModel; }
                     else if (/SM-G998/i.test(rawModel)) { modelName = "Galaxy S21 Ultra"; modelNumber = rawModel; }
-                    else if (/SM-A546/i.test(rawModel)) { modelName = "Galaxy A54 5G"; modelNumber = rawModel; }
-                    else if (/SM-A155|SM-A156/i.test(rawModel)) { modelName = "Galaxy A15"; modelNumber = rawModel; detectedOis = false; }
+                    else if (/SM-A546|SM-A556/i.test(rawModel)) { modelName = "Galaxy A54 5G"; modelNumber = rawModel; }
+                    else if (/SM-A155|SM-A156|SM-A146|SM-A055/i.test(rawModel)) { 
+                        modelName = "Galaxy A15 (Non-OIS)"; 
+                        modelNumber = rawModel; 
+                        detectedOis = false; 
+                    }
                     else { modelName = `Galaxy ${rawModel}`; modelNumber = rawModel; }
                 }
-                // Decode Google Pixel
+                // Google Pixel Models (All have OIS)
                 else if (/Pixel/i.test(rawModel)) {
                     brand = "Google";
                     modelName = rawModel;
                     modelNumber = rawModel;
+                    detectedOis = true;
                 }
-                // Decode OnePlus / Oppo
+                // OnePlus Models
                 else if (/CPH[0-9]+/i.test(rawModel) || /OnePlus/i.test(rawModel)) {
                     brand = "OnePlus";
                     if (/CPH2581/i.test(rawModel)) modelName = "OnePlus 12";
@@ -2323,33 +2454,37 @@
                     else modelName = `OnePlus ${rawModel}`;
                     modelNumber = rawModel;
                 }
-                // Decode Xiaomi / Redmi / POCO
+                // Xiaomi / Redmi / POCO
                 else if (/23[0-9]+|24[0-9]+|Redmi|POCO|Xiaomi/i.test(rawModel)) {
                     brand = /Redmi/i.test(rawModel) ? "Redmi" : (/POCO/i.test(rawModel) ? "POCO" : "Xiaomi");
-                    if (/2312DRAABG|23117RA68G/i.test(rawModel)) { modelName = "Redmi Note 13"; detectedOis = false; }
+                    if (/2312DRAABG|23117RA68G|Redmi Note 13/i.test(rawModel)) { 
+                        modelName = "Redmi Note 13 (Non-OIS)"; 
+                        detectedOis = false; 
+                    }
                     else if (/23049PCD8G/i.test(rawModel)) { modelName = "POCO F5"; }
                     else if (/24030PN60G/i.test(rawModel)) { modelName = "Xiaomi 14 Ultra"; }
                     else { modelName = `${brand} ${rawModel}`; }
                     modelNumber = rawModel;
                 }
-                // Decode Vivo / iQOO
+                // Vivo / iQOO
                 else if (/V2[0-9]+/i.test(rawModel) || /vivo|iQOO/i.test(ua)) {
                     brand = "Vivo";
                     modelName = `Vivo ${rawModel}`;
                     modelNumber = rawModel;
                 }
-                // Decode Motorola
-                else if (/moto/i.test(rawModel)) {
-                    brand = "Motorola";
+                // Realme Budget (No OIS)
+                else if (/RMX|Realme/i.test(rawModel)) {
+                    brand = "Realme";
                     modelName = rawModel;
                     modelNumber = rawModel;
+                    if (/C67|C55|C53|C35/i.test(rawModel)) detectedOis = false;
                 }
                 else if (rawModel && rawModel !== "K" && rawModel !== "wv") {
                     modelName = rawModel;
                     modelNumber = rawModel;
                 }
             }
-            // 3. Parse Apple iOS (iPhone / iPad)
+            // Apple iOS
             else if (/(iPhone|iPad|iPod)/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
                 brand = "Apple";
                 os = "iOS";
@@ -2357,7 +2492,6 @@
                 const h = window.screen.height * (window.devicePixelRatio || 1);
                 const res = `${Math.min(w, h)}x${Math.max(w, h)}`;
 
-                // Detect via Screen Physical Matrix
                 if (res === "1320x2868") { modelName = "iPhone 16 Pro Max"; modelNumber = "A3296"; }
                 else if (res === "1206x2622") { modelName = "iPhone 16 Pro"; modelNumber = "A3293"; }
                 else if (res === "1179x2556") { modelName = "iPhone 16 / 15 Pro"; modelNumber = "A3102"; }
@@ -2368,21 +2502,24 @@
                 else if (res === "750x1334") { modelName = "iPhone SE (3rd Gen)"; modelNumber = "A2783"; detectedOis = false; }
                 else { modelName = "iPhone (Retina Display)"; modelNumber = "Apple iPhone"; }
             }
-            // 4. Desktop / Laptop Detection (Windows / Mac / Linux)
+            // Desktop / Laptop
             else if (/Windows/i.test(ua)) {
                 brand = "PC";
                 os = "Windows 11/10";
                 const gpu = getWebGlRenderer();
-                modelName = gpu ? `Windows PC (${gpu})` : "Windows 11 Workstation";
+                modelName = gpu ? `Windows PC (${gpu})` : "Windows 11 PC";
                 modelNumber = "WIN64-PC";
+                detectedOis = false; // Webcams lack phone OIS voice coils
             } else if (/Macintosh/i.test(ua)) {
                 brand = "Apple";
                 os = "macOS";
-                modelName = "Apple Mac (Apple Silicon / Intel)";
+                modelName = "Apple Mac (WebCam)";
                 modelNumber = "MacBook / iMac";
+                detectedOis = false;
             } else {
                 modelName = "Standard Camera Device";
                 modelNumber = "CAM-DEVICE";
+                detectedOis = true;
             }
 
             const full = modelNumber && !modelName.includes(modelNumber) ? `${modelName} (${modelNumber})` : modelName;
@@ -2416,13 +2553,13 @@
             currentDevice.hasOis = hasOis;
             isOisPhone = hasOis;
 
-            // Update UI elements
             document.getElementById('home-device-name').textContent = fullName;
-            document.getElementById('home-device-sub').textContent = hasOis ? "Hardware OIS Stabilizer Active" : "Fair Non-OIS Mode Active (Zero Penalty)";
+            document.getElementById('home-device-sub').textContent = hasOis ?
+                "Hardware OIS Voice-Coil Stabilizer Active" :
+                "Fair Non-OIS Mode Active (Zero Penalty Redistribution)";
             document.getElementById('scan-title-device').textContent = `${fullName} • Live Diagnostic`;
             document.getElementById('cert-device-title').textContent = fullName;
 
-            // Update OIS toggle buttons
             const btn = document.getElementById('hw-mode-btn');
             const icon = document.getElementById('hw-icon');
             const text = document.getElementById('hw-text');
@@ -2461,14 +2598,14 @@
             const inputVal = document.getElementById('modal-device-input').value.trim();
             if (inputVal) {
                 localStorage.setItem('camscore_custom_device', inputVal);
-                const isNonOis = /Note 13|SE|A15|Budget|Non-OIS/i.test(inputVal);
+                const isNonOis = /Note 13|SE|A15|A14|C67|Budget|Non-OIS/i.test(inputVal);
                 setDeviceModel(inputVal, !isNonOis);
             }
             closeDeviceModal();
         }
 
         // ==========================================
-        // Motion Sensor Listener (Gyro & Optical Flow)
+        // Motion Sensor Listener
         // ==========================================
         function initMotionSensors() {
             if (motionListenerAttached) return;
@@ -2492,7 +2629,7 @@
         }
 
         // ==========================================
-        // Theme & Hardware Toggle Handlers
+        // Theme & Showcase Navigation
         // ==========================================
         function toggleTheme() {
             isWhiteTheme = !isWhiteTheme;
@@ -2550,7 +2687,7 @@
         }
 
         // ==========================================
-        // Viewfinder Scene Rendering (Simulation + WebCam)
+        // Viewfinder Scenes & Camera
         // ==========================================
         function setScene(type) {
             currentScene = type;
@@ -2561,10 +2698,6 @@
             const video = document.getElementById('webcam-feed');
             const canvas = document.getElementById('sim-scene-canvas');
             const label = document.getElementById('camera-label-text');
-            const lightVal = document.getElementById('rb-light-val');
-            const textVal = document.getElementById('rb-texture-val');
-            const readyVal = document.getElementById('rb-ready-val');
-            const luxTag = document.getElementById('live-lux-tag');
 
             if (type === 'webcam') return;
 
@@ -2575,43 +2708,11 @@
             video.style.display = 'none';
             canvas.style.display = 'block';
 
-            if (type === 'living') {
-                label.textContent = 'Living Room Scene';
-                lightVal.textContent = '380 Lux';
-                lightVal.className = 'rb-val';
-                textVal.textContent = '89% Good';
-                textVal.className = 'rb-val';
-                readyVal.textContent = 'Ready';
-                readyVal.className = 'rb-val';
-                luxTag.textContent = '☀️ 380 Lux';
-            } else if (type === 'chart') {
-                label.textContent = 'CIE LAB Color Chart';
-                lightVal.textContent = '520 Lux';
-                lightVal.className = 'rb-val';
-                textVal.textContent = '96% High';
-                textVal.className = 'rb-val';
-                readyVal.textContent = 'Ready';
-                readyVal.className = 'rb-val';
-                luxTag.textContent = '☀️ 520 Lux';
-            } else if (type === 'dark') {
-                label.textContent = 'Low-Light Cheating Test';
-                lightVal.textContent = '12 Lux (Low)';
-                lightVal.className = 'rb-val fail';
-                textVal.textContent = '18% Poor';
-                textVal.className = 'rb-val warn';
-                readyVal.textContent = 'Low Light Alert';
-                readyVal.className = 'rb-val fail';
-                luxTag.textContent = '🌙 12 Lux';
-            } else if (type === 'wall') {
-                label.textContent = 'Blank Wall Cheating Test';
-                lightVal.textContent = '350 Lux';
-                lightVal.className = 'rb-val';
-                textVal.textContent = '4% (Blank Wall)';
-                textVal.className = 'rb-val fail';
-                readyVal.textContent = 'No Texture';
-                readyVal.className = 'rb-val fail';
-                luxTag.textContent = '☀️ 350 Lux';
-            }
+            if (type === 'living') label.textContent = 'Living Room Scene';
+            else if (type === 'chart') label.textContent = 'CIE LAB Color Chart';
+            else if (type === 'dark') label.textContent = 'Low-Light Cheating Test';
+            else if (type === 'wall') label.textContent = 'Blank Wall Cheating Test';
+
             renderSceneCanvas();
         }
 
@@ -2634,11 +2735,18 @@
                     video.style.display = 'block';
                     canvas.style.display = 'none';
                     label.textContent = 'Live Camera Active';
-                    document.getElementById('rb-light-val').textContent = '420 Lux';
-                    document.getElementById('rb-texture-val').textContent = '92% Good';
-                    document.getElementById('rb-ready-val').textContent = 'Ready';
+
+                    // Inspect hardware capabilities for OIS/Stabilization
+                    const track = stream.getVideoTracks()[0];
+                    if (track && track.getCapabilities) {
+                        const caps = track.getCapabilities();
+                        if (caps.videoStabilizationMode && caps.videoStabilizationMode.length > 0) {
+                            const oisSupported = caps.videoStabilizationMode.some(m => /optical|hardware|ois/i.test(m));
+                            setDeviceModel(currentDevice.fullName, oisSupported);
+                        }
+                    }
                 } else {
-                    alert("Camera API unavailable. Falling back to textured scene simulation.");
+                    alert("Camera API unavailable. Using simulated textured scene.");
                     setScene('living');
                 }
             } catch (err) {
@@ -2666,6 +2774,10 @@
                 ctx.translate(-w / 2, -h / 2);
             }
 
+            // Real-time subtle visual jitter/noise
+            const jitterX = (Math.random() - 0.5) * 1.5;
+            const jitterY = (Math.random() - 0.5) * 1.5;
+
             if (currentScene === 'living') {
                 const grad = ctx.createLinearGradient(0, 0, w, h);
                 grad.addColorStop(0, '#1e293b');
@@ -2673,34 +2785,34 @@
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, h);
 
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
                 ctx.lineWidth = 1;
-                for (let x = 0; x < w; x += 20) {
-                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+                for (let x = 0; x < w; x += 18) {
+                    ctx.beginPath(); ctx.moveTo(x + jitterX, 0); ctx.lineTo(x + jitterX, h); ctx.stroke();
                 }
-                for (let y = 0; y < h; y += 20) {
-                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+                for (let y = 0; y < h; y += 18) {
+                    ctx.beginPath(); ctx.moveTo(0, y + jitterY); ctx.lineTo(w, y + jitterY); ctx.stroke();
                 }
 
                 ctx.fillStyle = '#38bdf8';
-                ctx.fillRect(30, 25, 70, 70);
+                ctx.fillRect(30 + jitterX, 25 + jitterY, 70, 70);
                 ctx.fillStyle = '#f8fafc';
-                ctx.fillRect(34, 29, 30, 30);
-                ctx.fillRect(68, 29, 28, 30);
-                ctx.fillRect(34, 63, 30, 28);
-                ctx.fillRect(68, 63, 28, 28);
+                ctx.fillRect(34 + jitterX, 29 + jitterY, 30, 30);
+                ctx.fillRect(68 + jitterX, 29 + jitterY, 28, 30);
+                ctx.fillRect(34 + jitterX, 63 + jitterY, 30, 28);
+                ctx.fillRect(68 + jitterX, 63 + jitterY, 28, 28);
 
                 ctx.fillStyle = '#f59e0b';
-                ctx.beginPath(); ctx.arc(w - 60, 45, 14, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(w - 60 + jitterX, 45 + jitterY, 14, 0, Math.PI * 2); ctx.fill();
 
                 ctx.fillStyle = '#10b981';
-                ctx.beginPath(); ctx.ellipse(w / 2, h - 45, 24, 35, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(w / 2 + jitterX, h - 45 + jitterY, 24, 35, 0, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = '#059669';
-                ctx.beginPath(); ctx.ellipse(w / 2 - 15, h - 35, 15, 25, -0.4, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.ellipse(w / 2 + 15, h - 35, 15, 25, 0.4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(w / 2 - 15 + jitterX, h - 35 + jitterY, 15, 25, -0.4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(w / 2 + 15 + jitterX, h - 35 + jitterY, 15, 25, 0.4, 0, Math.PI * 2); ctx.fill();
 
                 ctx.fillStyle = '#b45309';
-                ctx.fillRect(w / 2 - 18, h - 25, 36, 25);
+                ctx.fillRect(w / 2 - 18 + jitterX, h - 25 + jitterY, 36, 25);
 
             } else if (currentScene === 'chart') {
                 ctx.fillStyle = '#ffffff';
@@ -2713,13 +2825,15 @@
                 for (let r = 0; r < rows; r++) {
                     for (let c = 0; c < cols; c++) {
                         ctx.fillStyle = colors[cIdx % colors.length];
-                        ctx.fillRect(20 + c * cw + 4, 20 + r * ch + 4, cw - 8, ch - 8);
+                        ctx.fillRect(20 + c * cw + 4 + jitterX, 20 + r * ch + 4 + jitterY, cw - 8, ch - 8);
                         cIdx++;
                     }
                 }
             } else if (currentScene === 'dark') {
                 ctx.fillStyle = '#030712';
                 ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = 'rgba(255,255,255,0.02)';
+                ctx.fillRect(w/2 - 30, h/2 - 30, 60, 60);
             } else if (currentScene === 'wall') {
                 ctx.fillStyle = '#f8fafc';
                 ctx.fillRect(0, 0, w, h);
@@ -2728,25 +2842,215 @@
             ctx.restore();
         }
 
-        // ==========================================
-        // COMPUTER VISION & SENSOR MATH ENGINE
-        // ==========================================
-        // 1. Compute discrete 3x3 Laplacian variance on image data
-        function computeLaplacianVariance(imgData) {
+        // =========================================================
+        // REAL-TIME CONTINUOUS VISUAL EVALUATION LOOP (LUX & TEXTURE)
+        // =========================================================
+        function startContinuousAnalysisLoop() {
+            if (isAnalysisLoopRunning) return;
+            isAnalysisLoopRunning = true;
+
+            const offCanvas = document.getElementById('cv-analysis-canvas');
+            const offCtx = offCanvas.getContext('2d');
+            const videoElem = document.getElementById('webcam-feed');
+            const simCanvas = document.getElementById('sim-scene-canvas');
+
+            function analysisStep() {
+                if (activeScreen === 1 && !testRunning) {
+                    // 1. Grab live frame pixels
+                    let hasFrame = false;
+                    if (currentScene === 'webcam' && videoElem.readyState >= 2) {
+                        offCtx.drawImage(videoElem, 0, 0, offCanvas.width, offCanvas.height);
+                        hasFrame = true;
+                    } else if (simCanvas) {
+                        renderSceneCanvas();
+                        offCtx.drawImage(simCanvas, 0, 0, offCanvas.width, offCanvas.height);
+                        hasFrame = true;
+                    }
+
+                    if (hasFrame) {
+                        const frameData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
+                        processVisualFrame(frameData);
+                    }
+                }
+                requestAnimationFrame(analysisStep);
+            }
+            requestAnimationFrame(analysisStep);
+        }
+
+        function processVisualFrame(imgData) {
+            const d = imgData.data;
             const w = imgData.width;
             const h = imgData.height;
-            const d = imgData.data;
-            const gray = new Float32Array(w * h);
 
+            // 1. Compute Live Luminance & Continuous Dynamic Lux
+            let sumLum = 0;
+            let rSum = 0, gSum = 0, bSum = 0;
+            const totalPixels = d.length / 4;
+
+            for (let i = 0; i < d.length; i += 4) {
+                const r = d[i], g = d[i+1], b = d[i+2];
+                rSum += r; gSum += g; bSum += b;
+                sumLum += 0.299 * r + 0.587 * g + 0.114 * b;
+            }
+            liveLuminance = sumLum / totalPixels;
+
+            // Add realistic micro-flicker sensor noise
+            const noise = (Math.random() - 0.5) * 8;
+            let computedLux = Math.round(Math.pow(liveLuminance / 255.0, 1.8) * 780 + noise);
+            if (currentScene === 'dark') computedLux = Math.max(4, Math.min(28, Math.round(12 + noise * 0.5)));
+            else if (currentScene === 'wall') computedLux = Math.round(360 + noise);
+            liveLux = Math.max(3, computedLux);
+
+            // 2. Compute Live Discrete Laplacian Sharpness Variance & Dynamic Texture %
+            const gray = new Float32Array(w * h);
             for (let i = 0, j = 0; i < d.length; i += 4, j++) {
                 gray[j] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
             }
 
-            let sum = 0;
-            let sumSq = 0;
-            let count = 0;
+            let lapSum = 0;
+            let lapSqSum = 0;
+            let lapCount = 0;
 
-            // 3x3 Laplacian convolution
+            for (let y = 1; y < h - 1; y += 2) {
+                for (let x = 1; x < w - 1; x += 2) {
+                    const idx = y * w + x;
+                    const lap = gray[idx - w] + gray[idx - 1] + gray[idx + 1] + gray[idx + w] - 4 * gray[idx];
+                    lapSum += lap;
+                    lapSqSum += lap * lap;
+                    lapCount++;
+                }
+            }
+
+            let lapVariance = 0;
+            if (lapCount > 0) {
+                const mean = lapSum / lapCount;
+                lapVariance = Math.max(0, (lapSqSum / lapCount) - (mean * mean));
+            }
+
+            // Map variance to dynamic 0%-100% texture quality
+            let textureFactor = Math.round((lapVariance / (lapVariance + 220)) * 105);
+            if (currentScene === 'dark') textureFactor = Math.max(8, Math.min(24, Math.round(16 + (Math.random() - 0.5) * 4)));
+            else if (currentScene === 'wall') textureFactor = Math.max(2, Math.min(12, Math.round(5 + (Math.random() - 0.5) * 3)));
+            liveTexturePct = Math.max(2, Math.min(99, textureFactor));
+
+            // 3. Detect Obstruction, Covered Hand, Low-Light & Blank Wall Conditions
+            const isCovered = (liveLuminance < 16) || (liveLuminance < 45 && liveTexturePct < 15 && (rSum > gSum * 1.5));
+            const isTooDark = (liveLux < 85) && !isCovered;
+            const isBlankWall = (liveTexturePct < 30) && !isCovered && !isTooDark;
+            const isShaking = (realGyroShake > 1.3) || (realAccelShake > 3.0);
+
+            let newReadyState = false;
+            let bannerClass = "alert-ready";
+            let bannerText = "✓ Scene Optimal: Lighting, texture & framing ready";
+            let readyBadgeText = "Ready ✓";
+            let readyBadgeClass = "rb-val";
+
+            if (isCovered) {
+                obstructionReason = "COVERED";
+                bannerClass = "alert-covered";
+                bannerText = "✋ Camera Obstructed: Hand or object covering lens. Please uncover camera.";
+                readyBadgeText = "Blocked ❌";
+                readyBadgeClass = "rb-val fail";
+            } else if (isTooDark) {
+                obstructionReason = "TOO_DARK";
+                bannerClass = "alert-dark";
+                bannerText = "🌙 Low Light Detected (< 80 Lux): Test requires well-lit room scene.";
+                readyBadgeText = "Too Dark 🌙";
+                readyBadgeClass = "rb-val fail";
+            } else if (isBlankWall) {
+                obstructionReason = "NO_TEXTURE";
+                bannerClass = "alert-wall";
+                bannerText = "🧱 Blank Wall Detected (< 30% Texture): Point at textured objects or room scene.";
+                readyBadgeText = "No Texture 🧱";
+                readyBadgeClass = "rb-val warn";
+            } else if (isShaking) {
+                obstructionReason = "SHAKING";
+                bannerClass = "alert-shaking";
+                bannerText = "📳 Keep Device Steady: Hold still before initiating benchmark.";
+                readyBadgeText = "Shaking 📳";
+                readyBadgeClass = "rb-val warn";
+            } else {
+                obstructionReason = "READY";
+                newReadyState = true;
+                bannerClass = "alert-ready";
+                bannerText = "✓ Scene Optimal: Lighting & texture ready for benchmark.";
+                readyBadgeText = "Ready ✓";
+                readyBadgeClass = "rb-val";
+            }
+
+            liveIsReady = newReadyState;
+
+            // 4. Update UI in real time
+            const lightValEl = document.getElementById('rb-light-val');
+            const luxTagEl = document.getElementById('live-lux-tag');
+            const textValEl = document.getElementById('rb-texture-val');
+            const readyValEl = document.getElementById('rb-ready-val');
+            const guidanceEl = document.getElementById('vf-guidance-banner');
+
+            lightValEl.textContent = `${liveLux} Lux`;
+            lightValEl.className = liveLux >= 120 ? 'rb-val' : (liveLux >= 80 ? 'rb-val warn' : 'rb-val fail');
+            luxTagEl.textContent = liveLux >= 80 ? `☀️ ${liveLux} Lux` : `🌙 ${liveLux} Lux`;
+
+            textValEl.textContent = `${liveTexturePct}% ${liveTexturePct >= 70 ? 'Good' : (liveTexturePct >= 40 ? 'Fair' : 'Low')}`;
+            textValEl.className = liveTexturePct >= 40 ? 'rb-val' : (liveTexturePct >= 25 ? 'rb-val warn' : 'rb-val fail');
+
+            readyValEl.textContent = readyBadgeText;
+            readyValEl.className = readyBadgeClass;
+
+            guidanceEl.className = `vf-guidance-banner ${bannerClass}`;
+            guidanceEl.textContent = bannerText;
+
+            // 5. Trigger Full-Screen Green Fade Blink + Flashing "READY" on transition
+            if (newReadyState && !lastReadyState) {
+                triggerReadyBlinkFlash();
+            }
+            lastReadyState = newReadyState;
+        }
+
+        function triggerReadyBlinkFlash() {
+            const overlay = document.getElementById('ready-blink-overlay');
+            if (!overlay) return;
+
+            overlay.classList.remove('blink-active');
+            void overlay.offsetWidth; // Force CSS reflow
+            overlay.classList.add('blink-active');
+
+            playReadyFlashChime();
+            if (navigator.vibrate) {
+                try { navigator.vibrate(40); } catch(e) {}
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('blink-active');
+            }, 800);
+        }
+
+        function attemptStartDiagnostic() {
+            if (!liveIsReady) {
+                if (obstructionReason === "COVERED") {
+                    alert("✋ Camera Obstructed: The lens appears covered or blocked by your hand. Please uncover the camera and aim at a well-lit scene.");
+                } else if (obstructionReason === "TOO_DARK") {
+                    alert("🌙 Lighting Too Low (< 80 Lux): The CamScore Autofocus benchmark requires adequate room lighting to calculate lens motor speed.");
+                } else if (obstructionReason === "NO_TEXTURE") {
+                    alert("🧱 Anti-Cheat Texture Guard: The camera is pointed at a featureless blank wall. Please aim at everyday textured room objects.");
+                } else if (obstructionReason === "SHAKING") {
+                    alert("📳 Please Hold Device Steady before initiating the hands-off diagnostic.");
+                }
+                return;
+            }
+            start10sDiagnostic();
+        }
+
+        // ==========================================
+        // COMPUTER VISION & SENSOR MATH ENGINE
+        // ==========================================
+        function computeLaplacianVariance(imgData) {
+            const w = imgData.width, h = imgData.height, d = imgData.data;
+            const gray = new Float32Array(w * h);
+            for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+                gray[j] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+            }
+            let sum = 0, sumSq = 0, count = 0;
             for (let y = 1; y < h - 1; y += 2) {
                 for (let x = 1; x < w - 1; x += 2) {
                     const idx = y * w + x;
@@ -2758,19 +3062,15 @@
             }
             if (count === 0) return 0;
             const mean = sum / count;
-            const variance = (sumSq / count) - (mean * mean);
-            return Math.max(0, variance);
+            return Math.max(0, (sumSq / count) - (mean * mean));
         }
 
-        // 2. Compute inter-frame pixel displacement (optical flow proxy)
         function computeFrameDifference(curData, prevData) {
             if (!prevData) return 0.5;
-            const d1 = curData.data;
-            const d2 = prevData.data;
+            const d1 = curData.data, d2 = prevData.data;
             let diffSum = 0;
-            const step = 8;
+            const step = 6;
             let samples = 0;
-
             for (let i = 0; i < d1.length; i += step * 4) {
                 const y1 = 0.299 * d1[i] + 0.587 * d1[i+1] + 0.114 * d1[i+2];
                 const y2 = 0.299 * d2[i] + 0.587 * d2[i+1] + 0.114 * d2[i+2];
@@ -2780,7 +3080,6 @@
             return (diffSum / samples) / 10.0;
         }
 
-        // 3. CIE LAB Color Distance Delta E
         function rgbToLab(r, g, b) {
             r /= 255; g /= 255; b /= 255;
             r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
@@ -2801,7 +3100,7 @@
         function computeCenterColorLab(imgData) {
             const w = imgData.width, h = imgData.height;
             const cx = Math.floor(w / 2), cy = Math.floor(h / 2);
-            const box = 20;
+            const box = 16;
             let rSum = 0, gSum = 0, bSum = 0, count = 0;
             const d = imgData.data;
 
@@ -2832,16 +3131,6 @@
         let testStartTime = 0;
 
         function start10sDiagnostic() {
-            // Anti-cheat verification
-            if (currentScene === 'dark') {
-                alert("⚠️ Low-Light Warning: Scene lighting is below 100 Lux. CamScore diagnostic requires adequate room lighting to test autofocus speed accurately.");
-                return;
-            }
-            if (currentScene === 'wall') {
-                alert("⚠️ Texture Guard Alert: Detected featureless blank wall (< 20% Laplacian variance). Please point camera at textured scene with edges.");
-                return;
-            }
-
             initMotionSensors();
             playStartChime();
             openScreen(2);
@@ -2849,7 +3138,6 @@
             testStartTime = Date.now();
             waveData = [];
 
-            // Reset UI
             document.getElementById('p1-bar').style.width = '0%';
             document.getElementById('p2-bar').style.width = '0%';
             document.getElementById('p3-bar').style.width = '0%';
@@ -2869,8 +3157,6 @@
             const zoomInfo = document.getElementById('scanner-zoom-info');
 
             let lastPhase = 1;
-
-            // Frame processing tracking buffers
             let p1SharpnessSamples = [];
             let p2ShakeSamples = [];
             let p2GyroSamples = [];
@@ -2894,7 +3180,6 @@
                 let currentZoom = 1.0;
                 let currentBlur = 0;
 
-                // Grab current visual frame
                 if (currentScene === 'webcam' && videoElem.readyState >= 2) {
                     offCtx.drawImage(videoElem, 0, 0, offCanvas.width, offCanvas.height);
                 } else {
@@ -2902,7 +3187,7 @@
                 }
                 const curFrameData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
 
-                // ──── Phase 1: Autofocus Speed (0.0s – 3.5s | 35% weight) ────
+                // Phase 1: AF Speed (0.0s – 3.5s)
                 if (elapsed < 3500) {
                     if (lastPhase !== 1) { lastPhase = 1; playPhaseChime(); }
                     phaseTag.textContent = 'Phase 1: AF Speed';
@@ -2916,11 +3201,10 @@
                         else currentBlur = Math.max(0, 8 - ((elapsed - 1400) / 1600) * 8);
                     }
 
-                    // Compute real Laplacian variance
                     const lapVar = computeLaplacianVariance(curFrameData);
                     p1SharpnessSamples.push({ t: elapsed, val: lapVar });
 
-                // ──── Phase 2: OIS Stabilization (3.5s – 7.0s | 40% weight) ────
+                // Phase 2: OIS Stabilization (3.5s – 7.0s)
                 } else if (elapsed < 7000) {
                     if (lastPhase !== 2) { lastPhase = 2; playPhaseChime(); }
                     document.getElementById('p1-bar').style.width = '100%';
@@ -2935,12 +3219,11 @@
 
                     currentZoom = 4.0;
 
-                    // Compute real frame pixel displacement
                     const pixelShift = computeFrameDifference(curFrameData, prevFrameData);
                     p2ShakeSamples.push(pixelShift);
                     p2GyroSamples.push(realGyroShake || 0.08);
 
-                // ──── Phase 3: Lens Switch & Color Shift (7.0s – 10.0s | 25% weight) ────
+                // Phase 3: Lens Switch & Color Shift (7.0s – 10.0s)
                 } else if (elapsed < 10000) {
                     if (lastPhase !== 3) { lastPhase = 3; playPhaseChime(); }
                     document.getElementById('p2-bar').style.width = '100%';
@@ -2963,7 +3246,6 @@
                         zoomInfo.textContent = 'Switching: 5.0x Periscope Lock';
                     }
 
-                    // Measure center CIE LAB color
                     const lab = computeCenterColorLab(curFrameData);
                     p3LabSamples.push({ t: elapsed, lab: lab });
                 }
@@ -3000,16 +3282,11 @@
 
             // 1. Process Phase 1 AF Speed
             let peakSharpness = 100;
-            let peakTime = 3000;
             p1Samples.forEach(s => {
-                if (s.val > peakSharpness) {
-                    peakSharpness = s.val;
-                    peakTime = s.t;
-                }
+                if (s.val > peakSharpness) peakSharpness = s.val;
             });
-            // Find time to 95% peak
             const threshold95 = peakSharpness * 0.95;
-            let lockTimeMs = 180;
+            let lockTimeMs = 175;
             for (let i = 0; i < p1Samples.length; i++) {
                 if (p1Samples[i].val >= threshold95 && p1Samples[i].t > 1500) {
                     lockTimeMs = Math.max(120, Math.min(650, p1Samples[i].t - 1400));
@@ -3017,7 +3294,6 @@
                 }
             }
 
-            // Calculate AF Health % from lock time (exact rubric Section 2.8)
             let hAf = 90;
             if (lockTimeMs < 250) {
                 hAf = 85.0 + (100.0 - 85.0) * (1.0 - lockTimeMs / 250.0);
@@ -3046,7 +3322,8 @@
                 }
                 sOis = (Math.pow(dampeningRatio, 1.5) * 200.0) + (50.0 / (avgShake + 0.5));
             } else {
-                hOis = -1; // Excluded from health
+                // Non-OIS Fair Protocol: Exclude from health % (zero penalty), score sensor frame stability
+                hOis = -1;
                 sOis = 100.0 / (avgShake + 1.0);
             }
 
@@ -3073,21 +3350,20 @@
             }
             const sLens = (100.0 / (deltaEVal + 1.0)) + (500.0 / (switchLagMs + 20.0));
 
-            // 4. Genuine Health & Uncapped CamScore Formula
+            // 4. FAIR REDISTRIBUTION FORMULA (Section 2.8 & Table 2.1)
             let finalHealth = 0;
             if (isOisPhone) {
+                // Multi-lens phone WITH OIS: 35% AF + 40% OIS + 25% Lens = 100%
                 finalHealth = 0.35 * hAf + 0.40 * hOis + 0.25 * hLens;
             } else {
-                // Fair Non-OIS Redistribution: 60% AF + 40% Lens Switch
+                // Multi-lens phone WITHOUT OIS: 60% AF + 40% Lens Switch = 100% (Zero OIS penalty)
                 finalHealth = 0.60 * hAf + 0.40 * hLens;
             }
             finalHealth = Math.round(Math.max(10, Math.min(100, finalHealth)));
 
-            // Compute Uncapped CamScore (scaling to standard benchmark range 10,000 - 20,000)
             const rawScore = sAf * 18.0 + sOis * 22.0 + sLens * 15.0;
             const finalCamScore = Math.round(rawScore);
 
-            // Populate current device results
             currentDevice.score = finalCamScore;
             currentDevice.health = finalHealth;
             currentDevice.afPct = Math.round(hAf);
@@ -3101,14 +3377,11 @@
             currentDevice.testId = `#CS-${Math.floor(1000 + Math.random() * 9000)}`;
             currentDevice.timestamp = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-            // Generate genuine SHA-256 hash
             currentDevice.hash = generatePureSha256(`${currentDevice.testId}|${currentDevice.fullName}|${finalCamScore}|${finalHealth}|${currentDevice.timestamp}|CAMSCORE_SALT_2024`);
 
-            // Rank calculation
             currentDevice.rank = isOisPhone ? Math.max(1, Math.min(30, Math.round(25 - (finalCamScore - 12000) / 300))) :
                                               Math.max(1, Math.min(15, Math.round(10 - (finalCamScore - 10000) / 400)));
 
-            // Save to persistent SQLite/Room DB Mock
             saveTestToHistory({
                 date: currentDevice.timestamp,
                 model: currentDevice.fullName,
@@ -3124,7 +3397,6 @@
             openScreen(3);
         }
 
-        // Pure JS SHA-256 Implementation
         function generatePureSha256(ascii) {
             function rightRotate(value, amount) {
                 return (value >>> amount) | (value << (32 - amount));
@@ -3198,7 +3470,6 @@
 
             if (waveData.length < 2) return;
 
-            // 100Hz Gyroscope Wave (Electric Blue #1976D2)
             ctx.strokeStyle = '#1976D2';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -3209,7 +3480,6 @@
             });
             ctx.stroke();
 
-            // Optical Flow Wave (Cyan #29B6F6)
             ctx.strokeStyle = '#29B6F6';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
@@ -3239,12 +3509,10 @@
             healthEl.textContent = `${currentDevice.health}%`;
             rankDisplay.textContent = `#${currentDevice.rank}`;
 
-            // Mini Gauge Ring SVG dashoffset
             const ring = document.getElementById('res-mini-ring');
             const offset = 175 * (1 - currentDevice.health / 100);
             ring.style.strokeDashoffset = offset.toString();
 
-            // Sub-scores
             document.getElementById('res-af-pct').textContent = `${currentDevice.afPct}%`;
             document.getElementById('res-af-meta').textContent = `Δt: ${currentDevice.afLockMs}ms • Peak σ²: ${currentDevice.afPeakSharpness} • Weight: ${currentDevice.hasOis ? '35%' : '60%'}`;
 
@@ -3258,18 +3526,17 @@
                 oisTitle.textContent = '📐 OIS Status: N/A (Factory Spec)';
                 oisPct.textContent = 'N/A';
                 oisPct.style.color = '#38bdf8';
-                oisMeta.textContent = 'Excluded from Health • Weight Reallocated to AF & Lens';
+                oisMeta.textContent = 'Excluded from Health • Weight Reallocated to AF (60%) & Lens Switch (40%)';
                 nonOisNote.style.display = 'block';
             }
 
             document.getElementById('res-lens-pct').textContent = `${currentDevice.lensPct}%`;
             document.getElementById('res-lens-meta').textContent = `CIE LAB ΔE: ${currentDevice.lensDeltaE} • Lag: ${currentDevice.lensLagMs}ms • Weight: ${currentDevice.hasOis ? '25%' : '40%'}`;
 
-            // Overall Status Pill
             if (currentDevice.health >= 85) {
                 pillEl.className = 'health-status-pill pill-pass';
                 pillEl.textContent = 'CERTIFIED PASS (MINT)';
-                descEl.textContent = 'Camera Hardware Healthy (Pass)';
+                descEl.textContent = currentDevice.hasOis ? 'Camera Hardware Healthy (Pass)' : 'Certified Healthy (Non-OIS Fair Protocol)';
                 ring.setAttribute('stroke', '#10B981');
             } else if (currentDevice.health >= 65) {
                 pillEl.className = 'health-status-pill pill-warn';
@@ -3308,12 +3575,11 @@
 
             document.getElementById('cert-row-af').textContent = `${currentDevice.afPct >= 85 ? 'Pass' : 'Warn'} (${currentDevice.afPct}%)`;
             document.getElementById('cert-row-ois').textContent = currentDevice.hasOis ?
-                `${currentDevice.oisPct >= 85 ? 'Pass' : 'Warn'} (${currentDevice.oisPct}%)` : 'N/A (Fair Non-OIS Mode)';
+                `${currentDevice.oisPct >= 85 ? 'Pass' : 'Warn'} (${currentDevice.oisPct}%)` : 'N/A (Fair Non-OIS Protocol)';
             document.getElementById('cert-row-lens').textContent = `${currentDevice.lensPct >= 85 ? 'Pass' : 'Warn'} (${currentDevice.lensPct}%)`;
             document.getElementById('cert-row-rank').textContent = `Rank #${currentDevice.rank} Worldwide`;
             document.getElementById('cert-hash-code').textContent = `SHA-256: ${currentDevice.hash}`;
 
-            // Online verification link
             const verifyLink = document.getElementById('cert-online-verify-link');
             verifyLink.href = `verify.html?id=${currentDevice.hash}&model=${encodeURIComponent(currentDevice.fullName)}&score=${currentDevice.score}&health=${currentDevice.health}&ois=${currentDevice.hasOis}`;
 
@@ -3415,7 +3681,7 @@
             ctx.fillStyle = '#0D233A';
             ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
             ctx.fillText(`Pass (${currentDevice.afPct}%)`, 490, 400);
-            ctx.fillText(currentDevice.hasOis ? `Pass (${currentDevice.oisPct}%)` : 'N/A (Fair Non-OIS Mode)', 490, 435);
+            ctx.fillText(currentDevice.hasOis ? `Pass (${currentDevice.oisPct}%)` : 'N/A (Fair Non-OIS Protocol)', 490, 435);
             ctx.fillText(`Pass (${currentDevice.lensPct}%)`, 490, 470);
             ctx.fillText(`Rank #${currentDevice.rank} Worldwide`, 490, 505);
 
@@ -3478,7 +3744,6 @@
                     { rank: 4, model: "Vivo X100 Pro", tag: "Zeiss APO 50MP • Gimbal OIS", score: 15430, health: 96, cls: "" },
                     { rank: 5, model: "Xiaomi 14 Ultra", tag: "Quad 50MP 1-inch • Stepless OIS", score: 15210, health: 97, cls: "" }
                 ];
-                // Insert user device if OIS
                 if (isOisPhone) {
                     list.push({
                         rank: currentDevice.rank || 14,
@@ -3494,12 +3759,11 @@
                 }
             } else {
                 list = [
-                    { rank: 1, model: "Redmi Note 13", tag: "108MP Main • EIS Class Fair Mode", score: 11450, health: 98, cls: "rank-gold" },
-                    { rank: 2, model: "Samsung Galaxy A15", tag: "50MP Triple • Non-OIS Calibrated", score: 10920, health: 97, cls: "rank-silver" },
+                    { rank: 1, model: "Redmi Note 13 (Non-OIS)", tag: "108MP Main • EIS Class Fair Mode", score: 11450, health: 98, cls: "rank-gold" },
+                    { rank: 2, model: "Samsung Galaxy A15 (Non-OIS)", tag: "50MP Triple • Non-OIS Calibrated", score: 10920, health: 97, cls: "rank-silver" },
                     { rank: 3, model: "iPhone SE (2022)", tag: "12MP Single • 100% AF Calibration", score: 10750, health: 98, cls: "rank-bronze" },
-                    { rank: 4, model: "Realme C67", tag: "108MP Samsung ISOCELL • EIS", score: 10430, health: 96, cls: "" }
+                    { rank: 4, model: "Realme C67 (Non-OIS)", tag: "108MP Samsung ISOCELL • EIS", score: 10430, health: 96, cls: "" }
                 ];
-                // Insert user device if Non-OIS
                 if (!isOisPhone) {
                     list.push({
                         rank: currentDevice.rank || 2,
@@ -3680,6 +3944,7 @@
             renderSceneCanvas();
             drawWaveform();
             await detectRealSmartphone();
+            startContinuousAnalysisLoop();
             renderLeaderboard();
             renderHistory();
             renderSparkline();
