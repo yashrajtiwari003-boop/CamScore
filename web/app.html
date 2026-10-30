@@ -1,451 +1,3100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CamScore by Fischer Labs — 10-Second Camera Hardware Diagnostic Benchmark</title>
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --background: #0a0f1d;
-      --foreground: #f8fafc;
-      --card: #111827;
-      --sidebar: #1e293b;
-      --border: #334155;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --muted-foreground: #94a3b8;
-      --ring-track: #1e293b;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CamScore by Fischer Labs — 10-Second Camera Hardware Diagnostic & Leaderboard</title>
+    <meta name="description" content="World's first cross-platform, on-device, zero-lab-equipment smartphone camera benchmark and hardware health diagnostic tool.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Dark Theme of Project X (Figure 3.1 & Section 3.2) */
+            --bg-canvas: #0A192F;
+            --surface: #112240;
+            --surface-card: #172A45;
+            --text-primary: #E6F1FF;
+            --text-secondary: #8892B0;
+            --primary: #1976D2;
+            --primary-accent: #29B6F6;
+            --pass: #10B981;
+            --warn: #F59E0B;
+            --fail: #EF4444;
+            --border: rgba(255, 255, 255, 0.08);
+            --header-bg: #112240;
+            --nav-bg: #0D1D35;
+            --input-bg: #0B192E;
+            --badge-bg: rgba(41, 182, 246, 0.15);
+            --phone-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
 
-    body.light-mode {
-      --background: #f1f5f9;
-      --foreground: #0f172a;
-      --card: #ffffff;
-      --sidebar: #f8fafc;
-      --border: #cbd5e1;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --muted-foreground: #64748b;
-      --ring-track: #e2e8f0;
-    }
+        .white-theme {
+            /* White Theme of Project X (Figure 3.1 & Section 3.2) */
+            --bg-canvas: #F4F7FB;
+            --surface: #FFFFFF;
+            --surface-card: #FFFFFF;
+            --text-primary: #0D233A;
+            --text-secondary: #64748B;
+            --primary: #1976D2;
+            --primary-accent: #29B6F6;
+            --pass: #10B981;
+            --warn: #F59E0B;
+            --fail: #EF4444;
+            --border: #E2E8F0;
+            --header-bg: #FFFFFF;
+            --nav-bg: #FFFFFF;
+            --input-bg: #F8FAFC;
+            --badge-bg: rgba(25, 118, 210, 0.1);
+            --phone-shadow: 0 20px 50px rgba(13, 35, 58, 0.12);
+        }
 
-    * {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      margin: 0;
-    }
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 8px 30px;
+        }
 
-    .countdown-meter {
-      transition: stroke-dashoffset 0.1s linear;
-    }
-  </style>
+        /* Top Brand Showcase Header */
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 14px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .showcase-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .app-emblem {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #0d47a1 0%, #1976D2 50%, #29B6F6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(25, 118, 210, 0.4);
+            position: relative;
+        }
+
+        .app-emblem-lens {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2.5px solid #FFFFFF;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-emblem-iris {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #29B6F6;
+        }
+
+        .showcase-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            text-align: left;
+        }
+
+        .showcase-title span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: block;
+            margin-top: -2px;
+            letter-spacing: 0px;
+        }
+
+        .control-pill-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .pill-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 100px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .pill-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--primary-accent);
+        }
+
+        .pill-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+            border-color: var(--primary);
+            box-shadow: 0 3px 10px rgba(25, 118, 210, 0.4);
+        }
+
+        .pill-btn.non-ois-active {
+            background: #0284c7;
+            color: #FFFFFF;
+            border-color: #0284c7;
+        }
+
+        /* Smartphone Shell Container */
+        .phone-frame {
+            width: 100%;
+            max-width: 410px;
+            height: 825px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            box-shadow: var(--phone-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Phone Top App Bar */
+        .app-top-bar {
+            height: 58px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: var(--header-bg);
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .top-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-brand-icon {
+            font-size: 18px;
+        }
+
+        .top-brand-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .top-brand-title span {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: block;
+            margin-top: -3px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Screen Body & Scrolling Area */
+        .screen-body {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .screen-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .screen-view {
+            display: none;
+            padding: 16px;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .screen-view.active {
+            display: flex;
+        }
+
+        /* Bottom 4-Tab Navigation (Section 3.1) */
+        .bottom-nav {
+            height: 64px;
+            background: var(--nav-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 4px;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .nav-item-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary-accent);
+        }
+
+        .white-theme .nav-item.active {
+            color: var(--primary);
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 01: Home Screen Styles (Section 3.4)          */
+        /* ---------------------------------------------------- */
+        .home-headline {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .home-subheadline {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-accent);
+            margin-bottom: 4px;
+        }
+
+        .white-theme .home-subheadline {
+            color: var(--primary);
+        }
+
+        .home-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        /* Viewfinder preview card */
+        .viewfinder-card {
+            width: 100%;
+            height: 185px;
+            background: #060e1a;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .camera-video-elem {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            display: none;
+        }
+
+        .scene-canvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+        }
+
+        .viewfinder-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .vf-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vf-pill {
+            background: rgba(10, 25, 47, 0.75);
+            backdrop-filter: blur(6px);
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .vf-crosshair {
+            width: 50px;
+            height: 50px;
+            border: 1.5px dashed rgba(41, 182, 246, 0.7);
+            border-radius: 8px;
+            margin: auto;
+            position: relative;
+            animation: pulse-reticle 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-reticle {
+            0% { transform: scale(0.96); opacity: 0.7; }
+            50% { transform: scale(1.04); opacity: 1; }
+            100% { transform: scale(0.96); opacity: 0.7; }
+        }
+
+        .vf-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scene-selector-row {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .scene-btn {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .scene-btn.active {
+            background: var(--badge-bg);
+            color: var(--primary-accent);
+            border-color: var(--primary-accent);
+        }
+
+        .white-theme .scene-btn.active {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* 3-Column Readiness Grid (Section 3.4) */
+        .readiness-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .readiness-box {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 6px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .rb-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .rb-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .rb-val {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--pass);
+        }
+
+        .rb-val.warn {
+            color: var(--warn);
+        }
+
+        .rb-val.fail {
+            color: var(--fail);
+        }
+
+        /* Big Action Button */
+        .btn-start-diagnostic {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #1976D2 0%, #29B6F6 100%);
+            border: none;
+            border-radius: 16px;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .btn-start-diagnostic:active {
+            transform: scale(0.98);
+        }
+
+        .home-footnote {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 02: 10-Second Live Testing Scanner (Sec 3.4)  */
+        /* ---------------------------------------------------- */
+        .scanner-header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .scanner-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .scanner-subtitle {
+            font-size: 10px;
+            color: var(--primary-accent);
+            font-weight: 600;
+        }
+
+        .white-theme .scanner-subtitle {
+            color: var(--primary);
+        }
+
+        .non-ois-live-banner {
+            background: rgba(2, 132, 199, 0.15);
+            border: 1px solid rgba(2, 132, 199, 0.35);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 10.5px;
+            color: #38bdf8;
+            line-height: 1.35;
+            display: none;
+        }
+
+        .white-theme .non-ois-live-banner {
+            color: #0369a1;
+            background: #f0f9ff;
+            border-color: #bae6fd;
+        }
+
+        /* Circular Countdown Ring Gauge */
+        .countdown-gauge-wrap {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 4px auto 10px;
+        }
+
+        .countdown-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .gauge-track {
+            fill: none;
+            stroke: var(--surface-card);
+            stroke-width: 8;
+        }
+
+        .gauge-progress {
+            fill: none;
+            stroke: var(--primary-accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .white-theme .gauge-progress {
+            stroke: var(--primary);
+        }
+
+        .gauge-center-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .gcc-camera-icon {
+            font-size: 18px;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .gcc-seconds {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .gcc-phase-badge {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .white-theme .gcc-phase-badge {
+            color: var(--primary);
+        }
+
+        /* 3-Row Diagnostic Checklist (Section 3.4) */
+        .phase-checklist-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .phase-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .phase-item-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .phase-item-status {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--primary-accent);
+        }
+
+        .white-theme .phase-item-status {
+            color: var(--primary);
+        }
+
+        .phase-item-status.complete {
+            color: var(--pass);
+        }
+
+        .phase-bar-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .white-theme .phase-bar-track {
+            background: #e2e8f0;
+        }
+
+        .phase-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1976D2, #29B6F6);
+            border-radius: 100px;
+            transition: width 0.1s linear;
+        }
+
+        /* Waveform Oscilloscope Footer */
+        .waveform-card {
+            background: #060e1a;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .waveform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .waveform-badge {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--primary-accent);
+            background: rgba(41, 182, 246, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .waveform-canvas {
+            width: 100%;
+            height: 48px;
+            display: block;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 03: Results Breakdown Screen (Section 3.4)    */
+        /* ---------------------------------------------------- */
+        .results-top {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .score-headline {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .score-counter-num {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--primary-accent);
+            line-height: 1;
+            margin: 4px 0 6px;
+            letter-spacing: -1px;
+        }
+
+        .white-theme .score-counter-num {
+            color: var(--primary);
+        }
+
+        .health-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .pill-pass {
+            background: rgba(16, 185, 129, 0.18);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .pill-warn {
+            background: rgba(245, 158, 11, 0.18);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .pill-fail {
+            background: rgba(239, 68, 68, 0.18);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        /* Overall Health Gauge Card */
+        .health-gauge-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .hgc-info {
+            text-align: left;
+        }
+
+        .hgc-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .hgc-percent {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--pass);
+            line-height: 1.1;
+        }
+
+        .hgc-desc {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .mini-gauge-ring {
+            width: 60px;
+            height: 60px;
+            transform: rotate(-90deg);
+        }
+
+        /* 3 Sub-Score Breakdown Cards (Section 3.4) */
+        .sub-scores-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .sub-score-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ssc-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ssc-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ssc-pct {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--pass);
+        }
+
+        .ssc-metrics {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .ssc-non-ois-expl {
+            font-size: 9.5px;
+            color: #38bdf8;
+            line-height: 1.3;
+            margin-top: 2px;
+            background: rgba(2, 132, 199, 0.1);
+            padding: 6px;
+            border-radius: 6px;
+        }
+
+        .white-theme .ssc-non-ois-expl {
+            color: #0369a1;
+            background: #f0f9ff;
+        }
+
+        /* Monthly Rank Banner */
+        .rank-banner-card {
+            background: linear-gradient(135deg, rgba(25, 118, 210, 0.15), rgba(41, 182, 246, 0.15));
+            border: 1px solid rgba(41, 182, 246, 0.3);
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .rbc-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .rbc-sub {
+            font-size: 9.5px;
+            color: var(--text-secondary);
+        }
+
+        .rbc-rank {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary-accent);
+        }
+
+        .white-theme .rbc-rank {
+            color: var(--primary);
+        }
+
+        .results-actions-row {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .btn-view-cert {
+            flex: 1;
+            height: 44px;
+            background: var(--primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-run-again {
+            flex: 1;
+            height: 44px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 04: Digital Certificate View (Section 3.4)    */
+        /* ---------------------------------------------------- */
+        .cert-paper-card {
+            background: #FFFFFF;
+            color: #0D233A;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .cert-banner {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976D2 50%, #29B6F6 100%);
+            padding: 14px 16px;
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .cert-badge-top {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .cert-banner-title {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: -0.3px;
+        }
+
+        .cert-banner-sub {
+            font-size: 9.5px;
+            opacity: 0.85;
+        }
+
+        .cert-body {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cert-device-row {
+            text-align: center;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 8px;
+        }
+
+        .cert-device-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0D233A;
+        }
+
+        .cert-meta-info {
+            font-size: 9.5px;
+            color: #64748B;
+        }
+
+        .cert-score-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .csb-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748B;
+            letter-spacing: 0.5px;
+        }
+
+        .csb-score {
+            font-size: 26px;
+            font-weight: 900;
+            color: #1976D2;
+            line-height: 1.1;
+        }
+
+        .csb-stamp {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-size: 9.5px;
+            font-weight: 800;
+            background: #DCFCE7;
+            color: #166534;
+            margin-top: 2px;
+        }
+
+        .cert-table-rows {
+            font-size: 10.5px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ctr-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px dashed #E2E8F0;
+        }
+
+        .ctr-item span {
+            color: #64748B;
+        }
+
+        .ctr-item strong {
+            color: #0D233A;
+        }
+
+        /* Anti-Fraud QR Code Box */
+        .cert-qr-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px 0;
+        }
+
+        .cert-qr-box {
+            padding: 6px;
+            background: #FFFFFF;
+            border: 1.5px dashed #CBD5E1;
+            border-radius: 10px;
+        }
+
+        .qr-canvas-elem {
+            display: block;
+        }
+
+        .cert-hash-label {
+            font-size: 8.5px;
+            font-family: monospace;
+            color: #94A3B8;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .cert-export-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .btn-export {
+            height: 38px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-export:hover {
+            border-color: var(--primary-accent);
+        }
+
+        .btn-verify-online {
+            width: 100%;
+            height: 40px;
+            background: #10B981;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 05: Leaderboard View (Section 2.3)           */
+        /* ---------------------------------------------------- */
+        .leaderboard-tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .lb-tab-btn {
+            flex: 1;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .lb-tab-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        .lb-season-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .lb-season-bar strong {
+            color: var(--primary-accent);
+        }
+
+        .white-theme .lb-season-bar strong {
+            color: var(--primary);
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .lb-item {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lb-item.user-device {
+            border: 1.5px solid var(--primary-accent);
+            background: linear-gradient(135deg, rgba(25, 118, 210, 0.12), rgba(41, 182, 246, 0.12));
+        }
+
+        .lb-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lb-rank-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .rank-gold {
+            background: #F59E0B;
+            color: #FFFFFF;
+        }
+
+        .rank-silver {
+            background: #94A3B8;
+            color: #FFFFFF;
+        }
+
+        .rank-bronze {
+            background: #B45309;
+            color: #FFFFFF;
+        }
+
+        .lb-device-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lb-device-name {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .lb-device-tag {
+            font-size: 9.5px;
+            color: var(--text-secondary);
+        }
+
+        .lb-right {
+            text-align: right;
+        }
+
+        .lb-score-val {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--primary-accent);
+        }
+
+        .white-theme .lb-score-val {
+            color: var(--primary);
+        }
+
+        .lb-health-val {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--pass);
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 06: Test History Screen (Section 2.3)        */
+        /* ---------------------------------------------------- */
+        .history-chart-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .hcc-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .hcc-sub {
+            font-size: 9.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .history-sparkline-canvas {
+            width: 100%;
+            height: 60px;
+            display: block;
+        }
+
+        .history-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .history-row-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .history-row-card:hover {
+            border-color: var(--primary-accent);
+        }
+
+        .hrc-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hrc-date {
+            font-size: 9.5px;
+            color: var(--text-secondary);
+        }
+
+        .hrc-model {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .hrc-right {
+            text-align: right;
+        }
+
+        .hrc-score {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--primary-accent);
+        }
+
+        .white-theme .hrc-score {
+            color: var(--primary);
+        }
+
+        .hrc-health {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--pass);
+        }
+
+        /* ---------------------------------------------------- */
+        /* Screen 07: Onboarding Tutorial (Section 2.3)        */
+        /* ---------------------------------------------------- */
+        .onboarding-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .onboarding-slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .onboarding-slide.active {
+            display: flex;
+        }
+
+        .ob-illu {
+            font-size: 64px;
+            margin: 20px 0;
+            animation: bounce-illu 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce-illu {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .ob-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .ob-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            max-width: 280px;
+            margin-bottom: 20px;
+        }
+
+        .ob-dots-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+
+        .ob-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .ob-dot.active {
+            width: 24px;
+            border-radius: 100px;
+            background: var(--primary-accent);
+        }
+
+        .white-theme .ob-dot.active {
+            background: var(--primary);
+        }
+
+        .ob-actions {
+            width: 100%;
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Figure 3.1 Architecture Showcase View                */
+        /* ---------------------------------------------------- */
+        #showcase-grid-view {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 10px;
+        }
+
+        .showcase-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .showcase-screen-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ssc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .ssc-title-badge {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+        }
+
+        .white-theme .ssc-title-badge {
+            color: var(--primary);
+        }
+
+        /* Responsive Mobile tweaks */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            .phone-frame {
+                border-radius: 0;
+                border: none;
+                height: 100vh;
+                max-width: 100%;
+            }
+            .showcase-header {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body class="antialiased">
-  <div class="w-full max-w-md mx-auto bg-[var(--card)] border border-[var(--border)] rounded-3xl p-5 shadow-2xl flex flex-col space-y-4">
-    
-    <!-- Top Header -->
-    <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
-      <div>
-        <h1 class="text-base font-extrabold text-[var(--primary)] flex items-center gap-2">
-          <span>📷</span> CamScore
-        </h1>
-        <p class="text-xs text-[var(--muted-foreground)]">by Fischer Labs</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <!-- Bright / Dark Theme Toggle Button -->
-        <button id="theme-toggle-btn" class="text-xs px-2.5 py-1 rounded-full font-bold border border-[var(--border)] bg-[var(--sidebar)] text-[var(--foreground)] shadow-sm hover:opacity-80 transition-all" onclick="toggleTheme()">
-          ☀️ Light
-        </button>
-        <!-- OIS Mode Toggle Button -->
-        <button id="device-mode-toggle" class="text-xs px-2.5 py-1 rounded-full font-bold bg-[var(--primary)] text-white shadow-sm transition-all" onclick="toggleOisMode()">
-          OIS Mode: ON
-        </button>
-      </div>
-    </div>
 
-    <!-- Active View: 1. Home View -->
-    <div id="view-home" class="flex flex-col space-y-3">
-      <!-- Viewfinder Simulation -->
-      <div class="relative h-44 bg-slate-950 rounded-2xl overflow-hidden flex flex-col items-center justify-center border border-[var(--border)] text-center p-4">
-        <span class="text-3xl mb-1">📷</span>
-        <p class="text-xs font-bold text-white">Automated Camera Hardware Diagnostic</p>
-        <p class="text-[11px] text-slate-400">Point at a textured, well-lit scene</p>
-        <span id="ois-badge" class="mt-2 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-          OIS Equipped ✓
-        </span>
-      </div>
-
-      <!-- Readiness 3-Grid -->
-      <div class="grid grid-cols-3 gap-2">
-        <div class="bg-[var(--sidebar)] p-2 rounded-xl text-center border border-[var(--border)]">
-          <div class="text-lg">☀️</div>
-          <div class="text-[11px] text-[var(--muted-foreground)]">Lighting</div>
-          <div class="text-xs font-bold text-emerald-400">380 Lux</div>
-        </div>
-        <div class="bg-[var(--sidebar)] p-2 rounded-xl text-center border border-[var(--border)]">
-          <div class="text-lg">🧱</div>
-          <div class="text-[11px] text-[var(--muted-foreground)]">Texture</div>
-          <div class="text-xs font-bold text-emerald-400">89% Good</div>
-        </div>
-        <div class="bg-[var(--sidebar)] p-2 rounded-xl text-center border border-[var(--border)]">
-          <div class="text-lg">✅</div>
-          <div class="text-[11px] text-[var(--muted-foreground)]">Readiness</div>
-          <div class="text-xs font-bold text-emerald-400">Ready</div>
-        </div>
-      </div>
-
-      <!-- Start Button -->
-      <button class="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 active:scale-[0.99] transition-all flex items-center justify-center gap-2" onclick="runDiagnostic()">
-        ▶ Run 10-Second Diagnostic
-      </button>
-
-      <p class="text-center text-[10px] text-[var(--muted-foreground)] pt-0.5">
-        Hold phone steady • Point at textured wall • Ensure good lighting
-      </p>
-    </div>
-
-    <!-- Active View: 2. Live Testing View -->
-    <div id="view-testing" class="hidden flex flex-col space-y-3">
-      <!-- Non-OIS notification banner -->
-      <div id="non-ois-banner" class="hidden p-2.5 bg-blue-500/10 border border-blue-400/30 rounded-xl text-xs text-blue-400">
-        ℹ <strong>Non-OIS Fair Mode:</strong> Skipping mechanical OIS penalty. Evaluating Digital Sensor & Frame Stability.
-      </div>
-
-      <!-- Countdown Circular Ring -->
-      <div class="relative w-36 h-36 mx-auto my-2">
-        <svg class="w-full h-full -rotate-90" viewBox="0 0 140 140">
-          <circle cx="70" cy="70" r="60" class="stroke-[var(--ring-track)]" stroke-width="8" fill="none" />
-          <circle id="countdown-ring" cx="70" cy="70" r="60" class="stroke-cyan-400 countdown-meter" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="377" stroke-dashoffset="0" />
-        </svg>
-        <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span class="text-xl">📷</span>
-          <span id="countdown-text" class="text-2xl font-black text-[var(--foreground)]">10.0s</span>
-          <span id="phase-label" class="text-[10px] uppercase font-bold text-cyan-400">Phase 1 / 3</span>
-        </div>
-      </div>
-
-      <!-- Real-time Phase Checklist -->
-      <div class="bg-[var(--sidebar)] p-3 rounded-2xl border border-[var(--border)] space-y-2 text-xs">
-        <div class="flex items-center justify-between font-bold">
-          <span>1. Autofocus Speed (0.0–3.5s)</span>
-          <span id="p1-val" class="text-cyan-400">0%</span>
-        </div>
-        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-          <div id="p1-bar" class="bg-cyan-400 h-full w-0 transition-all duration-100"></div>
+    <!-- Top Brand Showcase Header matching Figure 3.1 -->
+    <header class="showcase-header">
+        <div class="showcase-logo-row">
+            <div class="app-emblem">
+                <div class="app-emblem-lens">
+                    <div class="app-emblem-iris"></div>
+                </div>
+            </div>
+            <div class="showcase-title">
+                CamScore
+                <span>by Fischer Labs</span>
+            </div>
         </div>
 
-        <div class="flex items-center justify-between font-bold pt-1">
-          <span id="p2-label">2. OIS Stabilization (3.5–7.0s)</span>
-          <span id="p2-val" class="text-cyan-400">0%</span>
-        </div>
-        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-          <div id="p2-bar" class="bg-cyan-400 h-full w-0 transition-all duration-100"></div>
-        </div>
+        <!-- Dynamic Control Bar -->
+        <div class="control-pill-bar">
+            <!-- Theme Toggle -->
+            <button id="theme-btn" class="pill-btn" onclick="toggleTheme()">
+                <span id="theme-icon">☀️</span>
+                <span id="theme-text">Light Theme</span>
+            </button>
 
-        <div class="flex items-center justify-between font-bold pt-1">
-          <span>3. Multi-Lens & Color (7.0–10.0s)</span>
-          <span id="p3-val" class="text-cyan-400">0%</span>
-        </div>
-        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-          <div id="p3-bar" class="bg-cyan-400 h-full w-0 transition-all duration-100"></div>
-        </div>
-      </div>
+            <!-- Hardware Mode Toggle -->
+            <button id="hw-mode-btn" class="pill-btn active" onclick="toggleOisMode()">
+                <span id="hw-icon">⚡</span>
+                <span id="hw-text">OIS Equipped</span>
+            </button>
 
-      <!-- Realtime Waveform Canvas -->
-      <div class="bg-slate-950 p-2 rounded-xl border border-[var(--border)]">
-        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
-          <span>100Hz Sensor Fusion (Gyro vs Optical Flow)</span>
-          <span class="text-cyan-400">Active</span>
+            <!-- Layout View Switcher -->
+            <button id="layout-view-btn" class="pill-btn" onclick="toggleShowcaseView()">
+                <span>🖼️</span>
+                <span id="layout-view-text">Figure 3.1 Showcase</span>
+            </button>
         </div>
-        <canvas id="live-canvas" width="360" height="50" class="w-full h-12 block"></canvas>
-      </div>
-    </div>
+    </header>
 
-    <!-- Active View: 3. Result View -->
-    <div id="view-result" class="hidden flex flex-col space-y-3">
-      <div class="text-center">
-        <p class="text-xs font-semibold text-[var(--muted-foreground)]">Uncapped CamScore</p>
-        <p id="res-score" class="text-4xl font-extrabold text-[var(--primary)]">14,850</p>
-        <span class="inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-          PASS — Camera Hardware Healthy
-        </span>
-      </div>
-
-      <div class="bg-[var(--sidebar)] p-3 rounded-2xl border border-[var(--border)] text-center">
-        <p class="text-xs text-[var(--muted-foreground)]">0%–100% Hardware Health</p>
-        <p id="res-health" class="text-3xl font-black text-emerald-400 my-1">96%</p>
-        <p id="res-desc" class="text-[11px] text-[var(--muted-foreground)]">Physical mechanism intact across all 3 lenses</p>
-      </div>
-
-      <div class="space-y-1.5 text-xs">
-        <div class="flex justify-between p-2 rounded-xl bg-[var(--sidebar)] border border-[var(--border)]">
-          <span>🎯 Autofocus Motor (Lock: 132ms)</span>
-          <strong class="text-emerald-400">98%</strong>
-        </div>
-        <div class="flex justify-between p-2 rounded-xl bg-[var(--sidebar)] border border-[var(--border)]">
-          <span id="sub-ois-row-title">📐 OIS Stabilization (Damp: 89%)</span>
-          <strong id="sub-ois-row-val" class="text-emerald-400">94%</strong>
-        </div>
-        <div class="flex justify-between p-2 rounded-xl bg-[var(--sidebar)] border border-[var(--border)]">
-          <span>🔍 Lens Switch & Color (ΔE: 1.4)</span>
-          <strong class="text-emerald-400">96%</strong>
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-1">
-        <button class="flex-1 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-bold rounded-xl shadow-md transition-all" onclick="showCert()">
-          📜 View Certificate
-        </button>
-        <button class="flex-1 py-2.5 border border-[var(--border)] bg-[var(--sidebar)] text-[var(--foreground)] text-xs font-bold rounded-xl hover:opacity-80 transition-all" onclick="resetToHome()">
-          🔄 Run Again
-        </button>
-      </div>
-    </div>
-
-    <!-- Active View: 4. Certificate View -->
-    <div id="view-cert" class="hidden flex flex-col space-y-3">
-      <div class="bg-white text-slate-900 rounded-2xl overflow-hidden shadow-xl p-4 text-center space-y-2 border border-slate-200">
-        <div class="bg-blue-600 text-white -m-4 mb-3 p-3 text-center">
-          <p class="text-xs font-bold tracking-wider">OFFICIAL HARDWARE CERTIFICATE</p>
-          <p class="text-[10px] opacity-80">Verified by Fischer Labs</p>
-        </div>
-        <p id="cert-device" class="font-extrabold text-base">Google Pixel 8 Pro</p>
-        <p class="text-[10px] text-slate-500">Test ID: #CS-8921 • Oct 30, 2026</p>
-        
-        <div class="py-2 bg-slate-50 rounded-xl my-2 border border-slate-100">
-          <p class="text-[10px] text-slate-500 font-bold uppercase">Uncapped Score</p>
-          <p id="cert-score-val" class="text-2xl font-black text-blue-600">14,850 pts</p>
-          <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-            MINT HEALTH (96%)
-          </span>
+    <!-- Main Smartphone Shell Container -->
+    <main class="phone-frame" id="phone-container">
+        <!-- Phone Top Bar -->
+        <div class="app-top-bar">
+            <div class="top-brand">
+                <div class="app-emblem" style="width: 26px; height: 26px; border-radius: 7px;">
+                    <div class="app-emblem-lens" style="width: 14px; height: 14px; border-width: 1.5px;">
+                        <div class="app-emblem-iris" style="width: 6px; height: 6px;"></div>
+                    </div>
+                </div>
+                <div class="top-brand-title">
+                    CamScore
+                    <span>by Fischer Labs</span>
+                </div>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn" title="Tutorial / Onboarding" onclick="openScreen(7)">
+                    ❓
+                </button>
+                <button class="icon-btn" id="phone-theme-btn" title="Toggle Theme" onclick="toggleTheme()">
+                    ☀️
+                </button>
+            </div>
         </div>
 
-        <div class="text-[11px] text-slate-600 space-y-1 text-left px-2">
-          <div class="flex justify-between"><span>Focus Mechanism:</span><strong id="cert-af">Pass (98%)</strong></div>
-          <div class="flex justify-between"><span>OIS Dampening:</span><strong id="cert-ois">Pass (94%)</strong></div>
-          <div class="flex justify-between"><span>Lens Calibration:</span><strong id="cert-lens">Pass (96%)</strong></div>
+        <!-- Phone Screen Body -->
+        <div class="screen-body">
+
+            <!-- ============================================== -->
+            <!-- Screen 01/04: Home Screen & Readiness Guard     -->
+            <!-- ============================================== -->
+            <section class="screen-view active" id="screen-1">
+                <h1 class="home-headline">Know Your Camera.</h1>
+                <div class="home-subheadline">In 10 Seconds.</div>
+                <p class="home-desc">
+                    World's first on-device, zero-lab-equipment camera hardware diagnostic benchmark & monthly leaderboard.
+                </p>
+
+                <!-- Live Camera Viewfinder Card -->
+                <div class="viewfinder-card">
+                    <video id="webcam-feed" class="camera-video-elem" autoplay playsinline muted></video>
+                    <canvas id="sim-scene-canvas" class="scene-canvas" width="380" height="185"></canvas>
+                    
+                    <div class="viewfinder-overlay">
+                        <div class="vf-top-row">
+                            <div class="vf-pill" id="live-camera-tag">
+                                <span style="color: #ef4444; animation: pulse-reticle 1s infinite;">●</span>
+                                <span id="camera-label-text">Living Room Scene</span>
+                            </div>
+                            <div class="vf-pill" id="live-ois-pill" style="color: #34d399;">
+                                OIS Active ✓
+                            </div>
+                        </div>
+
+                        <div class="vf-crosshair"></div>
+
+                        <div class="vf-bottom-row">
+                            <div class="vf-pill">
+                                <span>1x Main Lens (f/1.68)</span>
+                            </div>
+                            <div class="vf-pill" id="live-lux-tag">
+                                ☀️ 380 Lux
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scene Selector (Real WebCam + Synthetic Scenes) -->
+                <div class="scene-selector-row">
+                    <button class="scene-btn active" id="sc-btn-living" onclick="setScene('living')">🛋️ Textured Room</button>
+                    <button class="scene-btn" id="sc-btn-chart" onclick="setScene('chart')">🎯 Color Chart</button>
+                    <button class="scene-btn" id="sc-btn-webcam" onclick="initRealWebcam()">📷 Real WebCam</button>
+                    <button class="scene-btn" id="sc-btn-dark" onclick="setScene('dark')">🌙 Low Light</button>
+                    <button class="scene-btn" id="sc-btn-wall" onclick="setScene('wall')">🧱 Blank Wall</button>
+                </div>
+
+                <!-- 3-Column Readiness Grid (Section 3.4) -->
+                <div class="readiness-grid">
+                    <div class="readiness-box">
+                        <span class="rb-icon">☀️</span>
+                        <span class="rb-label">Lighting</span>
+                        <span class="rb-val" id="rb-light-val">380 Lux</span>
+                    </div>
+                    <div class="readiness-box">
+                        <span class="rb-icon">🧱</span>
+                        <span class="rb-label">Texture</span>
+                        <span class="rb-val" id="rb-texture-val">89% Good</span>
+                    </div>
+                    <div class="readiness-box">
+                        <span class="rb-icon">✅</span>
+                        <span class="rb-label">Readiness</span>
+                        <span class="rb-val" id="rb-ready-val">Ready</span>
+                    </div>
+                </div>
+
+                <!-- Start 10-Second Test Button -->
+                <button class="btn-start-diagnostic" onclick="start10sDiagnostic()">
+                    <span>▶</span>
+                    <span>Start 10-Second Diagnostic</span>
+                </button>
+                <p class="home-footnote">
+                    Point at everyday textured scene • Keep still for 10 seconds
+                </p>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 02/04: 10-Second Live Testing Scanner    -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-2">
+                <div class="scanner-header">
+                    <div class="scanner-title">Live Hardware Diagnostic</div>
+                    <div class="scanner-subtitle" id="scanner-zoom-info">Auto-Zoom Sweep 1x → 10x</div>
+                </div>
+
+                <!-- Non-OIS Fair Mode Live Banner (Section 2.8) -->
+                <div class="non-ois-live-banner" id="non-ois-banner">
+                    ℹ️ <strong>Hardware Note:</strong> No physical OIS motor exists on this device model. Running Digital Sensor & Frame Stability Check (No OIS Penalty Applied).
+                </div>
+
+                <!-- Circular Countdown Ring Timer (Section 3.1) -->
+                <div class="countdown-gauge-wrap">
+                    <svg class="countdown-svg" viewBox="0 0 140 140">
+                        <circle class="gauge-track" cx="70" cy="70" r="60" />
+                        <circle class="gauge-progress" id="countdown-circle" cx="70" cy="70" r="60" />
+                    </svg>
+                    <div class="gauge-center-content">
+                        <div class="gcc-camera-icon">📷</div>
+                        <div class="gcc-seconds" id="countdown-timer-text">10.0s</div>
+                        <div class="gcc-phase-badge" id="countdown-phase-tag">Phase 1 / 3</div>
+                    </div>
+                </div>
+
+                <!-- 3-Row Diagnostic Checklist (Section 3.4) -->
+                <div class="phase-checklist-card">
+                    <div class="phase-item" id="phase-row-1">
+                        <div class="phase-item-head">
+                            <span>1. Autofocus Speed (0.0s–3.5s)</span>
+                            <span class="phase-item-status" id="p1-status">Waiting...</span>
+                        </div>
+                        <div class="phase-bar-track">
+                            <div class="phase-bar-fill" id="p1-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="phase-item" id="phase-row-2">
+                        <div class="phase-item-head">
+                            <span id="p2-title-text">2. OIS Stabilization (3.5s–7.0s)</span>
+                            <span class="phase-item-status" id="p2-status">Waiting...</span>
+                        </div>
+                        <div class="phase-bar-track">
+                            <div class="phase-bar-fill" id="p2-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="phase-item" id="phase-row-3">
+                        <div class="phase-item-head">
+                            <span>3. Lens Switch & Color (7.0s–10.0s)</span>
+                            <span class="phase-item-status" id="p3-status">Waiting...</span>
+                        </div>
+                        <div class="phase-bar-track">
+                            <div class="phase-bar-fill" id="p3-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 100Hz Sensor Fusion Waveform Oscilloscope -->
+                <div class="waveform-card">
+                    <div class="waveform-header">
+                        <span>100Hz Sensor Fusion (Gyro vs Optical Flow)</span>
+                        <span class="waveform-badge">LIVE 100Hz</span>
+                    </div>
+                    <canvas id="live-waveform-canvas" class="waveform-canvas" width="360" height="50"></canvas>
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 03/04: Result & Health % Screen         -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-3">
+                <div class="results-top">
+                    <div class="score-headline">Uncapped CamScore</div>
+                    <div class="score-counter-num" id="res-score-number">14,850</div>
+                    <div class="health-status-pill pill-pass" id="res-status-pill">
+                        PASS — Camera Hardware Healthy
+                    </div>
+                </div>
+
+                <!-- Circular 0%–100% Health Monitor Gauge (Section 3.4) -->
+                <div class="health-gauge-card">
+                    <div class="hgc-info">
+                        <div class="hgc-label">Hardware Health Monitor</div>
+                        <div class="hgc-percent" id="res-health-pct">96%</div>
+                        <div class="hgc-desc" id="res-health-desc">CERTIFIED PASS (MINT)</div>
+                    </div>
+                    <svg class="mini-gauge-ring" viewBox="0 0 70 70">
+                        <circle class="gauge-track" cx="35" cy="35" r="28" stroke-width="6" />
+                        <circle class="gauge-progress" id="res-mini-ring" cx="35" cy="35" r="28" stroke-width="6" stroke-dasharray="175" stroke-dashoffset="7" stroke="#10B981" />
+                    </svg>
+                </div>
+
+                <!-- 3 Percentage Sub-Score Breakdown Cards (Section 3.4) -->
+                <div class="sub-scores-list">
+                    <div class="sub-score-card">
+                        <div class="ssc-head">
+                            <div class="ssc-title">🎯 Autofocus Motor Speed</div>
+                            <div class="ssc-pct" id="res-af-pct">98%</div>
+                        </div>
+                        <div class="ssc-metrics" id="res-af-meta">Δt: 132ms • Peak σ²: 1,840 • Weight: 35%</div>
+                    </div>
+
+                    <div class="sub-score-card">
+                        <div class="ssc-head">
+                            <div class="ssc-title" id="res-ois-title">📐 OIS Stabilization Motor</div>
+                            <div class="ssc-pct" id="res-ois-pct">94%</div>
+                        </div>
+                        <div class="ssc-metrics" id="res-ois-meta">Dampening: 89% • Jitter: 0.8px • Weight: 40%</div>
+                        <div class="ssc-non-ois-expl" id="res-non-ois-note" style="display: none;">
+                            <strong>OIS Status: N/A — Non-OIS Device (Factory Spec)</strong><br>
+                            Your phone model does not come with physical OIS hardware from the factory. Your 0%–100% Camera Health is evaluated 100% fairly based on your Autofocus Motor & Lens Sensors without counting OIS against you!
+                        </div>
+                    </div>
+
+                    <div class="sub-score-card">
+                        <div class="ssc-head">
+                            <div class="ssc-title">🔍 Lens Switch & Color Fidelity</div>
+                            <div class="ssc-pct" id="res-lens-pct">96%</div>
+                        </div>
+                        <div class="ssc-metrics" id="res-lens-meta">CIE LAB ΔE: 1.4 • Switch Lag: 110ms • Weight: 25%</div>
+                    </div>
+                </div>
+
+                <!-- Monthly Global Rank & Compare Banner -->
+                <div class="rank-banner-card">
+                    <div>
+                        <div class="rbc-text">Monthly Global Rank</div>
+                        <div class="rbc-sub">October 2026 Season • Top 3%</div>
+                    </div>
+                    <div class="rbc-rank" id="res-rank-display">#14</div>
+                </div>
+
+                <!-- Bottom Actions -->
+                <div class="results-actions-row">
+                    <button class="btn-view-cert" onclick="openScreen(4)">
+                        <span>📜</span>
+                        <span>View Certificate</span>
+                    </button>
+                    <button class="btn-run-again" onclick="openScreen(1)">
+                        <span>🔄 Run Again</span>
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 04/04: Hardware Health Certificate View -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-4">
+                <div class="cert-paper-card" id="printable-cert-card">
+                    <div class="cert-banner">
+                        <div class="cert-badge-top">OFFICIAL CAMSCORE VERIFICATION</div>
+                        <div class="cert-banner-title">Hardware Health & Flex Certificate</div>
+                        <div class="cert-banner-sub">Fischer Labs Anti-Fraud Diagnostic Registry</div>
+                    </div>
+
+                    <div class="cert-body">
+                        <div class="cert-device-row">
+                            <div class="cert-device-name" id="cert-device-title">Google Pixel 8 Pro</div>
+                            <div class="cert-meta-info" id="cert-date-info">Test ID: #CS-8921 • Oct 30, 2026 • Android 15</div>
+                        </div>
+
+                        <div class="cert-score-box">
+                            <div class="csb-label">Uncapped CamScore</div>
+                            <div class="csb-score" id="cert-score-text">14,850 pts</div>
+                            <div class="csb-stamp" id="cert-stamp-badge">
+                                ✔ VERIFIED MINT HEALTH (96%)
+                            </div>
+                        </div>
+
+                        <div class="cert-table-rows">
+                            <div class="ctr-item">
+                                <span>Focus Motor (Laplacian σ²):</span>
+                                <strong id="cert-row-af">Pass (98%)</strong>
+                            </div>
+                            <div class="ctr-item">
+                                <span>OIS Gyro Dampening:</span>
+                                <strong id="cert-row-ois">Pass (94%)</strong>
+                            </div>
+                            <div class="ctr-item">
+                                <span>Lens Calibration (CIE LAB ΔE):</span>
+                                <strong id="cert-row-lens">Pass (96%)</strong>
+                            </div>
+                            <div class="ctr-item">
+                                <span>Global Monthly Standing:</span>
+                                <strong id="cert-row-rank">Rank #14 Worldwide</strong>
+                            </div>
+                        </div>
+
+                        <!-- Anti-Fraud QR Code Box -->
+                        <div class="cert-qr-container">
+                            <div class="cert-qr-box">
+                                <canvas id="cert-qr-canvas" class="qr-canvas-elem" width="90" height="90"></canvas>
+                            </div>
+                            <div class="cert-hash-label" id="cert-hash-code">
+                                SHA-256: 4a8f9c1b7e2d63018274aef0c82937bd
+                            </div>
+                            <div style="font-size: 8.5px; color: #64748B;">
+                                Scan QR to verify on fischerlabs.com
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Action Buttons -->
+                <div class="cert-export-buttons">
+                    <button class="btn-export" onclick="downloadCertificatePNG()">
+                        <span>🖼️</span> PNG
+                    </button>
+                    <button class="btn-export" onclick="downloadCertificatePDF()">
+                        <span>📄</span> PDF
+                    </button>
+                    <button class="btn-export" onclick="shareCertificate()">
+                        <span>🔗</span> Share
+                    </button>
+                </div>
+
+                <a href="verify.html?id=4a8f9c1b7e2d63018274aef0c82937bd" id="cert-online-verify-link" class="btn-verify-online" target="_blank">
+                    <span>🛡️</span> Verify on Official Cloud Registry
+                </a>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 05: Monthly Global Leaderboard View     -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-5">
+                <div style="text-align: center; margin-bottom: 8px;">
+                    <div style="font-size: 15px; font-weight: 800; color: var(--text-primary);">Monthly Global Mobile Ranking</div>
+                    <div style="font-size: 10px; color: var(--text-secondary);">Real unmanipulated camera scores worldwide</div>
+                </div>
+
+                <!-- Dual Filter Tabs: All Phones vs Non-OIS / Budget Phones (Section 2.3) -->
+                <div class="leaderboard-tabs">
+                    <button class="lb-tab-btn active" id="lb-tab-all" onclick="filterLeaderboard('all')">
+                        🏆 All Phones
+                    </button>
+                    <button class="lb-tab-btn" id="lb-tab-nonois" onclick="filterLeaderboard('nonois')">
+                        ⚡ Non-OIS / Budget
+                    </button>
+                </div>
+
+                <div class="lb-season-bar">
+                    <span>Season: <strong>October 2026 (2026-10)</strong></span>
+                    <span style="font-size: 10px; color: var(--text-secondary);">Resets in 2 days</span>
+                </div>
+
+                <div class="leaderboard-list" id="leaderboard-records-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 06: Test History Screen (Section 2.3)   -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-6">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--text-primary);">Test History & Trends</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Long-term hardware health degradation log</div>
+                    </div>
+                    <button class="icon-btn" onclick="clearTestHistory()" title="Clear History" style="font-size: 12px; color: var(--text-secondary);">
+                        🗑️ Clear
+                    </button>
+                </div>
+
+                <!-- Health Degradation Sparkline Chart -->
+                <div class="history-chart-card">
+                    <div class="hcc-title">0%–100% Health Retention Over Time</div>
+                    <div class="hcc-sub">KMP Room DB persistent tracking</div>
+                    <canvas id="health-sparkline-canvas" class="history-sparkline-canvas" width="360" height="60"></canvas>
+                </div>
+
+                <div class="history-items-list" id="history-records-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- Screen 07: 3-Step Illustrated Onboarding       -->
+            <!-- ============================================== -->
+            <section class="screen-view" id="screen-7">
+                <div class="onboarding-wrap">
+                    <div style="width: 100%; display: flex; justify-content: flex-end;">
+                        <button class="icon-btn" onclick="openScreen(1)" style="font-size: 12px; font-weight: 700;">
+                            Skip ✕
+                        </button>
+                    </div>
+
+                    <!-- Slide 1 -->
+                    <div class="onboarding-slide active" id="ob-slide-1">
+                        <div class="ob-illu">📷</div>
+                        <div class="ob-title">10-Second Hands-Off Diagnostic</div>
+                        <div class="ob-desc">
+                            Point your smartphone at any well-lit, textured scene. The app sweeps zoom from 1x to 10x, testing Autofocus motors, OIS springs, and multi-lens lag.
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="onboarding-slide" id="ob-slide-2">
+                        <div class="ob-illu">🛡️</div>
+                        <div class="ob-title">0%–100% Health & Non-OIS Fair Mode</div>
+                        <div class="ob-desc">
+                            Detects physical camera wear and drop damage. Budget phones without OIS motors are evaluated via Fair Non-OIS redistribution so healthy cameras still get 100% Mint Health!
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="onboarding-slide" id="ob-slide-3">
+                        <div class="ob-illu">📜</div>
+                        <div class="ob-title">Tamper-Proof QR Certificate</div>
+                        <div class="ob-desc">
+                            Export fraud-proof PNG/PDF health certificates backed by Firebase QR verification. Perfect for proving camera condition before selling or buying on OLX.
+                        </div>
+                    </div>
+
+                    <!-- Indicator Dots -->
+                    <div class="ob-dots-row">
+                        <div class="ob-dot active" id="ob-dot-1"></div>
+                        <div class="ob-dot" id="ob-dot-2"></div>
+                        <div class="ob-dot" id="ob-dot-3"></div>
+                    </div>
+
+                    <div class="ob-actions">
+                        <button class="btn-start-diagnostic" id="ob-next-btn" onclick="nextOnboardingSlide()">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
         </div>
 
-        <!-- QR Code Canvas -->
-        <div class="w-24 h-24 mx-auto border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center bg-slate-50 mt-2 p-1">
-          <canvas id="cert-qr" width="80" height="80"></canvas>
+        <!-- Persistent 4-Tab Bottom Navigation Bar (Section 3.1) -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" id="nav-btn-home" onclick="openScreen(1)">
+                <span class="nav-item-icon">🏠</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" id="nav-btn-leaderboard" onclick="openScreen(5)">
+                <span class="nav-item-icon">📊</span>
+                <span>Leaderboard</span>
+            </button>
+            <button class="nav-item" id="nav-btn-cert" onclick="openScreen(4)">
+                <span class="nav-item-icon">📜</span>
+                <span>Certificate</span>
+            </button>
+            <button class="nav-item" id="nav-btn-history" onclick="openScreen(6)">
+                <span class="nav-item-icon">🕒</span>
+                <span>History</span>
+            </button>
+        </nav>
+    </main>
+
+    <!-- Figure 3.1 Full 6-Screen Architecture Showcase View -->
+    <section id="showcase-grid-view">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 800;">Figure 3.1: Official UI/UX Design Direction</h2>
+            <p style="font-size: 13px; color: var(--text-secondary);">CamScore by Fischer Labs — 6-Screen Architecture Showcase</p>
         </div>
-        <p class="text-[9px] text-slate-400">Scan QR to verify on fischerlabs.com</p>
-      </div>
+        <div class="showcase-grid-6">
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 01: Home & Light Guard</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">T = 0.0s</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Live camera viewfinder, 3-column readiness badges (Lighting, Texture, Readiness), OIS capability pill, and Start Diagnostic action.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(1)">Open Interactive Screen 1 →</button>
+            </div>
 
-      <div class="flex gap-2">
-        <a href="verify.html?id=4a8f9c1b7e2d63018274aef0c82937bd" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl text-center shadow-md transition-all text-decoration-none flex items-center justify-center">
-          Verify Online
-        </a>
-        <button class="flex-1 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-bold rounded-xl transition-all" onclick="resetToHome()">
-          ← Back
-        </button>
-      </div>
-    </div>
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 02: 10s Live Testing Scanner</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">0.0s – 10.0s</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Smooth circular countdown ring gauge, 3-row diagnostic phase checklist with real-time progress bars, and 100Hz Gyro vs Optical Flow oscilloscope waveform.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(2)">Open Interactive Screen 2 →</button>
+            </div>
 
-  </div>
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 03: Results Breakdown</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">Instant Verdict</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Animated Uncapped CamScore counter, circular 0%–100% Health Monitor gauge, 3 horizontal sub-score cards (AF, OIS, Lens), and Monthly Global Rank.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(3)">Open Interactive Screen 3 →</button>
+            </div>
 
-  <script>
-    let hasOis = true;
-    let isLight = false;
-    let waveformPts = [];
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 04: Digital Health Certificate</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">Export & Share</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Fintech-grade certificate card featuring royal-blue header banner, verified health stamp, anti-fraud QR code box, and one-tap PNG/PDF share.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(4)">Open Interactive Screen 4 →</button>
+            </div>
 
-    function toggleTheme() {
-      isLight = !isLight;
-      document.body.classList.toggle('light-mode', isLight);
-      const btn = document.getElementById('theme-toggle-btn');
-      btn.textContent = isLight ? '🌙 Dark' : '☀️ Light';
-    }
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 05: Monthly Global Leaderboard</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">Rolling Monthly Season</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Live rankings partitioned by YYYY-MM, filter for "All Phones" vs "Non-OIS / Budget Phones", medal badges, and compare-with-friends features.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(5)">Open Interactive Screen 5 →</button>
+            </div>
 
-    function toggleOisMode() {
-      hasOis = !hasOis;
-      const btn = document.getElementById('device-mode-toggle');
-      const badge = document.getElementById('ois-badge');
-      if (hasOis) {
-        btn.textContent = 'OIS Mode: ON';
-        btn.className = 'text-xs px-2.5 py-1 rounded-full font-bold bg-[var(--primary)] text-white shadow-sm';
-        badge.textContent = 'OIS Equipped ✓';
-        badge.className = 'mt-2 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
-      } else {
-        btn.textContent = 'Non-OIS Fair Mode';
-        btn.className = 'text-xs px-2.5 py-1 rounded-full font-bold bg-cyan-600 text-white shadow-sm';
-        badge.textContent = 'Non-OIS Fair Mode Active';
-        badge.className = 'mt-2 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40';
-      }
-    }
+            <div class="showcase-screen-card">
+                <div class="ssc-header">
+                    <span class="ssc-title-badge">Screen 06: Test History & Trends</span>
+                    <span style="font-size: 11px; color: var(--text-secondary);">Offline SQLite / Room DB</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary);">Long-term 0%–100% health degradation chart, complete historical run logs, and one-tap past certificate inspection.</p>
+                <button class="pill-btn" onclick="openScreenFromShowcase(6)">Open Interactive Screen 6 →</button>
+            </div>
+        </div>
+    </section>
 
-    function runDiagnostic() {
-      document.getElementById('view-home').classList.add('hidden');
-      document.getElementById('view-result').classList.add('hidden');
-      document.getElementById('view-cert').classList.add('hidden');
-      document.getElementById('view-testing').classList.remove('hidden');
+    <!-- ======================================================= -->
+    <!-- Application Logic & Diagnostics State Machine           -->
+    <!-- ======================================================= -->
+    <script>
+        // App State
+        let isWhiteTheme = false;
+        let isOisPhone = true;
+        let activeScreen = 1;
+        let currentScene = 'living';
+        let currentObSlide = 1;
+        let activeLbTab = 'all';
+        let webcamStream = null;
 
-      document.getElementById('non-ois-banner').classList.toggle('hidden', hasOis);
-      document.getElementById('p2-label').textContent = hasOis ? '2. OIS Stabilization (3.5–7.0s)' : '2. Sensor Stability (Non-OIS)';
+        // Diagnostic Metrics State
+        let testRunning = false;
+        let testStartTime = 0;
+        let currentDevice = {
+            model: "Google Pixel 8 Pro",
+            hasOis: true,
+            score: 14850,
+            health: 96,
+            afPct: 98,
+            afLockMs: 132,
+            oisPct: 94,
+            oisDampPct: 89,
+            lensPct: 96,
+            lensDeltaE: 1.4,
+            rank: 14,
+            testId: "#CS-8921",
+            hash: "4a8f9c1b7e2d63018274aef0c82937bd",
+            timestamp: "Oct 30, 2026"
+        };
 
-      const ring = document.getElementById('countdown-ring');
-      const text = document.getElementById('countdown-text');
-      const phaseLabel = document.getElementById('phase-label');
+        // Real-Time Sensor Fusion Waveform Buffer
+        let waveData = [];
 
-      const totalMs = 10000;
-      const startMs = Date.now();
+        // Web Audio Synthesizer Context
+        let audioCtx = null;
 
-      function step() {
-        const elapsed = Date.now() - startMs;
-        const remain = Math.max(0, (totalMs - elapsed) / 1000);
-        text.textContent = remain.toFixed(1) + 's';
-
-        const fraction = Math.min(1, elapsed / totalMs);
-        ring.style.strokeDashoffset = (377 * fraction).toString();
-
-        if (elapsed < 3500) {
-          phaseLabel.textContent = 'Phase 1: Autofocus';
-          const p = (elapsed / 3500) * 100;
-          document.getElementById('p1-bar').style.width = p + '%';
-          document.getElementById('p1-val').textContent = Math.round(p) + '%';
-        } else if (elapsed < 7000) {
-          phaseLabel.textContent = hasOis ? 'Phase 2: OIS Motors' : 'Phase 2: Sensor Stability';
-          document.getElementById('p1-bar').style.width = '100%';
-          document.getElementById('p1-val').textContent = '100%';
-          const p = ((elapsed - 3500) / 3500) * 100;
-          document.getElementById('p2-bar').style.width = p + '%';
-          document.getElementById('p2-val').textContent = Math.round(p) + '%';
-        } else if (elapsed < 10000) {
-          phaseLabel.textContent = 'Phase 3: Lens & Color';
-          document.getElementById('p2-bar').style.width = '100%';
-          document.getElementById('p2-val').textContent = '100%';
-          const p = ((elapsed - 7000) / 3000) * 100;
-          document.getElementById('p3-bar').style.width = p + '%';
-          document.getElementById('p3-val').textContent = Math.round(p) + '%';
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) audioCtx = new AudioContextClass();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
 
-        // Waveform
-        waveformPts.push({
-          gyro: Math.sin(elapsed * 0.02) * (hasOis ? 8 : 18) + (Math.random() - 0.5) * 4,
-          flow: Math.cos(elapsed * 0.015) * 10 + (Math.random() - 0.5) * 4
+        function playTone(freq, durationMs, type = 'sine', volume = 0.15) {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durationMs / 1000);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + durationMs / 1000);
+            } catch (e) {
+                // Audio autoplay policy fallback
+            }
+        }
+
+        function playStartChime() {
+            playTone(440, 150, 'sine', 0.15);
+            setTimeout(() => playTone(587.33, 150, 'sine', 0.15), 100);
+            setTimeout(() => playTone(880, 250, 'triangle', 0.2), 200);
+        }
+
+        function playPhaseChime() {
+            playTone(523.25, 120, 'sine', 0.12);
+            setTimeout(() => playTone(659.25, 180, 'sine', 0.15), 80);
+        }
+
+        function playSuccessFanfare() {
+            playTone(523.25, 120, 'triangle', 0.2);
+            setTimeout(() => playTone(659.25, 120, 'triangle', 0.2), 100);
+            setTimeout(() => playTone(783.99, 150, 'triangle', 0.25), 200);
+            setTimeout(() => playTone(1046.50, 400, 'sine', 0.3), 320);
+        }
+
+        // ==========================================
+        // Theme & Hardware Toggle Handlers
+        // ==========================================
+        function toggleTheme() {
+            isWhiteTheme = !isWhiteTheme;
+            document.body.classList.toggle('white-theme', isWhiteTheme);
+            document.getElementById('theme-icon').textContent = isWhiteTheme ? '🌙' : '☀️';
+            document.getElementById('theme-text').textContent = isWhiteTheme ? 'Dark Theme' : 'Light Theme';
+            document.getElementById('phone-theme-btn').textContent = isWhiteTheme ? '🌙' : '☀️';
+            renderSceneCanvas();
+            drawWaveform();
+            renderSparkline();
+        }
+
+        function toggleOisMode() {
+            isOisPhone = !isOisPhone;
+            const btn = document.getElementById('hw-mode-btn');
+            const icon = document.getElementById('hw-icon');
+            const text = document.getElementById('hw-text');
+            const pill = document.getElementById('live-ois-pill');
+
+            if (isOisPhone) {
+                btn.className = 'pill-btn active';
+                icon.textContent = '⚡';
+                text.textContent = 'OIS Equipped';
+                pill.textContent = 'OIS Active ✓';
+                pill.style.color = '#34d399';
+                currentDevice.model = "Google Pixel 8 Pro";
+                currentDevice.hasOis = true;
+                currentDevice.score = 14850;
+                currentDevice.health = 96;
+                currentDevice.oisPct = 94;
+                currentDevice.rank = 14;
+            } else {
+                btn.className = 'pill-btn non-ois-active';
+                icon.textContent = 'ℹ️';
+                text.textContent = 'Non-OIS Fair Mode';
+                pill.textContent = 'Non-OIS Fair Mode';
+                pill.style.color = '#38bdf8';
+                currentDevice.model = "Redmi Note 13 (Non-OIS)";
+                currentDevice.hasOis = false;
+                currentDevice.score = 11200;
+                currentDevice.health = 98; // Mint health achieved via Fair Mode!
+                currentDevice.oisPct = -1;
+                currentDevice.rank = 3;
+            }
+            updateResultsUI();
+            updateCertificateUI();
+            renderLeaderboard();
+        }
+
+        function toggleShowcaseView() {
+            const phone = document.getElementById('phone-container');
+            const showcase = document.getElementById('showcase-grid-view');
+            const btnText = document.getElementById('layout-view-text');
+
+            if (showcase.style.display === 'block') {
+                showcase.style.display = 'none';
+                phone.style.display = 'flex';
+                btnText.textContent = 'Figure 3.1 Showcase';
+            } else {
+                showcase.style.display = 'block';
+                phone.style.display = 'none';
+                btnText.textContent = 'Interactive Phone';
+            }
+        }
+
+        function openScreenFromShowcase(num) {
+            toggleShowcaseView();
+            openScreen(num);
+        }
+
+        // ==========================================
+        // Screen Navigation Manager
+        // ==========================================
+        function openScreen(num) {
+            activeScreen = num;
+            document.querySelectorAll('.screen-view').forEach((s, idx) => {
+                s.classList.toggle('active', (idx + 1) === num);
+            });
+
+            // Update bottom navigation bar
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            if (num === 1) document.getElementById('nav-btn-home').classList.add('active');
+            if (num === 5) document.getElementById('nav-btn-leaderboard').classList.add('active');
+            if (num === 4) document.getElementById('nav-btn-cert').classList.add('active');
+            if (num === 6) document.getElementById('nav-btn-history').classList.add('active');
+
+            if (num === 1) renderSceneCanvas();
+            if (num === 4) updateCertificateUI();
+            if (num === 5) renderLeaderboard();
+            if (num === 6) { renderHistory(); renderSparkline(); }
+        }
+
+        // ==========================================
+        // Viewfinder Scene Rendering (Simulation + WebCam)
+        // ==========================================
+        function setScene(type) {
+            currentScene = type;
+            document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+            const b = document.getElementById(`sc-btn-${type}`);
+            if (b) b.classList.add('active');
+
+            const video = document.getElementById('webcam-feed');
+            const canvas = document.getElementById('sim-scene-canvas');
+            const label = document.getElementById('camera-label-text');
+            const lightVal = document.getElementById('rb-light-val');
+            const textVal = document.getElementById('rb-texture-val');
+            const readyVal = document.getElementById('rb-ready-val');
+            const luxTag = document.getElementById('live-lux-tag');
+
+            if (type === 'webcam') return; // Handled separately
+
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(t => t.stop());
+                webcamStream = null;
+            }
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+
+            if (type === 'living') {
+                label.textContent = 'Living Room Scene';
+                lightVal.textContent = '380 Lux';
+                lightVal.className = 'rb-val';
+                textVal.textContent = '89% Good';
+                textVal.className = 'rb-val';
+                readyVal.textContent = 'Ready';
+                readyVal.className = 'rb-val';
+                luxTag.textContent = '☀️ 380 Lux';
+            } else if (type === 'chart') {
+                label.textContent = 'CIE LAB Color Chart';
+                lightVal.textContent = '520 Lux';
+                lightVal.className = 'rb-val';
+                textVal.textContent = '96% High';
+                textVal.className = 'rb-val';
+                readyVal.textContent = 'Ready';
+                readyVal.className = 'rb-val';
+                luxTag.textContent = '☀️ 520 Lux';
+            } else if (type === 'dark') {
+                label.textContent = 'Low-Light Cheating Test';
+                lightVal.textContent = '12 Lux (Low)';
+                lightVal.className = 'rb-val fail';
+                textVal.textContent = '18% Poor';
+                textVal.className = 'rb-val warn';
+                readyVal.textContent = 'Low Light Alert';
+                readyVal.className = 'rb-val fail';
+                luxTag.textContent = '🌙 12 Lux';
+            } else if (type === 'wall') {
+                label.textContent = 'Blank Wall Cheating Test';
+                lightVal.textContent = '350 Lux';
+                lightVal.className = 'rb-val';
+                textVal.textContent = '4% (Blank Wall)';
+                textVal.className = 'rb-val fail';
+                readyVal.textContent = 'No Texture';
+                readyVal.className = 'rb-val fail';
+                luxTag.textContent = '☀️ 350 Lux';
+            }
+            renderSceneCanvas();
+        }
+
+        async function initRealWebcam() {
+            const video = document.getElementById('webcam-feed');
+            const canvas = document.getElementById('sim-scene-canvas');
+            const label = document.getElementById('camera-label-text');
+
+            document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('sc-btn-webcam').classList.add('active');
+            currentScene = 'webcam';
+
+            try {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 360 } }
+                    });
+                    webcamStream = stream;
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    canvas.style.display = 'none';
+                    label.textContent = 'Live WebCam Active';
+                    document.getElementById('rb-light-val').textContent = '420 Lux';
+                    document.getElementById('rb-texture-val').textContent = '91% Good';
+                    document.getElementById('rb-ready-val').textContent = 'Ready';
+                } else {
+                    alert("Camera API not available in this browser. Falling back to textured scene simulation.");
+                    setScene('living');
+                }
+            } catch (err) {
+                alert("Camera permission denied or camera unavailable. Falling back to textured simulation.");
+                setScene('living');
+            }
+        }
+
+        function renderSceneCanvas(zoomLevel = 1.0, blurAmount = 0) {
+            const canvas = document.getElementById('sim-scene-canvas');
+            if (!canvas || currentScene === 'webcam') return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+
+            ctx.save();
+            ctx.clearRect(0, 0, w, h);
+
+            if (blurAmount > 0) {
+                ctx.filter = `blur(${blurAmount}px)`;
+            }
+
+            // Zoom transform from center
+            if (zoomLevel > 1.0) {
+                ctx.translate(w / 2, h / 2);
+                ctx.scale(zoomLevel, zoomLevel);
+                ctx.translate(-w / 2, -h / 2);
+            }
+
+            if (currentScene === 'living') {
+                // Stylized Room Scene matching Figure 3.1
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, '#1e293b');
+                grad.addColorStop(1, '#0f172a');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // Wall textured grid
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < w; x += 20) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+                }
+                for (let y = 0; y < h; y += 20) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+                }
+
+                // Window with daylight glow
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(30, 25, 70, 70);
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillRect(34, 29, 30, 30);
+                ctx.fillRect(68, 29, 28, 30);
+                ctx.fillRect(34, 63, 30, 28);
+                ctx.fillRect(68, 63, 28, 28);
+
+                // Lamp & warm glow
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath(); ctx.arc(w - 60, 45, 14, 0, Math.PI * 2); ctx.fill();
+
+                // Plant with detailed leaves for texture
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath(); ctx.ellipse(w / 2, h - 45, 24, 35, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#059669';
+                ctx.beginPath(); ctx.ellipse(w / 2 - 15, h - 35, 15, 25, -0.4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(w / 2 + 15, h - 35, 15, 25, 0.4, 0, Math.PI * 2); ctx.fill();
+
+                // Pot
+                ctx.fillStyle = '#b45309';
+                ctx.fillRect(w / 2 - 18, h - 25, 36, 25);
+
+            } else if (currentScene === 'chart') {
+                // Color Calibrator Test Chart
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, w, h);
+                const colors = ['#e11d48', '#2563eb', '#16a34a', '#ca8a04', '#9333ea', '#0891b2', '#ea580c', '#4b5563'];
+                const cols = 4, rows = 2;
+                const cw = (w - 40) / cols;
+                const ch = (h - 40) / rows;
+                let cIdx = 0;
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        ctx.fillStyle = colors[cIdx % colors.length];
+                        ctx.fillRect(20 + c * cw + 4, 20 + r * ch + 4, cw - 8, ch - 8);
+                        cIdx++;
+                    }
+                }
+            } else if (currentScene === 'dark') {
+                ctx.fillStyle = '#030712';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = 'rgba(255,255,255,0.03)';
+                ctx.fillRect(w/2 - 40, h/2 - 40, 80, 80);
+            } else if (currentScene === 'wall') {
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            ctx.restore();
+        }
+
+        // ==========================================
+        // 10-Second Diagnostic Automated Execution
+        // ==========================================
+        function start10sDiagnostic() {
+            // Anti-Cheat Blank-Wall & Low-Light Guard Check (Section 2.1 & 6.4)
+            if (currentScene === 'dark') {
+                alert("⚠️ Low-Light Warning: Scene lighting is below 100 Lux. CamScore diagnostic requires adequate room lighting to test autofocus speed accurately.");
+                return;
+            }
+            if (currentScene === 'wall') {
+                alert("⚠️ Texture Guard Alert: Detected featureless blank wall (< 20% Laplacian variance). Please point camera at textured scene with edges.");
+                return;
+            }
+
+            playStartChime();
+            openScreen(2);
+            testRunning = true;
+            testStartTime = Date.now();
+            waveData = [];
+
+            // Reset UI
+            document.getElementById('p1-bar').style.width = '0%';
+            document.getElementById('p2-bar').style.width = '0%';
+            document.getElementById('p3-bar').style.width = '0%';
+            document.getElementById('p1-status').textContent = 'Running...';
+            document.getElementById('p2-status').textContent = 'Waiting...';
+            document.getElementById('p3-status').textContent = 'Waiting...';
+
+            const banner = document.getElementById('non-ois-banner');
+            banner.style.display = isOisPhone ? 'none' : 'block';
+            document.getElementById('p2-title-text').textContent = isOisPhone ?
+                '2. OIS Stabilization (3.5s–7.0s)' : '2. Sensor Stability (Non-OIS Mode)';
+
+            const totalMs = 10000;
+            const circle = document.getElementById('countdown-circle');
+            const timerText = document.getElementById('countdown-timer-text');
+            const phaseTag = document.getElementById('countdown-phase-tag');
+            const zoomInfo = document.getElementById('scanner-zoom-info');
+
+            let lastPhase = 1;
+
+            function runTick() {
+                if (!testRunning) return;
+                const elapsed = Date.now() - testStartTime;
+                const rem = Math.max(0, (totalMs - elapsed) / 1000);
+                timerText.textContent = rem.toFixed(1) + 's';
+
+                // Update circle stroke (perimeter = 2 * PI * 60 ≈ 377)
+                const frac = Math.min(1, elapsed / totalMs);
+                circle.style.strokeDashoffset = (377 * frac).toString();
+
+                let currentZoom = 1.0;
+                let currentBlur = 0;
+
+                // ──── Phase 1: Autofocus Speed (0.0s – 3.5s | 35% weight) ────
+                if (elapsed < 3500) {
+                    if (lastPhase !== 1) { lastPhase = 1; playPhaseChime(); }
+                    phaseTag.textContent = 'Phase 1: AF Speed';
+                    zoomInfo.textContent = 'Autofocus Defocus → Refocus Macro (σ²)';
+                    const p1 = (elapsed / 3500) * 100;
+                    document.getElementById('p1-bar').style.width = p1 + '%';
+                    document.getElementById('p1-status').textContent = `${Math.round(p1)}%`;
+
+                    // Lens defocus simulation
+                    if (elapsed < 1500) {
+                        currentBlur = (elapsed / 1500) * 8; // Defocusing
+                    } else {
+                        currentBlur = Math.max(0, 8 - ((elapsed - 1500) / 1500) * 8); // Refocusing
+                    }
+
+                // ──── Phase 2: OIS Stabilization (3.5s – 7.0s | 40% weight) ────
+                } else if (elapsed < 7000) {
+                    if (lastPhase !== 2) { lastPhase = 2; playPhaseChime(); }
+                    document.getElementById('p1-bar').style.width = '100%';
+                    document.getElementById('p1-status').textContent = 'Done ✓';
+                    document.getElementById('p1-status').className = 'phase-item-status complete';
+
+                    phaseTag.textContent = isOisPhone ? 'Phase 2: OIS Dampening' : 'Phase 2: Sensor Stability';
+                    zoomInfo.textContent = '4.0x Optical Zoom • Hand Micro-Tremor Lock';
+                    const p2 = ((elapsed - 3500) / 3500) * 100;
+                    document.getElementById('p2-bar').style.width = p2 + '%';
+                    document.getElementById('p2-status').textContent = `${Math.round(p2)}%`;
+
+                    currentZoom = 4.0; // 4x locked zoom where tremors occur
+
+                // ──── Phase 3: Lens Switch & Color Shift (7.0s – 10.0s | 25% weight) ────
+                } else if (elapsed < 10000) {
+                    if (lastPhase !== 3) { lastPhase = 3; playPhaseChime(); }
+                    document.getElementById('p2-bar').style.width = '100%';
+                    document.getElementById('p2-status').textContent = 'Done ✓';
+                    document.getElementById('p2-status').className = 'phase-item-status complete';
+
+                    phaseTag.textContent = 'Phase 3: Multi-Lens Switch';
+                    const p3 = ((elapsed - 7000) / 3000) * 100;
+                    document.getElementById('p3-bar').style.width = p3 + '%';
+                    document.getElementById('p3-status').textContent = `${Math.round(p3)}%`;
+
+                    // Sweep lenses 1x -> 0.6x Ultrawide -> 5x Telephoto
+                    if (elapsed < 8000) {
+                        currentZoom = 0.6; // Ultrawide
+                        zoomInfo.textContent = 'Switching: 0.6x Ultrawide (CIE LAB ΔE)';
+                    } else if (elapsed < 9000) {
+                        currentZoom = 3.0; // Telephoto 3x
+                        zoomInfo.textContent = 'Switching: 3.0x Telephoto Transition';
+                    } else {
+                        currentZoom = 5.0; // Telephoto 5x
+                        zoomInfo.textContent = 'Switching: 5.0x Periscope Lock';
+                    }
+                }
+
+                renderSceneCanvas(currentZoom, currentBlur);
+
+                // Waveform calculation (Gyroscope ω vs Optical Flow dpx)
+                const gyroJitter = Math.sin(elapsed * 0.02) * (isOisPhone ? 6 : 16) + (Math.random() - 0.5) * 3;
+                const flowJitter = Math.cos(elapsed * 0.018) * 8 + (Math.random() - 0.5) * 4;
+                waveData.push({ gyro: gyroJitter, flow: flowJitter });
+                if (waveData.length > 50) waveData.shift();
+                drawWaveform();
+
+                if (elapsed < totalMs) {
+                    requestAnimationFrame(runTick);
+                } else {
+                    completeDiagnostic();
+                }
+            }
+            requestAnimationFrame(runTick);
+        }
+
+        function completeDiagnostic() {
+            testRunning = false;
+            playSuccessFanfare();
+
+            document.getElementById('p3-bar').style.width = '100%';
+            document.getElementById('p3-status').textContent = 'Done ✓';
+            document.getElementById('p3-status').className = 'phase-item-status complete';
+
+            // Generate cryptographic test ID and verification hash
+            const randHex = Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+            currentDevice.testId = `#CS-${Math.floor(1000 + Math.random() * 9000)}`;
+            currentDevice.hash = `${randHex}1b7e2d63018274aef0c82937bd`;
+            currentDevice.timestamp = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            // Save run to local history (Room DB simulation)
+            saveTestToHistory({
+                date: currentDevice.timestamp,
+                model: currentDevice.model,
+                score: currentDevice.score,
+                health: currentDevice.health,
+                hasOis: currentDevice.hasOis,
+                testId: currentDevice.testId,
+                hash: currentDevice.hash
+            });
+
+            updateResultsUI();
+            updateCertificateUI();
+            openScreen(3);
+        }
+
+        function drawWaveform() {
+            const canvas = document.getElementById('live-waveform-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#060e1a';
+            ctx.fillRect(0, 0, w, h);
+
+            // Center baseline
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+
+            if (waveData.length < 2) return;
+
+            // 100Hz Gyroscope Wave (Electric Blue #1976D2)
+            ctx.strokeStyle = '#1976D2';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            waveData.forEach((pt, i) => {
+                const x = (i / (waveData.length - 1)) * w;
+                const y = h/2 + pt.gyro;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Optical Flow Wave (Cyan #29B6F6)
+            ctx.strokeStyle = '#29B6F6';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            waveData.forEach((pt, i) => {
+                const x = (i / (waveData.length - 1)) * w;
+                const y = h/2 + pt.flow;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+        }
+
+        // ==========================================
+        // Results & Certificate UI Renderers
+        // ==========================================
+        function updateResultsUI() {
+            const scoreEl = document.getElementById('res-score-number');
+            const healthEl = document.getElementById('res-health-pct');
+            const pillEl = document.getElementById('res-status-pill');
+            const oisTitle = document.getElementById('res-ois-title');
+            const oisPct = document.getElementById('res-ois-pct');
+            const oisMeta = document.getElementById('res-ois-meta');
+            const nonOisNote = document.getElementById('res-non-ois-note');
+            const rankDisplay = document.getElementById('res-rank-display');
+
+            scoreEl.textContent = currentDevice.score.toLocaleString();
+            healthEl.textContent = `${currentDevice.health}%`;
+            rankDisplay.textContent = `#${currentDevice.rank}`;
+
+            // Mini Gauge Ring SVG dashoffset (perimeter = 2 * PI * 28 ≈ 175)
+            const ring = document.getElementById('res-mini-ring');
+            const offset = 175 * (1 - currentDevice.health / 100);
+            ring.style.strokeDashoffset = offset.toString();
+
+            if (currentDevice.hasOis) {
+                oisTitle.textContent = '📐 OIS Stabilization Motor';
+                oisPct.textContent = '94%';
+                oisPct.style.color = '#10B981';
+                oisMeta.textContent = 'Dampening: 89% • Jitter: 0.8px • Weight: 40%';
+                nonOisNote.style.display = 'none';
+                pillEl.className = 'health-status-pill pill-pass';
+                pillEl.textContent = 'PASS — Camera Hardware Healthy';
+            } else {
+                oisTitle.textContent = '📐 OIS Status: N/A (Factory Spec)';
+                oisPct.textContent = 'N/A';
+                oisPct.style.color = '#38bdf8';
+                oisMeta.textContent = 'Excluded from Health • Weight Reallocated to AF & Lens';
+                nonOisNote.style.display = 'block';
+                pillEl.className = 'health-status-pill pill-pass';
+                pillEl.textContent = 'PASS — Healthy Non-OIS Camera';
+            }
+        }
+
+        function updateCertificateUI() {
+            document.getElementById('cert-device-title').textContent = currentDevice.model;
+            document.getElementById('cert-date-info').textContent = `Test ID: ${currentDevice.testId} • ${currentDevice.timestamp}`;
+            document.getElementById('cert-score-text').textContent = `${currentDevice.score.toLocaleString()} pts`;
+            document.getElementById('cert-stamp-badge').textContent = currentDevice.hasOis ?
+                `✔ VERIFIED MINT HEALTH (${currentDevice.health}%)` :
+                `✔ VERIFIED HEALTHY (${currentDevice.health}% • NON-OIS MODEL)`;
+            document.getElementById('cert-row-ois').textContent = currentDevice.hasOis ? 'Pass (94%)' : 'N/A (Fair Non-OIS Protocol)';
+            document.getElementById('cert-row-rank').textContent = `Rank #${currentDevice.rank} Worldwide`;
+            document.getElementById('cert-hash-code').textContent = `SHA-256: ${currentDevice.hash}`;
+
+            // Update verification link
+            const verifyLink = document.getElementById('cert-online-verify-link');
+            verifyLink.href = `verify.html?id=${currentDevice.hash}&model=${encodeURIComponent(currentDevice.model)}&score=${currentDevice.score}&health=${currentDevice.health}&ois=${currentDevice.hasOis}`;
+
+            drawQrCode(currentDevice.hash);
+        }
+
+        function drawQrCode(hash) {
+            const canvas = document.getElementById('cert-qr-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#0D233A';
+
+            function drawCorner(x, y) {
+                ctx.fillRect(x, y, 22, 22);
+                ctx.clearRect(x + 3, y + 3, 16, 16);
+                ctx.fillRect(x + 6, y + 6, 10, 10);
+            }
+
+            drawCorner(2, 2);
+            drawCorner(w - 24, 2);
+            drawCorner(2, h - 24);
+
+            // Deterministic pattern from hash string
+            const cellSize = 4;
+            const gridCols = Math.floor((w - 16) / cellSize);
+            for (let r = 0; r < gridCols; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    // Skip corners
+                    if ((r < 6 && c < 6) || (r < 6 && c > gridCols - 7) || (r > gridCols - 7 && c < 6)) continue;
+                    const charCode = hash.charCodeAt((r * 7 + c * 11) % hash.length);
+                    if (charCode % 2 === 0) {
+                        ctx.fillRect(8 + c * cellSize, 8 + r * cellSize, cellSize - 0.5, cellSize - 0.5);
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // Certificate Export Handlers (PNG & PDF)
+        // ==========================================
+        function downloadCertificatePNG() {
+            const card = document.getElementById('printable-cert-card');
+            // High-resolution canvas rendering
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = 600;
+            exportCanvas.height = 750;
+            const ctx = exportCanvas.getContext('2d');
+
+            // Draw clean certificate
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, 600, 750);
+
+            // Banner
+            const grad = ctx.createLinearGradient(0, 0, 600, 140);
+            grad.addColorStop(0, '#0d47a1');
+            grad.addColorStop(0.5, '#1976D2');
+            grad.addColorStop(1, '#29B6F6');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 600, 140);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('OFFICIAL CAMSCORE VERIFICATION', 300, 45);
+            ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Hardware Health & Flex Certificate', 300, 80);
+            ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Fischer Labs Anti-Fraud Diagnostic Registry', 300, 108);
+
+            // Device
+            ctx.fillStyle = '#0D233A';
+            ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText(currentDevice.model, 300, 190);
+            ctx.font = '13px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText(`Test ID: ${currentDevice.testId} • ${currentDevice.timestamp}`, 300, 215);
+
+            // Score Box
+            ctx.fillStyle = '#F8FAFC';
+            ctx.strokeStyle = '#E2E8F0';
+            ctx.lineWidth = 2;
+            ctx.fillRect(100, 240, 400, 110);
+            ctx.strokeRect(100, 240, 400, 110);
+
+            ctx.fillStyle = '#64748B';
+            ctx.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('UNCAPPED CAMSCORE', 300, 268);
+            ctx.fillStyle = '#1976D2';
+            ctx.font = 'bold 38px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText(`${currentDevice.score.toLocaleString()} pts`, 300, 310);
+            ctx.fillStyle = '#166534';
+            ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText(`MINT HARDWARE HEALTH (${currentDevice.health}%)`, 300, 335);
+
+            // Metrics table
+            ctx.textAlign = 'left';
+            ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText('Focus Motor (Laplacian σ²):', 110, 400);
+            ctx.fillText('OIS Gyro Dampening:', 110, 435);
+            ctx.fillText('Lens Calibration (CIE LAB ΔE):', 110, 470);
+            ctx.fillText('Global Monthly Standing:', 110, 505);
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#0D233A';
+            ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Pass (98%)', 490, 400);
+            ctx.fillText(currentDevice.hasOis ? 'Pass (94%)' : 'N/A (Fair Non-OIS Mode)', 490, 435);
+            ctx.fillText('Pass (96%)', 490, 470);
+            ctx.fillText(`Rank #${currentDevice.rank} Worldwide`, 490, 505);
+
+            // QR Code copy
+            const qrCanvas = document.getElementById('cert-qr-canvas');
+            if (qrCanvas) {
+                ctx.drawImage(qrCanvas, 250, 550, 100, 100);
+            }
+
+            ctx.textAlign = 'center';
+            ctx.font = '11px monospace';
+            ctx.fillStyle = '#94A3B8';
+            ctx.fillText(`SHA-256: ${currentDevice.hash}`, 300, 680);
+            ctx.font = '12px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Verified on https://yashrajtiwari003-boop.github.io/CamScore/', 300, 715);
+
+            // Trigger Download
+            const link = document.createElement('a');
+            link.download = `CamScore_Certificate_${currentDevice.testId.replace('#', '')}.png`;
+            link.href = exportCanvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadCertificatePDF() {
+            // Trigger browser print dialog formatted for certificate saving
+            window.print();
+        }
+
+        function shareCertificate() {
+            const shareUrl = window.location.href.split('#')[0];
+            if (navigator.share) {
+                navigator.share({
+                    title: `CamScore Hardware Certificate: ${currentDevice.model}`,
+                    text: `My ${currentDevice.model} scored ${currentDevice.score} pts with ${currentDevice.health}% Mint Camera Health on CamScore!`,
+                    url: shareUrl
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert("Certificate link copied to clipboard!");
+                });
+            }
+        }
+
+        // ==========================================
+        // Monthly Global Leaderboard Data & Filter
+        // ==========================================
+        const leaderboardDataAll = [
+            { rank: 1, model: "iPhone 16 Pro Max", tag: "Triple 48MP • Sensor-Shift OIS", score: 16420, health: 99, cls: "rank-gold" },
+            { rank: 2, model: "Samsung Galaxy S24 Ultra", tag: "Quad 200MP • Dual OIS", score: 16150, health: 98, cls: "rank-silver" },
+            { rank: 3, model: "Google Pixel 9 Pro", tag: "Triple 50MP • OIS + EIS", score: 15890, health: 97, cls: "rank-bronze" },
+            { rank: 4, model: "Vivo X100 Pro", tag: "Zeiss APO 50MP • Gimbal OIS", score: 15430, health: 96, cls: "" },
+            { rank: 5, model: "Xiaomi 14 Ultra", tag: "Quad 50MP 1-inch • Stepless OIS", score: 15210, health: 97, cls: "" },
+            { rank: 14, model: "Google Pixel 8 Pro", tag: "Your Device • 50MP Octa-PD OIS", score: 14850, health: 96, cls: "", isUser: true },
+            { rank: 15, model: "OnePlus 12", tag: "Hasselblad 50MP • OIS", score: 14720, health: 95, cls: "" }
+        ];
+
+        const leaderboardDataNonOis = [
+            { rank: 1, model: "Redmi Note 13", tag: "108MP Main • EIS Class Fair Mode", score: 11450, health: 98, cls: "rank-gold" },
+            { rank: 2, model: "Samsung Galaxy A15", tag: "50MP Triple • Non-OIS Calibrated", score: 10920, health: 97, cls: "rank-silver" },
+            { rank: 3, model: "Redmi Note 13 (Non-OIS)", tag: "Your Device • Fair Mode Active", score: 11200, health: 98, cls: "rank-bronze", isUser: true },
+            { rank: 4, model: "iPhone SE (2022)", tag: "12MP Single • 100% AF Calibration", score: 10750, health: 98, cls: "" },
+            { rank: 5, model: "Realme C67", tag: "108MP Samsung ISOCELL • EIS", score: 10430, health: 96, cls: "" }
+        ];
+
+        function filterLeaderboard(mode) {
+            activeLbTab = mode;
+            document.getElementById('lb-tab-all').classList.toggle('active', mode === 'all');
+            document.getElementById('lb-tab-nonois').classList.toggle('active', mode === 'nonois');
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboard-records-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const list = (activeLbTab === 'all') ? leaderboardDataAll : leaderboardDataNonOis;
+
+            list.forEach(item => {
+                const isCurrent = (item.isUser && ((item.model.includes('Non-OIS') && !isOisPhone) || (!item.model.includes('Non-OIS') && isOisPhone)));
+                const row = document.createElement('div');
+                row.className = `lb-item ${isCurrent ? 'user-device' : ''}`;
+                row.innerHTML = `
+                    <div class="lb-left">
+                        <div class="lb-rank-badge ${item.cls}">${item.rank}</div>
+                        <div class="lb-device-details">
+                            <span class="lb-device-name">${item.model} ${isCurrent ? '★ (You)' : ''}</span>
+                            <span class="lb-device-tag">${item.tag}</span>
+                        </div>
+                    </div>
+                    <div class="lb-right">
+                        <div class="lb-score-val">${item.score.toLocaleString()} pts</div>
+                        <div class="lb-health-val">${item.health}% Health</div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // ==========================================
+        // Test History Persistence (Room DB Mock)
+        // ==========================================
+        function getSavedHistory() {
+            try {
+                const raw = localStorage.getItem('camscore_history');
+                if (raw) return JSON.parse(raw);
+            } catch (e) {}
+            return [
+                { date: "Oct 30, 2026", model: "Google Pixel 8 Pro", score: 14850, health: 96, hasOis: true },
+                { date: "Sep 28, 2026", model: "Google Pixel 8 Pro", score: 14910, health: 97, hasOis: true },
+                { date: "Aug 15, 2026", model: "Google Pixel 8 Pro", score: 14950, health: 98, hasOis: true }
+            ];
+        }
+
+        function saveTestToHistory(testRecord) {
+            try {
+                const history = getSavedHistory();
+                history.unshift(testRecord);
+                localStorage.setItem('camscore_history', JSON.stringify(history.slice(0, 20)));
+            } catch (e) {}
+        }
+
+        function clearTestHistory() {
+            if (confirm("Clear all local test history logs?")) {
+                localStorage.removeItem('camscore_history');
+                renderHistory();
+                renderSparkline();
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-records-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const list = getSavedHistory();
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align: center; padding: 20px; font-size: 11px; color: var(--text-secondary);">No historical diagnostic runs saved yet.</div>`;
+                return;
+            }
+
+            list.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'history-row-card';
+                row.onclick = () => {
+                    currentDevice.model = item.model;
+                    currentDevice.score = item.score;
+                    currentDevice.health = item.health;
+                    currentDevice.hasOis = item.hasOis;
+                    currentDevice.timestamp = item.date;
+                    updateCertificateUI();
+                    openScreen(4);
+                };
+                row.innerHTML = `
+                    <div class="hrc-left">
+                        <span class="hrc-date">${item.date}</span>
+                        <span class="hrc-model">${item.model}</span>
+                    </div>
+                    <div class="hrc-right">
+                        <div class="hrc-score">${item.score.toLocaleString()} pts</div>
+                        <div class="hrc-health">${item.health}% Mint</div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderSparkline() {
+            const canvas = document.getElementById('health-sparkline-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const history = getSavedHistory();
+            const points = history.map(item => item.health);
+            if (points.length < 2) return;
+
+            // Trend Area Gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+            grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            ctx.beginPath();
+            points.forEach((val, i) => {
+                const x = (i / (points.length - 1)) * (w - 30) + 15;
+                const y = h - ((val - 80) / 20) * (h - 20) - 10;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.lineTo(w - 15, h);
+            ctx.lineTo(15, h);
+            ctx.closePath();
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Line stroke
+            ctx.beginPath();
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 2.5;
+            points.forEach((val, i) => {
+                const x = (i / (points.length - 1)) * (w - 30) + 15;
+                const y = h - ((val - 80) / 20) * (h - 20) - 10;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Circles at vertices
+            points.forEach((val, i) => {
+                const x = (i / (points.length - 1)) * (w - 30) + 15;
+                const y = h - ((val - 80) / 20) * (h - 20) - 10;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+        }
+
+        // ==========================================
+        // Onboarding Tutorial Carousel
+        // ==========================================
+        function nextOnboardingSlide() {
+            currentObSlide++;
+            if (currentObSlide > 3) {
+                openScreen(1);
+                currentObSlide = 1;
+            }
+            updateOnboardingUI();
+        }
+
+        function updateOnboardingUI() {
+            for (let i = 1; i <= 3; i++) {
+                const slide = document.getElementById(`ob-slide-${i}`);
+                const dot = document.getElementById(`ob-dot-${i}`);
+                if (slide) slide.classList.toggle('active', i === currentObSlide);
+                if (dot) dot.classList.toggle('active', i === currentObSlide);
+            }
+            const btn = document.getElementById('ob-next-btn');
+            if (btn) btn.textContent = (currentObSlide === 3) ? 'Get Started 🚀' : 'Next →';
+        }
+
+        // ==========================================
+        // Initialization
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSceneCanvas();
+            drawWaveform();
+            updateResultsUI();
+            updateCertificateUI();
+            renderLeaderboard();
+            renderHistory();
+            renderSparkline();
         });
-        if (waveformPts.length > 40) waveformPts.shift();
-        drawWave();
-
-        if (elapsed < totalMs) {
-          requestAnimationFrame(step);
-        } else {
-          showResults();
-        }
-      }
-      requestAnimationFrame(step);
-    }
-
-    function drawWave() {
-      const c = document.getElementById('live-canvas');
-      if (!c) return;
-      const ctx = c.getContext('2d');
-      const w = c.width, h = c.height;
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#020617';
-      ctx.fillRect(0, 0, w, h);
-
-      if (waveformPts.length < 2) return;
-
-      // Gyro (Blue)
-      ctx.strokeStyle = '#3b82f6';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      waveformPts.forEach((p, i) => {
-        const x = (i / (waveformPts.length - 1)) * w;
-        const y = h / 2 + p.gyro;
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-
-      // Optical flow (Cyan)
-      ctx.strokeStyle = '#22d3ee';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      waveformPts.forEach((p, i) => {
-        const x = (i / (waveformPts.length - 1)) * w;
-        const y = h / 2 + p.flow;
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-    }
-
-    function showResults() {
-      document.getElementById('view-testing').classList.add('hidden');
-      document.getElementById('view-result').classList.remove('hidden');
-
-      if (hasOis) {
-        document.getElementById('res-score').textContent = '14,850';
-        document.getElementById('res-health').textContent = '96%';
-        document.getElementById('sub-ois-row-title').textContent = '📐 OIS Stabilization (Damp: 89%)';
-        document.getElementById('sub-ois-row-val').textContent = '94%';
-        document.getElementById('cert-device').textContent = 'Google Pixel 8 Pro';
-        document.getElementById('cert-score-val').textContent = '14,850 pts';
-        document.getElementById('cert-ois').textContent = 'Pass (94%)';
-      } else {
-        document.getElementById('res-score').textContent = '11,200';
-        document.getElementById('res-health').textContent = '98%';
-        document.getElementById('sub-ois-row-title').textContent = '📐 OIS Status: N/A (Factory Spec)';
-        document.getElementById('sub-ois-row-val').textContent = 'N/A';
-        document.getElementById('cert-device').textContent = 'Redmi Note 13 (Non-OIS)';
-        document.getElementById('cert-score-val').textContent = '11,200 pts';
-        document.getElementById('cert-ois').textContent = 'N/A (Fair Non-OIS Mode)';
-      }
-    }
-
-    function showCert() {
-      document.getElementById('view-result').classList.add('hidden');
-      document.getElementById('view-cert').classList.remove('hidden');
-      drawQr();
-    }
-
-    function resetToHome() {
-      document.getElementById('view-testing').classList.add('hidden');
-      document.getElementById('view-result').classList.add('hidden');
-      document.getElementById('view-cert').classList.add('hidden');
-      document.getElementById('view-home').classList.remove('hidden');
-    }
-
-    function drawQr() {
-      const c = document.getElementById('cert-qr');
-      if (!c) return;
-      const ctx = c.getContext('2d');
-      ctx.clearRect(0, 0, 80, 80);
-      ctx.fillStyle = '#0f172a';
-
-      function corner(x, y) {
-        ctx.fillRect(x, y, 20, 20);
-        ctx.clearRect(x + 2, y + 2, 16, 16);
-        ctx.fillRect(x + 5, y + 5, 10, 10);
-      }
-      corner(2, 2);
-      corner(58, 2);
-      corner(2, 58);
-
-      for (let r = 0; r < 12; r++) {
-        for (let col = 0; col < 12; col++) {
-          if ((r < 4 && col < 4) || (r < 4 && col > 7) || (r > 7 && col < 4)) continue;
-          if ((r * 7 + col * 11) % 3 === 0) {
-            ctx.fillRect(8 + col * 4.5, 8 + r * 4.5, 3, 3);
-          }
-        }
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
