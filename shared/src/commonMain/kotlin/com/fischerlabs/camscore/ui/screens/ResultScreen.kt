@@ -193,7 +193,7 @@ fun ResultScreen(
                     subtitle = if (result.oisResult.isNonOisDevice)
                         "Non-OIS Fair Mode: Excluded from penalty"
                     else
-                        "Dampening: ${String.format("%.0f", result.oisResult.dampeningRatio * 100)}% vs 100Hz Gyro",
+                        "Dampening: ${(result.oisResult.dampeningRatio * 100).toInt()}% vs 100Hz Gyro",
                     healthPercent = result.oisResult.healthPercent,
                     icon = { Text("📐", fontSize = 20.sp) },
                     isNotApplicable = result.oisResult.isNonOisDevice,
@@ -205,7 +205,7 @@ fun ResultScreen(
                 // Lens & Colour Row
                 SubScoreCard(
                     title = "Lens & Colour",
-                    subtitle = "Color Shift ΔE: ${String.format("%.1f", result.lensResult.colorShiftDeltaE)} • Lag: ${result.lensResult.switchLagMs}ms",
+                    subtitle = "Color Shift ΔE: ${(result.lensResult.colorShiftDeltaE * 10).toInt() / 10.0} • Lag: ${result.lensResult.switchLagMs}ms",
                     healthPercent = result.lensResult.healthPercent,
                     icon = { Text("🔍", fontSize = 20.sp) }
                 )

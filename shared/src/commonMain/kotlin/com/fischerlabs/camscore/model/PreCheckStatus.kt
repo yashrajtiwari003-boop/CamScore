@@ -49,7 +49,7 @@ data class PreCheckStatus(
             val textureOk = textureScore >= MIN_TEXTURE_SCORE
             val errorMessage = buildString {
                 if (!lightingOk) append("Insufficient lighting (${ambientLux.toInt()} lux, need ≥${MIN_LUX.toInt()}). ")
-                if (!textureOk) append("Target lacks texture detail (score ${String.format("%.2f", textureScore)}, need ≥${MIN_TEXTURE_SCORE}). ")
+                if (!textureOk) append("Target lacks texture detail (score ${(textureScore * 100).toInt() / 100.0}, need ≥${MIN_TEXTURE_SCORE}). ")
             }.ifEmpty { null }
 
             return PreCheckStatus(
