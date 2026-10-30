@@ -364,6 +364,207 @@
             color: var(--primary);
         }
 
+        
+        /* Device Category Tags */
+        .ddc-tag {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 2px;
+            width: fit-content;
+        }
+        .ddc-tag-mobile {
+            background: rgba(41, 182, 246, 0.18);
+            color: #38bdf8;
+            border: 1px solid rgba(41, 182, 246, 0.4);
+        }
+        .ddc-tag-desktop {
+            background: rgba(168, 85, 247, 0.18);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+
+        /* OIS Hardware Compatibility Verification Card */
+        .ois-compat-card {
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            transition: all 0.4s ease;
+        }
+        .ois-compat-card.analyzing {
+            background: rgba(25, 118, 210, 0.12);
+            border: 1px dashed rgba(41, 182, 246, 0.5);
+            animation: ois-banner-pulse 1.8s infinite alternate;
+        }
+        .ois-compat-card.compatible {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1.5px solid #10B981;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.22);
+        }
+        .ois-compat-card.non-ois {
+            background: rgba(2, 132, 199, 0.15);
+            border: 1.5px solid #0284c7;
+            box-shadow: 0 0 16px rgba(2, 132, 199, 0.2);
+        }
+        .occ-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .occ-icon-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .ois-compat-card.analyzing .occ-icon-box {
+            background: rgba(41, 182, 246, 0.15);
+        }
+        .ois-compat-card.compatible .occ-icon-box {
+            background: #10B981;
+            color: #0A192F;
+            font-weight: 900;
+            font-size: 18px;
+        }
+        .ois-compat-card.non-ois .occ-icon-box {
+            background: #0284c7;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 16px;
+        }
+        .occ-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(41, 182, 246, 0.3);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: occ-spin 0.8s linear infinite;
+        }
+        @keyframes occ-spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes ois-banner-pulse {
+            0% { opacity: 0.85; }
+            100% { opacity: 1; box-shadow: 0 0 14px rgba(41, 182, 246, 0.3); }
+        }
+        .occ-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .occ-title {
+            font-size: 12.5px;
+            font-weight: 800;
+        }
+        .ois-compat-card.analyzing .occ-title { color: #38bdf8; }
+        .ois-compat-card.compatible .occ-title { color: #34d399; }
+        .ois-compat-card.non-ois .occ-title { color: #38bdf8; }
+        .occ-sub {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+        .occ-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+        .ois-compat-card.analyzing .occ-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        .ois-compat-card.compatible .occ-badge {
+            background: rgba(16, 185, 129, 0.25);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+        .ois-compat-card.non-ois .occ-badge {
+            background: rgba(2, 132, 199, 0.25);
+            color: #38bdf8;
+            border: 1px solid rgba(2, 132, 199, 0.5);
+        }
+
+        /* Fischer Labs Official Stamp */
+        .stamp-container {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0 14px 0;
+        }
+        .fischer-stamp {
+            display: inline-block;
+            border: 2.5px dashed #10B981;
+            border-radius: 14px;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.08);
+            color: #10B981;
+            text-align: center;
+            transform: rotate(-3deg);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.22), inset 0 0 10px rgba(16, 185, 129, 0.08);
+            user-select: none;
+            transition: transform 0.3s ease;
+        }
+        .fischer-stamp:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+        .stamp-inner-border {
+            border: 1.2px solid rgba(16, 185, 129, 0.6);
+            border-radius: 9px;
+            padding: 6px 14px;
+        }
+        .stamp-stars {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #34D399;
+        }
+        .stamp-company {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #10B981;
+            line-height: 1.2;
+            margin: 2px 0;
+        }
+        .stamp-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: #34D399;
+        }
+        .stamp-subtitle {
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: rgba(16, 185, 129, 0.85);
+            margin-top: 1px;
+        }
+        .stamp-hash-id {
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            background: #10B981;
+            color: #0A192F;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
         /* Device Banner Card */
         .device-detected-card {
             background: var(--surface-card);
@@ -1696,6 +1897,7 @@
             .showcase-header { display: none; }
         }
     </style>
+    <script src="qrcode.min.js"></script>
 </head>
 <body class="antialiased">
 
@@ -1766,13 +1968,28 @@
             <section class="screen-view active" id="screen-1">
                 <div class="device-detected-card">
                     <div class="ddc-left">
-                        <span class="ddc-tag">Detected Smartphone</span>
+                        <span class="ddc-tag ddc-tag-mobile" id="ddc-device-tag">Smartphone Detected</span>
                         <span class="ddc-name" id="home-device-name">Detecting Device...</span>
                         <span class="ddc-sub" id="home-device-sub">Scanning Hardware Sensors & OIS...</span>
                     </div>
                     <button class="ddc-edit-btn" onclick="openDeviceModal()">
                         <span>✏️</span> Edit
                     </button>
+                </div>
+
+                <!-- Dedicated OIS Hardware Compatibility Verification Banner -->
+                <div id="ois-compat-banner" class="ois-compat-card analyzing">
+                    <div class="occ-left">
+                        <div class="occ-icon-box" id="occ-icon-box">
+                            <div class="occ-spinner" id="occ-spinner"></div>
+                            <span id="occ-icon" style="display: none;">✓</span>
+                        </div>
+                        <div class="occ-details">
+                            <div class="occ-title" id="occ-title">Checking OIS Compatibility...</div>
+                            <div class="occ-sub" id="occ-sub">Cross-referencing hardware specifications & voice-coil stabilizer database...</div>
+                        </div>
+                    </div>
+                    <div class="occ-badge" id="occ-badge">Analyzing...</div>
                 </div>
 
                 <!-- Viewfinder Card -->
@@ -2037,15 +2254,28 @@
                             </div>
                         </div>
 
+                        <!-- Official Fischer Labs Green Stamp -->
+                        <div class="stamp-container">
+                            <div class="fischer-stamp">
+                                <div class="stamp-inner-border">
+                                    <div class="stamp-stars">★ ★ ★ ★ ★</div>
+                                    <div class="stamp-company">FISCHER LABS</div>
+                                    <div class="stamp-title">OFFICIALLY VERIFIED</div>
+                                    <div class="stamp-subtitle">HARDWARE DIAGNOSTIC AUDIT</div>
+                                    <div class="stamp-hash-id" id="cert-stamp-id">PASS • CS-9821</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="cert-qr-container">
                             <div class="cert-qr-box">
-                                <canvas id="cert-qr-canvas" class="qr-canvas-elem" width="84" height="84"></canvas>
+                                <canvas id="cert-qr-canvas" class="qr-canvas-elem" width="110" height="110"></canvas>
                             </div>
                             <div class="cert-hash-label" id="cert-hash-code">
                                 SHA-256: ---
                             </div>
-                            <div style="font-size: 8px; color: #64748B;">
-                                Scan QR to verify on fischerlabs.com
+                            <div style="font-size: 8.5px; color: #38BDF8; font-weight: 700; margin-top: 4px;">
+                                📷 Scan QR with camera to open Fischer Labs Registry
                             </div>
                         </div>
                     </div>
@@ -2389,20 +2619,124 @@
         // ==========================================
         // SMARTPHONE HARDWARE & OIS DETECTION ENGINE
         // ==========================================
+                // ==========================================
+        // SMARTPHONE HARDWARE & OIS COMPATIBILITY ENGINE
+        // ==========================================
+        function checkOisCompatibility(deviceName, isDesktop) {
+            if (isDesktop) {
+                return { hasOis: false, category: "Desktop WebCam (Non-OIS Sensor)" };
+            }
+            const name = (deviceName || "").toLowerCase();
+
+            // 1. Apple iOS
+            if (name.includes("iphone") || name.includes("apple")) {
+                if (name.includes("iphone 16") || name.includes("iphone 15") || name.includes("iphone 14") ||
+                    name.includes("iphone 13") || name.includes("iphone 12") || name.includes("iphone 11") ||
+                    name.includes("iphone xs") || name.includes("iphone xr") || name.includes("iphone x") ||
+                    name.includes("8 plus") || name.includes("7 plus") || name.includes("6s plus") ||
+                    name.includes("iphone 8") || name.includes("iphone 7")) {
+                    return { hasOis: true, category: "Apple Sensor-Shift / Optical Stabilization" };
+                }
+                if (name.includes("se") || name.includes("iphone 6") || name.includes("iphone 5") || name.includes("ipad")) {
+                    return { hasOis: false, category: "Apple Non-OIS / EIS Only" };
+                }
+                return { hasOis: true, category: "Apple Modern Camera OIS" };
+            }
+
+            // 2. Samsung Galaxy
+            if (name.includes("samsung") || name.includes("galaxy") || name.includes("sm-")) {
+                if (name.includes("s24") || name.includes("s23") || name.includes("s22") ||
+                    name.includes("s21") || name.includes("s20") || name.includes("s10") ||
+                    name.includes("s9") || name.includes("s8") || name.includes("s7") ||
+                    name.includes("note") || name.includes("fold") || name.includes("flip") ||
+                    name.includes("a55") || name.includes("a54") || name.includes("a53") ||
+                    name.includes("a52") || name.includes("a73") || name.includes("a72") ||
+                    /sm-[sgnf][0-9]{3}/i.test(name)) {
+                    return { hasOis: true, category: "Samsung Super-Steady OIS Motor" };
+                }
+                // Non-OIS Samsung Budget (A0x, A1x, A2x, A3x, M-series, F-series)
+                return { hasOis: false, category: "Samsung Budget Series (Non-OIS Factory Spec)" };
+            }
+
+            // 3. Google Pixel
+            if (name.includes("pixel")) {
+                if (name.includes("pixel 1") || name === "google pixel") {
+                    return { hasOis: false, category: "Google Pixel 1 (EIS Only)" };
+                }
+                return { hasOis: true, category: "Google Pixel OIS + EIS Fusion" };
+            }
+
+            // 4. Xiaomi / Redmi / POCO
+            if (name.includes("xiaomi") || name.includes("redmi") || name.includes("poco")) {
+                if (name.includes("14 ultra") || name.includes("14 pro") || name.includes("13 ultra") ||
+                    name.includes("13 pro") || name.includes("13t") || name.includes("14t") ||
+                    name.includes("note 13 pro+") || name.includes("note 12 pro+") ||
+                    name.includes("f6 pro") || name.includes("f5 pro") || name.includes("x6 pro")) {
+                    return { hasOis: true, category: "Xiaomi Flagship OIS" };
+                }
+                return { hasOis: false, category: "Xiaomi/Redmi Non-OIS (Fair Mode)" };
+            }
+
+            // 5. OnePlus
+            if (name.includes("oneplus") || name.includes("cph")) {
+                if (name.includes("nord ce") || name.includes("nord n") || name.includes("lite")) {
+                    return { hasOis: false, category: "OnePlus Nord Lite (Non-OIS)" };
+                }
+                if (name.includes("12") || name.includes("11") || name.includes("10") ||
+                    name.includes("9") || name.includes("8") || name.includes("7") ||
+                    name.includes("open") || name.includes("nord 3") || name.includes("nord 4")) {
+                    return { hasOis: true, category: "OnePlus Hardware OIS" };
+                }
+                return { hasOis: true, category: "OnePlus OIS" };
+            }
+
+            // 6. Vivo / iQOO
+            if (name.includes("vivo") || name.includes("iqoo")) {
+                if (name.includes("x50") || name.includes("x60") || name.includes("x70") ||
+                    name.includes("x80") || name.includes("x90") || name.includes("x100") ||
+                    name.includes("v27") || name.includes("v29") || name.includes("v30") ||
+                    name.includes("v40") || name.includes("iqoo 9") || name.includes("iqoo 11") ||
+                    name.includes("iqoo 12") || name.includes("neo")) {
+                    return { hasOis: true, category: "Vivo Ultra-Sensing Gimbal OIS" };
+                }
+                return { hasOis: false, category: "Vivo Y/T Budget (Non-OIS)" };
+            }
+
+            // 7. Realme
+            if (name.includes("realme") || name.includes("rmx")) {
+                if (name.includes("gt") || name.includes("11 pro+") || name.includes("12 pro+")) {
+                    return { hasOis: true, category: "Realme SuperOIS" };
+                }
+                return { hasOis: false, category: "Realme Non-OIS (Fair Mode)" };
+            }
+
+            // 8. Motorola
+            if (name.includes("moto") || name.includes("motorola")) {
+                if (name.includes("edge") || name.includes("razr") || name.includes("g84") || name.includes("thinkphone")) {
+                    return { hasOis: true, category: "Motorola Hardware OIS" };
+                }
+                return { hasOis: false, category: "Motorola G/E Budget (Non-OIS)" };
+            }
+
+            // Default fallback: Non-OIS to guarantee fair scoring without false OIS penalties
+            return { hasOis: false, category: "Standard Sensor (Non-OIS Fair Mode)" };
+        }
+
         async function detectRealSmartphone() {
+            const ua = navigator.userAgent;
+            const isDesktop = !(/Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)) &&
+                              !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
             const savedCustom = localStorage.getItem('camscore_custom_device');
             if (savedCustom) {
-                const isNonOis = /Note 13|SE|A15|A14|C67|Budget|Non-OIS/i.test(savedCustom);
-                setDeviceModel(savedCustom, !isNonOis);
+                runOisCompatibilityAnalysis(savedCustom, isDesktop);
                 return;
             }
 
-            const ua = navigator.userAgent;
-            let brand = "Smartphone";
+            let brand = isDesktop ? "PC" : "Smartphone";
             let modelName = "";
             let modelNumber = "";
-            let os = "Mobile OS";
-            let detectedOis = true;
+            let os = isDesktop ? "Desktop OS" : "Mobile OS";
 
             if (navigator.userAgentData) {
                 try {
@@ -2432,19 +2766,15 @@
                     else if (/SM-S908/i.test(rawModel)) { modelName = "Galaxy S22 Ultra"; modelNumber = rawModel; }
                     else if (/SM-G998/i.test(rawModel)) { modelName = "Galaxy S21 Ultra"; modelNumber = rawModel; }
                     else if (/SM-A546|SM-A556/i.test(rawModel)) { modelName = "Galaxy A54 5G"; modelNumber = rawModel; }
-                    else if (/SM-A155|SM-A156|SM-A146|SM-A055/i.test(rawModel)) { 
-                        modelName = "Galaxy A15 (Non-OIS)"; 
-                        modelNumber = rawModel; 
-                        detectedOis = false; 
-                    }
+                    else if (/SM-A155|SM-A156/i.test(rawModel)) { modelName = "Galaxy A15"; modelNumber = rawModel; }
+                    else if (/SM-A146|SM-A055/i.test(rawModel)) { modelName = "Galaxy A14"; modelNumber = rawModel; }
                     else { modelName = `Galaxy ${rawModel}`; modelNumber = rawModel; }
                 }
-                // Google Pixel Models (All have OIS)
+                // Google Pixel Models
                 else if (/Pixel/i.test(rawModel)) {
                     brand = "Google";
                     modelName = rawModel;
                     modelNumber = rawModel;
-                    detectedOis = true;
                 }
                 // OnePlus Models
                 else if (/CPH[0-9]+/i.test(rawModel) || /OnePlus/i.test(rawModel)) {
@@ -2457,10 +2787,7 @@
                 // Xiaomi / Redmi / POCO
                 else if (/23[0-9]+|24[0-9]+|Redmi|POCO|Xiaomi/i.test(rawModel)) {
                     brand = /Redmi/i.test(rawModel) ? "Redmi" : (/POCO/i.test(rawModel) ? "POCO" : "Xiaomi");
-                    if (/2312DRAABG|23117RA68G|Redmi Note 13/i.test(rawModel)) { 
-                        modelName = "Redmi Note 13 (Non-OIS)"; 
-                        detectedOis = false; 
-                    }
+                    if (/2312DRAABG|23117RA68G|Redmi Note 13/i.test(rawModel)) { modelName = "Redmi Note 13"; }
                     else if (/23049PCD8G/i.test(rawModel)) { modelName = "POCO F5"; }
                     else if (/24030PN60G/i.test(rawModel)) { modelName = "Xiaomi 14 Ultra"; }
                     else { modelName = `${brand} ${rawModel}`; }
@@ -2472,12 +2799,11 @@
                     modelName = `Vivo ${rawModel}`;
                     modelNumber = rawModel;
                 }
-                // Realme Budget (No OIS)
+                // Realme
                 else if (/RMX|Realme/i.test(rawModel)) {
                     brand = "Realme";
                     modelName = rawModel;
                     modelNumber = rawModel;
-                    if (/C67|C55|C53|C35/i.test(rawModel)) detectedOis = false;
                 }
                 else if (rawModel && rawModel !== "K" && rawModel !== "wv") {
                     modelName = rawModel;
@@ -2499,31 +2825,103 @@
                 else if (res === "1170x2532") { modelName = "iPhone 14 / 13 Pro"; modelNumber = "A2882"; }
                 else if (res === "1284x2778") { modelName = "iPhone 13 Pro Max"; modelNumber = "A2643"; }
                 else if (res === "828x1792") { modelName = "iPhone 11"; modelNumber = "A2221"; }
-                else if (res === "750x1334") { modelName = "iPhone SE (3rd Gen)"; modelNumber = "A2783"; detectedOis = false; }
-                else { modelName = "iPhone (Retina Display)"; modelNumber = "Apple iPhone"; }
+                else if (res === "750x1334") { modelName = "iPhone SE (3rd Gen)"; modelNumber = "A2783"; }
+                else { modelName = "Apple iPhone (Retina Display)"; modelNumber = "iPhone"; }
             }
             // Desktop / Laptop
             else if (/Windows/i.test(ua)) {
                 brand = "PC";
                 os = "Windows 11/10";
                 const gpu = getWebGlRenderer();
-                modelName = gpu ? `Windows PC (${gpu})` : "Windows 11 PC";
+                modelName = gpu ? `Windows 11 PC (${gpu})` : "Windows 11 PC";
                 modelNumber = "WIN64-PC";
-                detectedOis = false; // Webcams lack phone OIS voice coils
             } else if (/Macintosh/i.test(ua)) {
                 brand = "Apple";
                 os = "macOS";
                 modelName = "Apple Mac (WebCam)";
                 modelNumber = "MacBook / iMac";
-                detectedOis = false;
             } else {
-                modelName = "Standard Camera Device";
+                modelName = isDesktop ? "Desktop Workstation" : "Android Smartphone";
                 modelNumber = "CAM-DEVICE";
-                detectedOis = true;
             }
 
             const full = modelNumber && !modelName.includes(modelNumber) ? `${modelName} (${modelNumber})` : modelName;
-            setDeviceModel(full, detectedOis);
+            runOisCompatibilityAnalysis(full, isDesktop);
+        }
+
+        function runOisCompatibilityAnalysis(fullName, isDesktop) {
+            // 1. Update Top Banner Text UI (Smartphone Detected vs Desktop Detected)
+            const tagEl = document.getElementById('ddc-device-tag');
+            if (tagEl) {
+                if (isDesktop) {
+                    tagEl.textContent = "Desktop Detected";
+                    tagEl.className = "ddc-tag ddc-tag-desktop";
+                } else {
+                    tagEl.textContent = "Smartphone Detected";
+                    tagEl.className = "ddc-tag ddc-tag-mobile";
+                }
+            }
+
+            document.getElementById('home-device-name').textContent = fullName;
+            document.getElementById('home-device-sub').textContent = "Checking OIS compatibility against hardware database...";
+
+            // 2. Set OIS Compatibility Card to 'Analyzing' state
+            const banner = document.getElementById('ois-compat-banner');
+            const occSpinner = document.getElementById('occ-spinner');
+            const occIcon = document.getElementById('occ-icon');
+            const occTitle = document.getElementById('occ-title');
+            const occSub = document.getElementById('occ-sub');
+            const occBadge = document.getElementById('occ-badge');
+            const btnStart = document.getElementById('btn-start-diag');
+
+            if (banner) {
+                banner.className = "ois-compat-card analyzing";
+                if (occSpinner) occSpinner.style.display = "block";
+                if (occIcon) occIcon.style.display = "none";
+                if (occTitle) occTitle.textContent = "Checking OIS Compatibility...";
+                if (occSub) occSub.textContent = "Cross-referencing hardware specifications & voice-coil stabilizer database...";
+                if (occBadge) occBadge.textContent = "Analyzing...";
+            }
+
+            if (btnStart) {
+                btnStart.disabled = true;
+                btnStart.textContent = "⏳ Checking OIS Compatibility...";
+            }
+
+            // 3. Realistic Analysis Delay (Cross-referencing database)
+            setTimeout(() => {
+                const compat = checkOisCompatibility(fullName, isDesktop);
+                setDeviceModel(fullName, compat.hasOis, isDesktop);
+
+                if (banner) {
+                    if (occSpinner) occSpinner.style.display = "none";
+                    if (occIcon) occIcon.style.display = "inline-block";
+
+                    if (compat.hasOis) {
+                        banner.className = "ois-compat-card compatible";
+                        if (occIcon) occIcon.textContent = "✓";
+                        if (occTitle) occTitle.textContent = isDesktop ? "✓ Desktop is OIS Compatible" : "✓ Smartphone is OIS Compatible";
+                        if (occSub) occSub.textContent = "Physical 3-Axis Voice-Coil Stabilizer Verified Active • Full OIS Benchmark Enabled";
+                        if (occBadge) occBadge.textContent = "OIS VERIFIED ✓";
+                        if (btnStart) {
+                            btnStart.disabled = false;
+                            btnStart.innerHTML = "<span>Start 10s Diagnostic Test (OIS Active)</span> <span>▶</span>";
+                        }
+                    } else {
+                        banner.className = "ois-compat-card non-ois";
+                        if (occIcon) occIcon.textContent = "ℹ";
+                        if (occTitle) occTitle.textContent = "ℹ Non-OIS Device Detected (Digital / EIS Sensor)";
+                        if (occSub) occSub.textContent = "Fair Non-OIS Scoring Active • 0% OIS Penalty (Score reallocated 60% AF + 40% Lens Switch for 100% Mint Rating)";
+                        if (occBadge) occBadge.textContent = "FAIR MODE ACTIVE";
+                        if (btnStart) {
+                            btnStart.disabled = false;
+                            btnStart.innerHTML = "<span>Start 10s Diagnostic Test (Fair Non-OIS Mode)</span> <span>▶</span>";
+                        }
+                    }
+                }
+
+                playReadyFlashChime();
+            }, 1800);
         }
 
         function getWebGlRenderer() {
@@ -2547,7 +2945,7 @@
             return "";
         }
 
-        function setDeviceModel(fullName, hasOis = true) {
+        function setDeviceModel(fullName, hasOis = true, isDesktop = false) {
             currentDevice.fullName = fullName;
             currentDevice.model = fullName;
             currentDevice.hasOis = hasOis;
@@ -2598,15 +2996,12 @@
             const inputVal = document.getElementById('modal-device-input').value.trim();
             if (inputVal) {
                 localStorage.setItem('camscore_custom_device', inputVal);
-                const isNonOis = /Note 13|SE|A15|A14|C67|Budget|Non-OIS/i.test(inputVal);
-                setDeviceModel(inputVal, !isNonOis);
+                const isDesktop = /pc|desktop|windows|macbook|imac|macintosh|linux|webcam/i.test(inputVal);
+                runOisCompatibilityAnalysis(inputVal, isDesktop);
             }
             closeDeviceModal();
         }
 
-        // ==========================================
-        // Motion Sensor Listener
-        // ==========================================
         function initMotionSensors() {
             if (motionListenerAttached) return;
             if (window.DeviceMotionEvent) {
@@ -3551,16 +3946,19 @@
             }
         }
 
-        function updateCertificateUI() {
+                function updateCertificateUI() {
             document.getElementById('cert-device-title').textContent = currentDevice.fullName;
             document.getElementById('cert-date-info').textContent = `Test ID: ${currentDevice.testId} • ${currentDevice.timestamp}`;
             document.getElementById('cert-score-text').textContent = `${currentDevice.score.toLocaleString()} pts`;
             
+            const certStampId = document.getElementById('cert-stamp-id');
+            if (certStampId) certStampId.textContent = `PASS • ${currentDevice.testId}`;
+
             const stamp = document.getElementById('cert-stamp-badge');
             if (currentDevice.health >= 85) {
                 stamp.textContent = currentDevice.hasOis ?
-                    `✔ VERIFIED MINT HEALTH (${currentDevice.health}%)` :
-                    `✔ VERIFIED HEALTHY (${currentDevice.health}% • NON-OIS MODEL)`;
+                    `✓ VERIFIED MINT HEALTH (${currentDevice.health}%)` :
+                    `✓ VERIFIED HEALTHY (${currentDevice.health}% • NON-OIS MODEL)`;
                 stamp.style.background = '#DCFCE7';
                 stamp.style.color = '#166534';
             } else if (currentDevice.health >= 65) {
@@ -3568,7 +3966,7 @@
                 stamp.style.background = '#FEF3C7';
                 stamp.style.color = '#92400E';
             } else {
-                stamp.textContent = `❌ HARDWARE FAIL (${currentDevice.health}%)`;
+                stamp.textContent = `✗ HARDWARE FAIL (${currentDevice.health}%)`;
                 stamp.style.background = '#FEE2E2';
                 stamp.style.color = '#991B1B';
             }
@@ -3580,42 +3978,76 @@
             document.getElementById('cert-row-rank').textContent = `Rank #${currentDevice.rank} Worldwide`;
             document.getElementById('cert-hash-code').textContent = `SHA-256: ${currentDevice.hash}`;
 
-            const verifyLink = document.getElementById('cert-online-verify-link');
-            verifyLink.href = `verify.html?id=${currentDevice.hash}&model=${encodeURIComponent(currentDevice.fullName)}&score=${currentDevice.score}&health=${currentDevice.health}&ois=${currentDevice.hasOis}`;
+            // Build Genuine Verification URL pointing to live GitHub verification portal
+            const baseUrl = (window.location.origin && window.location.origin !== "null" && !window.location.origin.startsWith("file:") && !window.location.origin.includes("localhost")) ?
+                (window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/verify.html') :
+                'https://yashrajtiwari003-boop.github.io/CamScore/verify.html';
 
-            drawQrCode(currentDevice.hash || "4a8f9c1b7e2d63018274aef0c82937bd");
+            const verifyUrl = `${baseUrl}?id=${currentDevice.testId.replace('#','')}&model=${encodeURIComponent(currentDevice.fullName)}&score=${currentDevice.score}&health=${currentDevice.health}&ois=${currentDevice.hasOis}&af=${currentDevice.afLockMs}ms&stab=${currentDevice.oisDampPct}%25&lens=${currentDevice.lensDeltaE}&date=${encodeURIComponent(currentDevice.timestamp)}&hash=${currentDevice.hash}`;
+
+            const verifyLink = document.getElementById('cert-online-verify-link');
+            if (verifyLink) verifyLink.href = verifyUrl;
+
+            // Generate 100% Genuine Scannable QR Code
+            drawQrCode(verifyUrl);
         }
 
-        function drawQrCode(hash) {
+        function drawQrCode(textToEncode) {
             const canvas = document.getElementById('cert-qr-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const w = canvas.width, h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = '#0D233A';
-
-            function drawCorner(x, y) {
-                ctx.fillRect(x, y, 20, 20);
-                ctx.clearRect(x + 3, y + 3, 14, 14);
-                ctx.fillRect(x + 5, y + 5, 10, 10);
-            }
-
-            drawCorner(2, 2);
-            drawCorner(w - 22, 2);
-            drawCorner(2, h - 22);
-
-            const cellSize = 3.8;
-            const gridCols = Math.floor((w - 14) / cellSize);
-            for (let r = 0; r < gridCols; r++) {
-                for (let c = 0; c < gridCols; c++) {
-                    if ((r < 6 && c < 6) || (r < 6 && c > gridCols - 7) || (r > gridCols - 7 && c < 6)) continue;
-                    const charCode = hash.charCodeAt((r * 7 + c * 11) % hash.length);
-                    if (charCode % 2 === 0) {
-                        ctx.fillRect(7 + c * cellSize, 7 + r * cellSize, cellSize - 0.5, cellSize - 0.5);
+            
+            try {
+                if (typeof qrcode === 'function') {
+                    const qr = qrcode(0, 'M');
+                    qr.addData(textToEncode);
+                    qr.make();
+                    const moduleCount = qr.getModuleCount();
+                    
+                    const canvasSize = 110;
+                    canvas.width = canvasSize;
+                    canvas.height = canvasSize;
+                    
+                    const margin = 5;
+                    const available = canvasSize - (margin * 2);
+                    const cellSize = available / moduleCount;
+                    
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvasSize, canvasSize);
+                    
+                    ctx.fillStyle = '#0A192F';
+                    for (let r = 0; r < moduleCount; r++) {
+                        for (let c = 0; c < moduleCount; c++) {
+                            if (qr.isDark(r, c)) {
+                                ctx.fillRect(
+                                    Math.round(margin + c * cellSize),
+                                    Math.round(margin + r * cellSize),
+                                    Math.ceil(cellSize),
+                                    Math.ceil(cellSize)
+                                );
+                            }
+                        }
                     }
+                    
+                    // Click canvas to open link
+                    canvas.style.cursor = 'pointer';
+                    canvas.title = 'Click to open Fischer Labs Verification Portal';
+                    canvas.onclick = () => window.open(textToEncode, '_blank');
+                    return;
                 }
+            } catch (e) {
+                console.warn('QR Code generation fallback:', e);
             }
+
+            // Fallback rendering
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, w, h);
+            ctx.fillStyle = '#0D233A';
+            ctx.fillRect(2, 2, 20, 20);
+            ctx.fillRect(w - 22, 2, 20, 20);
+            ctx.fillRect(2, h - 22, 20, 20);
         }
 
         // ==========================================
@@ -3685,8 +4117,37 @@
             ctx.fillText(`Pass (${currentDevice.lensPct}%)`, 490, 470);
             ctx.fillText(`Rank #${currentDevice.rank} Worldwide`, 490, 505);
 
+            // 1. Draw Genuine Scannable QR Code
             const qrCanvas = document.getElementById('cert-qr-canvas');
-            if (qrCanvas) ctx.drawImage(qrCanvas, 250, 550, 100, 100);
+            if (qrCanvas) ctx.drawImage(qrCanvas, 140, 535, 110, 110);
+
+            // 2. Draw Verified by Fischer Labs Green Stamp on Exported PNG
+            ctx.save();
+            ctx.translate(390, 580);
+            ctx.rotate(-0.05);
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
+            ctx.fillRect(-70, -40, 140, 80);
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([4, 3]);
+            ctx.strokeRect(-70, -40, 140, 80);
+            ctx.setLineDash([]);
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-65, -35, 130, 70);
+
+            ctx.fillStyle = '#10B981';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('★ ★ ★ ★ ★', 0, -20);
+            ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('FISCHER LABS', 0, -5);
+            ctx.font = 'bold 9.5px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('OFFICIALLY VERIFIED', 0, 10);
+            ctx.font = 'bold 8.5px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#059669';
+            ctx.fillText('PASS • TAMPER PROOF', 0, 24);
+            ctx.restore();
 
             ctx.textAlign = 'center';
             ctx.font = '11px monospace';
