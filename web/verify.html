@@ -521,6 +521,39 @@
             document.getElementById('oem-spec-desc').textContent = 'ISO 12233 Target Verified (MTF50: 68.4 lp/mm • CIE LAB ΔE: 1.28) • Genuine OEM Module';
         }
 
+        const duel = params.get('duel') === '1';
+        const challenger = params.get('challenger');
+        const cscore = params.get('cscore');
+        const delta = params.get('delta');
+
+        if (duel && challenger) {
+            const duelBox = document.createElement('div');
+            duelBox.className = 'ois-banner-box';
+            duelBox.style.background = 'rgba(56, 189, 248, 0.1)';
+            duelBox.style.border = '1.5px solid rgba(56, 189, 248, 0.4)';
+            duelBox.style.margin = '14px 0';
+            duelBox.innerHTML = `
+                <div class="ois-banner-header">
+                    <span style="font-size: 16px;">⚔️</span>
+                    <div>
+                        <div class="ois-banner-title" style="color: #38bdf8;">Dual-Phone Certified Match</div>
+                        <div class="ois-banner-desc" style="color: #e2e8f0;">
+                            <strong>${model}</strong> (${score} pts) vs <strong>${challenger}</strong> (${cscore || '---'} pts) • Delta: <strong style="color: ${Number(delta) >= 0 ? '#34d399' : '#f87171'}">${Number(delta) >= 0 ? '+' : ''}${delta || 0} pts</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const certCard = document.querySelector('.cert-card');
+            if (certCard) {
+                const specBadge = document.querySelector('.oem-spec-badge');
+                if (specBadge && specBadge.nextSibling) {
+                    certCard.insertBefore(duelBox, specBadge.nextSibling);
+                } else {
+                    certCard.appendChild(duelBox);
+                }
+            }
+        }
+
         const oisBanner = document.getElementById('ois-banner');
         if (isOis) {
             oisBanner.className = 'ois-banner-box ois-compatible-box';
