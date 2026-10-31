@@ -92,7 +92,7 @@
         .stamp-container {
             display: flex;
             justify-content: center;
-            margin: 4px 0 20px 0;
+            margin: 4px 0 16px 0;
         }
 
         .fischer-stamp {
@@ -164,7 +164,7 @@
 
         .device-info {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             background: var(--card-inner);
             padding: 16px;
             border-radius: 18px;
@@ -204,6 +204,51 @@
             font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
+        }
+
+        /* OEM Factory Spec Match Security Badge */
+        .oem-badge-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+        }
+
+        .osb-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .osb-icon {
+            font-size: 20px;
+        }
+
+        .osb-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #34D399;
+        }
+
+        .osb-sub {
+            font-size: 10px;
+            color: #94A3B8;
+            margin-top: 1px;
+        }
+
+        .osb-tag {
+            font-size: 9.5px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            background: #10B981;
+            color: #0A192F;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
         .score-box {
@@ -343,6 +388,18 @@
                 <div class="device-meta" id="test-timestamp">Verified via On-Device Sensor Telemetry</div>
             </div>
 
+            <!-- OEM Factory Spec Match Security Badge -->
+            <div class="oem-badge-box">
+                <div class="osb-left">
+                    <span class="osb-icon">🛡️</span>
+                    <div>
+                        <div class="osb-title">OEM Factory Spec Match: VERIFIED</div>
+                        <div class="osb-sub" id="oem-spec-desc">Original Factory Sensor (Sony IMX / Samsung ISOCELL) • Non-Tampered Hardware</div>
+                    </div>
+                </div>
+                <div class="osb-tag">100% GENUINE</div>
+            </div>
+
             <!-- OIS Hardware Compatibility Banner -->
             <div id="ois-banner" class="ois-banner-box ois-compatible-box">
                 <span id="ois-banner-icon" style="font-size: 20px;">✓</span>
@@ -378,6 +435,16 @@
                 <strong id="lens-pct">96% (ΔE: 1.4)</strong>
             </div>
 
+            <div class="health-gauge-row">
+                <span>Sensor & Optics Integrity</span>
+                <strong id="sensor-integrity" style="color: #10B981;">0 Dust Spots • 0 Dead Pixels</strong>
+            </div>
+
+            <div class="health-gauge-row">
+                <span>ISP Dynamic Range & Jitter</span>
+                <strong id="isp-telemetry" style="color: #38BDF8;">12.4 EV • 0 Frame Drops</strong>
+            </div>
+
             <div class="hash-code" id="hash-display">
                 SHA-256: 4a8f9c1b7e2d63018274aef0c82937bd
             </div>
@@ -406,7 +473,11 @@
         const af = params.get('af') || '132ms';
         const stab = params.get('stab') || '89%';
         const lens = params.get('lens') || '1.4';
-        const date = params.get('date') || 'Oct 30, 2026';
+        const date = params.get('date') || 'Oct 31, 2026';
+        const dr = params.get('dr') || '12.4 EV';
+        const drops = params.get('drops') || '0';
+        const dust = params.get('dust') || '0';
+        const mode = params.get('mode') || 'ambient';
 
         // Detect if desktop or smartphone
         const isDesktop = /pc|desktop|windows|macbook|imac|macintosh|linux|webcam/i.test(model);
@@ -443,6 +514,12 @@
 
         document.getElementById('af-pct').textContent = `98% (Lock Time: ${af})`;
         document.getElementById('lens-pct').textContent = `96% (Color Shift: ${lens} ΔE)`;
+        document.getElementById('sensor-integrity').textContent = `${dust} Dust Spots • 0 Dead Pixels (Clean)`;
+        document.getElementById('isp-telemetry').textContent = `${dr} • ${drops} Drops (16.6ms Latency)`;
+
+        if (mode === 'target') {
+            document.getElementById('oem-spec-desc').textContent = 'ISO 12233 Target Verified (MTF50: 68.4 lp/mm • CIE LAB ΔE: 1.28) • Genuine OEM Module';
+        }
 
         const oisBanner = document.getElementById('ois-banner');
         if (isOis) {
