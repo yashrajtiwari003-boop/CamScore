@@ -2811,7 +2811,6 @@
             meanDeltaE: 1.28
         };
         let duelComparisonData = null;
-        let audioCtx = null;
         let micStream = null;
 
         let isOisPhone = true;
@@ -3041,13 +3040,16 @@
 
             if (navigator.userAgentData) {
                 try {
-                    const hints = await navigator.userAgentData.getHighEntropyValues([
-                        'model', 'platform', 'platformVersion', 'architecture'
+                    const hints = await Promise.race([
+                        navigator.userAgentData.getHighEntropyValues([
+                            'model', 'platform', 'platformVersion', 'architecture'
+                        ]),
+                        new Promise((_, reject) => setTimeout(() => reject('timeout'), 500))
                     ]);
-                    if (hints.model && hints.model.trim()) {
+                    if (hints && hints.model && hints.model.trim()) {
                         modelNumber = hints.model.trim();
                     }
-                    if (hints.platform) os = hints.platform;
+                    if (hints && hints.platform) os = hints.platform;
                 } catch (e) {}
             }
 
@@ -3173,7 +3175,7 @@
             const occTitle = document.getElementById('occ-title');
             const occSub = document.getElementById('occ-sub');
             const occBadge = document.getElementById('occ-badge');
-            const btnStart = document.getElementById('btn-start-diag');
+            const btnStart = document.getElementById('btn-start-test-elem') || document.getElementById('btn-start-diag');
 
             if (banner) {
                 banner.className = "ois-compat-card analyzing";
@@ -3186,7 +3188,7 @@
 
             if (btnStart) {
                 btnStart.disabled = true;
-                btnStart.textContent = "⏳ Checking OIS Compatibility...";
+                btnStart.innerHTML = "<span>⏳</span> <span>Checking OIS Compatibility...</span>";
             }
 
             // 3. Realistic Analysis Delay (Cross-referencing database)
@@ -3206,7 +3208,7 @@
                         if (occBadge) occBadge.textContent = "OIS VERIFIED ✓";
                         if (btnStart) {
                             btnStart.disabled = false;
-                            btnStart.innerHTML = "<span>Start 10s Diagnostic Test (OIS Active)</span> <span>▶</span>";
+                            btnStart.innerHTML = "<span>▶</span> <span>Start 10s Diagnostic Test (OIS Active)</span>";
                         }
                     } else {
                         banner.className = "ois-compat-card non-ois";
@@ -3216,7 +3218,7 @@
                         if (occBadge) occBadge.textContent = "FAIR MODE ACTIVE";
                         if (btnStart) {
                             btnStart.disabled = false;
-                            btnStart.innerHTML = "<span>Start 10s Diagnostic Test (Fair Non-OIS Mode)</span> <span>▶</span>";
+                            btnStart.innerHTML = "<span>▶</span> <span>Start 10s Diagnostic Test (Fair Non-OIS Mode)</span>";
                         }
                     }
                 }
@@ -3252,12 +3254,16 @@
             currentDevice.hasOis = hasOis;
             isOisPhone = hasOis;
 
-            document.getElementById('home-device-name').textContent = fullName;
-            document.getElementById('home-device-sub').textContent = hasOis ?
+            const nameEl = document.getElementById('home-device-name');
+            if (nameEl) nameEl.textContent = fullName;
+            const subEl = document.getElementById('home-device-sub');
+            if (subEl) subEl.textContent = hasOis ?
                 "Hardware OIS Voice-Coil Stabilizer Active" :
                 "Fair Non-OIS Mode Active (Zero Penalty Redistribution)";
-            document.getElementById('scan-title-device').textContent = `${fullName} • Live Diagnostic`;
-            document.getElementById('cert-device-title').textContent = fullName;
+            const scanTitle = document.getElementById('scan-title-device');
+            if (scanTitle) scanTitle.textContent = `${fullName} • Live Diagnostic`;
+            const certTitle = document.getElementById('cert-device-title');
+            if (certTitle) certTitle.textContent = fullName;
 
             const btn = document.getElementById('hw-mode-btn');
             const icon = document.getElementById('hw-icon');
@@ -3265,17 +3271,21 @@
             const pill = document.getElementById('live-ois-pill');
 
             if (hasOis) {
-                btn.className = 'pill-btn active';
-                icon.textContent = '⚡';
-                text.textContent = 'OIS Equipped';
-                pill.textContent = 'OIS Active ✓';
-                pill.style.color = '#34d399';
+                if (btn) btn.className = 'pill-btn active';
+                if (icon) icon.textContent = '⚡';
+                if (text) text.textContent = 'OIS Equipped';
+                if (pill) {
+                    pill.textContent = 'OIS Active ✓';
+                    pill.style.color = '#34d399';
+                }
             } else {
-                btn.className = 'pill-btn non-ois-active';
-                icon.textContent = 'ℹ️';
-                text.textContent = 'Non-OIS Fair Mode';
-                pill.textContent = 'Non-OIS Fair Mode';
-                pill.style.color = '#38bdf8';
+                if (btn) btn.className = 'pill-btn non-ois-active';
+                if (icon) icon.textContent = 'ℹ️';
+                if (text) text.textContent = 'Non-OIS Fair Mode';
+                if (pill) {
+                    pill.textContent = 'Non-OIS Fair Mode';
+                    pill.style.color = '#38bdf8';
+                }
             }
             renderLeaderboard();
         }
@@ -4975,13 +4985,13 @@
         // Initialization
         // ==========================================
         window.addEventListener('DOMContentLoaded', async () => {
-            renderSceneCanvas();
-            drawWaveform();
-            await detectRealSmartphone();
-            startContinuousAnalysisLoop();
-            renderLeaderboard();
-            renderHistory();
-            renderSparkline();
+            try { renderSceneCanvas(); } catch(e) { console.error('renderSceneCanvas error:', e); }
+            try { drawWaveform(); } catch(e) { console.error('drawWaveform error:', e); }
+            try { await detectRealSmartphone(); } catch(e) { console.error('detectRealSmartphone error:', e); }
+            try { startContinuousAnalysisLoop(); } catch(e) { console.error('startContinuousAnalysisLoop error:', e); }
+            try { renderLeaderboard(); } catch(e) { console.error('renderLeaderboard error:', e); }
+            try { renderHistory(); } catch(e) { console.error('renderHistory error:', e); }
+            try { renderSparkline(); } catch(e) { console.error('renderSparkline error:', e); }
         });
     </script>
 
