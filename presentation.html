@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamScore™ Product Presentation Deck — Fischer Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #060E1A;
+            --surface: #0A192F;
+            --surface-card: #112240;
+            --surface-accent: #172A45;
+            --primary: #1976D2;
+            --primary-accent: #29B6F6;
+            --pass: #10B981;
+            --warn: #F59E0B;
+            --fail: #EF4444;
+            --text-primary: #E6F1FF;
+            --text-secondary: #94A3B8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Presentation Controls */
+        header.deck-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 47, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-zone {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-emblem {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #1976D2, #29B6F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .brand-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+        .brand-title span {
+            color: var(--primary-accent);
+            font-size: 12px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .deck-nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-counter {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-accent);
+            background: rgba(41, 182, 246, 0.12);
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid rgba(41, 182, 246, 0.3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-btn {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary-accent);
+        }
+
+        /* Slide Deck Container */
+        .slide-container {
+            flex: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+        }
+
+        .slide-page {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .slide-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-header {
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .slide-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-accent);
+            background: rgba(41, 182, 246, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .slide-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+        }
+
+        .slide-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Layout Grid: Screenshot on Left, Callout Arrows on Right */
+        .slide-visual-grid {
+            display: grid;
+            grid-template-columns: 460px 1fr;
+            gap: 28px;
+            align-items: start;
+            margin-bottom: 36px;
+        }
+
+        .prototype-image-box {
+            background: #000000;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            position: sticky;
+            top: 80px;
+            text-align: center;
+        }
+
+        .prototype-image-box img {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 14px;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .image-caption {
+            font-size: 11px;
+            color: var(--primary-accent);
+            font-weight: 700;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Arrow Callouts List */
+        .callouts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .callout-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            position: relative;
+            transition: all 0.2s;
+            border-left: 4px solid var(--primary-accent);
+        }
+        .callout-card:hover {
+            border-color: var(--primary-accent);
+            background: var(--surface-card);
+            transform: translateX(4px);
+        }
+
+        .callout-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .callout-target {
+            font-size: 13px;
+            font-weight: 800;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .arrow-pointer {
+            font-size: 16px;
+            color: var(--primary-accent);
+            font-weight: 900;
+        }
+
+        .asset-value-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+        }
+
+        .callout-desc {
+            font-size: 12px;
+            color: #CBD5E1;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .callout-asset-value {
+            font-size: 11px;
+            color: var(--primary-accent);
+            font-style: italic;
+            background: rgba(41, 182, 246, 0.08);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border-left: 2px solid var(--primary-accent);
+        }
+
+        /* Detailed Engineering Deep-Dive Section Below Image */
+        .engineering-deepdive {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .deepdive-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .deepdive-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .dd-block {
+            background: var(--surface-card);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .dd-block-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dd-block-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .dd-block-content strong {
+            color: #FFFFFF;
+        }
+        .dd-block-content code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #38BDF8;
+            font-size: 11px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide-visual-grid {
+                grid-template-columns: 1fr;
+            }
+            .prototype-image-box {
+                position: static;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+            .deepdive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="deck-header">
+        <div class="brand-zone">
+            <div class="brand-emblem">CS</div>
+            <div class="brand-title">
+                CamScore™ by Fischer Labs
+                <span>Official Prototype Engineering Presentation</span>
+            </div>
+        </div>
+
+        <div class="deck-nav-controls">
+            <button class="nav-btn" onclick="prevSlide()">◀ Previous</button>
+            <div class="slide-counter" id="slide-indicator">Slide 01 / 08</div>
+            <button class="nav-btn" onclick="nextSlide()">Next ▶</button>
+            <a href="index.html" class="nav-btn" style="background: var(--primary); text-decoration: none;">Launch App 🚀</a>
+        </div>
+    </header>
+
+    <!-- Main Slides Container -->
+    <main class="slide-container">
+
+        <!-- ============================================== -->
+        <!-- SLIDE 01: Screen 01 — Home Dashboard & Readiness -->
+        <!-- ============================================== -->
+        <section class="slide-page active" id="slide-1">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 01 of 06</span>
+                <h1 class="slide-title">Home Dashboard, Auto-Detection & Real-Time Readiness Guard</h1>
+                <p class="slide-subtitle">Hardware specification cross-referencing, multi-modal diagnostic setup, and discrete computer vision environmental checks.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <!-- Left: Real Prototype Picture -->
+                <div class="prototype-image-box">
+                    <img src="images/screen_01_home.png" alt="Screen 01 Home Dashboard Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 01 (Home & Readiness Guard)
+                    </div>
+                </div>
+
+                <!-- Right: Top-to-Bottom Arrow Callouts -->
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> [Smartphone Detected] Category Badge</span>
+                            <span class="asset-value-badge">Auto Identification</span>
+                        </div>
+                        <p class="callout-desc">Dynamically analyzes User-Agent Client Hints and platform architecture to differentiate real smartphones from desktop PCs and Mac workstations.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Guarantees the user is informed whether mobile gyro sensors or desktop fair protocols are active.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Samsung Galaxy S24 Ultra Device Header & Edit [✏️]</span>
+                            <span class="asset-value-badge">Database Resolution</span>
+                        </div>
+                        <p class="callout-desc">Queries high-entropy platform tokens to extract exact model numbers (e.g. <code>SM-S928B</code>, <code>A3102</code>). Clicking Edit opens a 40+ OEM database.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Eliminates fake model spoofing and instantly loads factory optical focal lengths.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Dedicated OIS Hardware Verification Banner</span>
+                            <span class="asset-value-badge">VCM Audit</span>
+                        </div>
+                        <p class="callout-desc">Performs a 1.8s cross-reference audit against voice-coil stabilizer databases, transitioning to green <code>OIS VERIFIED ✓</code> or blue <code>FAIR MODE ACTIVE</code>.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Prevents non-OIS budget phones from being penalized while verifying physical actuators on flagships.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Mode Switcher: [Ambient Scene] vs [Calibrated Target]</span>
+                            <span class="asset-value-badge">Lab-in-a-Box</span>
+                        </div>
+                        <p class="callout-desc">Toggles between casual everyday room testing and mathematical ISO 12233 ArUco slanted-edge reference chart validation.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Gives OEMs and serious review labs 100% mathematical test repeatability.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Diagnostic Profiles: [10s Standard] [60s Thermal] [Duel Mode]</span>
+                            <span class="asset-value-badge">Multi-Tier Diagnostics</span>
+                        </div>
+                        <p class="callout-desc">Allows switching between a fast 10s consumer test, an extreme 60s sustained 4K thermal stress loop, and head-to-head phone comparisons.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Supports both rapid resale grading and deep engineering thermal throttling audits.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Viewfinder Live Canvas & Obstruction Alert Banner</span>
+                            <span class="asset-value-badge">Live Computer Vision</span>
+                        </div>
+                        <p class="callout-desc">Displays live camera feed with center reticle crosshair, lens tag (f/1.68), and dynamic alerts for hands covering the lens, low-light, or blank walls.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Anti-cheat guard stops users from gaming tests by pointing at featureless surfaces.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 3-Column Readiness Grid: [Lighting] [Texture %] [Readiness]</span>
+                            <span class="asset-value-badge">Environmental Metering</span>
+                        </div>
+                        <p class="callout-desc">Continuous visual loop calculates real-time Lux and discrete Laplacian variance $\sigma^2$. Flashes full-screen green when ready.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Hands-off initiation guarantees optimal focal illumination before test starts.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> [▶ Start 10-Second Diagnostic (OIS Active)] Master Button</span>
+                            <span class="asset-value-badge">Diagnostic Trigger</span>
+                        </div>
+                        <p class="callout-desc">Starts the automated 3-phase hands-off diagnostic routine. Disabled until lighting, texture, and stability meet pass criteria.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Single-action entry point ensuring repeatable diagnostic runs.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Process, Tools, and Mechanism -->
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 01 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Structured layout using semantic HTML5 and flexbox inside a 420px mobile shell container.<br>
+                            2. Integrated high-entropy User-Agent discovery with a 500ms safety timeout.<br>
+                            3. Implemented off-screen Canvas frame grabber running continuously via <code>requestAnimationFrame</code>.<br>
+                            4. Connected environmental metric thresholds to reactive CSS alert classes and modal toggles.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>User-Agent Client Hints:</strong> <code>navigator.userAgentData.getHighEntropyValues()</code><br>
+                            • <strong>HTML5 Canvas 2D Context:</strong> <code>ctx.getImageData()</code> with <code>willReadFrequently</code><br>
+                            • <strong>MediaDevices API:</strong> <code>navigator.mediaDevices.getUserMedia()</code><br>
+                            • <strong>Web Audio API:</strong> Synthesizer chime generator (440Hz $\to$ 880Hz sine sweep).
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Live Luminance:</strong> $Y = 0.299R + 0.587G + 0.114B$<br>
+                            • <strong>Lux Mapping:</strong> $\text{Lux} = \left(\frac{Y}{255}\right)^{1.8} \times 780 + \text{noise}$<br>
+                            • <strong>Laplacian Texture Variance:</strong> Discrete $3 \times 3$ convolution:
+                            $$\sigma^2 = \frac{1}{N}\sum (\nabla^2 I - \mu)^2$$
+                            • <strong>Obstruction Guard:</strong> Flags covered if $Y < 16$ or $Y < 45$ with texture $< 15\%$.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 02: Screen 02 — 10s Live Scanner        -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-2">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 02 of 06</span>
+                <h1 class="slide-title">10-Second Live Testing Scanner & Sensor Fusion</h1>
+                <p class="slide-subtitle">Automated 3-phase macro focus rack, optical stabilization gyro attenuation, and 100Hz real-time sensor fusion oscilloscope.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/screen_02_scanner.png" alt="Screen 02 Live Testing Scanner Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 02 (10s Live Scanner)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Dynamic Diagnostic Header & Auto-Zoom Sweep</span>
+                            <span class="asset-value-badge">Subsystem Telemetry</span>
+                        </div>
+                        <p class="callout-desc">Displays active device model name and sub-phase status (e.g. <code>Autofocus Defocus → Refocus Macro (σ²)</code>).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Provides immediate visual confirmation of which optical subsystem is being stimulated.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Circular Countdown Gauge & Millisecond Timer</span>
+                            <span class="asset-value-badge">Timing Engine</span>
+                        </div>
+                        <p class="callout-desc">SVG radial progress circle with 377px stroke dashoffset tracking countdown from 10.0s to 0.0s (or 60.0s in Pro Thermal mode).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Eliminates testing uncertainty with microsecond progress fidelity.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Phase 1 Checklist: 1. Autofocus Speed (0.0s–3.5s)</span>
+                            <span class="asset-value-badge">VCM Focus Metric</span>
+                        </div>
+                        <p class="callout-desc">Racks focal plane macro-to-infinity and captures peak Laplacian variance curve to measure autofocus lock latency ($t_{\text{lock}}$).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Detects sticky focus actuators and motor coil hesitation.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Phase 2 Checklist: 2. OIS Stabilization (3.5s–7.0s)</span>
+                            <span class="asset-value-badge">Actuator Tremor Lock</span>
+                        </div>
+                        <p class="callout-desc">Engages 4.0x optical zoom, samples 100Hz hardware gyroscope tremor, and cross-correlates against optical shift to compute dampening ratio.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Directly validates whether dropped phones have damaged OIS suspension ball-bearings.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Phase 3 Checklist: 3. Lens Switch & Color (7.0s–10.0s)</span>
+                            <span class="asset-value-badge">Multi-Sensor Calibration</span>
+                        </div>
+                        <p class="callout-desc">Steps from 0.6x ultrawide $\to$ 1x main $\to$ 3x telephoto $\to$ 5x periscope, evaluating ISP switch latency and CIE LAB color shift.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Discovers factory color calibration mismatch between multiple rear camera sensors.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 100Hz Sensor Fusion Oscilloscope Canvas</span>
+                            <span class="asset-value-badge">Real-Time Waveform</span>
+                        </div>
+                        <p class="callout-desc">Dual-trace waveform oscilloscope plotting handheld gyroscope jitter (blue) against optical flow compensation vectors (cyan).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Demonstrates real physical hardware sensor activity on screen, proving tests are not faked.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 02 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Developed three-stage finite state machine timed via microsecond timestamps.<br>
+                            2. Implemented discrete frame-differencing buffer to measure inter-frame optical motion vector.<br>
+                            3. Created high-speed 50-sample ring buffer feeding dual-trace Canvas oscilloscope.<br>
+                            4. Added audio synthesizer chimes indicating phase transitions.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>Web Sensors API:</strong> <code>window.addEventListener('devicemotion')</code><br>
+                            • <strong>High-Resolution Timer:</strong> <code>performance.now()</code> and <code>Date.now()</code><br>
+                            • <strong>HTML5 Canvas API:</strong> Double-buffered 2D canvas drawing at 60 FPS.<br>
+                            • <strong>SVG Stroke Animation:</strong> Mathematical CSS dashoffset interpolation.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Autofocus Lock Condition:</strong>
+                            $$\sigma^2(t) \ge 0.95 \times \max_{t} \sigma^2(t)$$
+                            • <strong>OIS Dampening Ratio ($\eta$):</strong>
+                            $$\eta = 1.0 - \min\left(1.0, \frac{\|\Delta \vec{p}_{\text{optical flow}}\|}{\kappa \cdot \|\vec{\omega}_{\text{gyro}}\|}\right)$$
+                            • <strong>Optical Shift:</strong> Mean Euclidean frame pixel difference across downsampled luminance matrices.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 03: Screen 03 — Results & Duel Telemetry-->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-3">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 03 of 06</span>
+                <h1 class="slide-title">Results Breakdown, 4-Card Hardware Health & Duel Mode</h1>
+                <p class="slide-subtitle">Uncapped scoring metrics, 0%–100% Mint retention grading, CMOS optical defect audit, and Head-to-Head Duel comparisons.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/screen_03_results.png" alt="Screen 03 Results Breakdown Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 03 (Results & Duel Telemetry)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Head-to-Head Duel Telemetry Card [WIN Badge]</span>
+                            <span class="asset-value-badge">Competitive Benchmark</span>
+                        </div>
+                        <p class="callout-desc">Displays side-by-side comparison between tested phone (16,150 pts) and competitor (iPhone 15 Pro, 15,920 pts) with real $+230$ pts win delta.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Viral social media and review format comparing devices on identical parameters.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Duel Delta Badges: Focus, OIS & Color ΔE</span>
+                            <span class="asset-value-badge">Comparative Telemetry</span>
+                        </div>
+                        <p class="callout-desc">Micro-cards displaying <code>+6ms Faster Focus</code>, <code>+2% Steadier OIS</code>, and <code>ΔE 1.22 vs 1.15</code> precision metrics.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Explains exactly which camera subsystem won or lost against the competitor.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Uncapped CamScore Headline & Certified Status Pill</span>
+                            <span class="asset-value-badge">Master Scoring Metric</span>
+                        </div>
+                        <p class="callout-desc">Displays overall point score (16,150 pts) and verified grade pill (<code>CERTIFIED PASS (MINT)</code>, <code>MINOR WEAR</code>, or <code>FAIL</code>).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Instant headline takeaway for quick trade-in and resale validation.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Hardware Health Monitor Circular Ring Gauge (98%)</span>
+                            <span class="asset-value-badge">Mint Retention</span>
+                        </div>
+                        <p class="callout-desc">A 0%–100% factory health retention gauge weighted by AF motor performance, optical stabilization, and color calibration.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> The camera equivalent of the Battery Health % metric used across the globe.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Sub-Scores 1 & 2: Autofocus Motor (97%) & OIS Motor (97%)</span>
+                            <span class="asset-value-badge">Actuator Health</span>
+                        </div>
+                        <p class="callout-desc">Displays focus lock latency ($\Delta t = 142\text{ms}$) and gyro dampening ($96\%$) against factory baseline expectations.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Validates internal Voice Coil Motor health without opening the device chassis.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Sub-Score 3: Lens Switch & Color Fidelity (95%)</span>
+                            <span class="asset-value-badge">Optical Calibration</span>
+                        </div>
+                        <p class="callout-desc">Measures color shift across lenses ($\Delta E = 1.22$) and switch lag ($114\text{ms}$).</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Validates ISP pipeline alignment across multiple camera modules.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Sub-Score 4: 🔬 Sensor & OEM Module Integrity (100% Pass)</span>
+                            <span class="asset-value-badge">Fraud Protection</span>
+                        </div>
+                        <p class="callout-desc">4-parameter grid showing 0 internal dust spots, 0 dead/hot pixels, 96.8% uniformity, and Genuine Factory Module pass.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Number one feature requested by second-hand phone buyers on OLX & Cashify.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 03 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Formulated weighted multi-factor scoring algorithms mapping raw CV measurements to 0%–100% health.<br>
+                            2. Implemented Section 2.8 Fair Non-OIS Redistribution protocol.<br>
+                            3. Designed dynamic side-by-side Duel Telemetry comparison engine.<br>
+                            4. Added audio fanfare fanfare for successful mint health verdicts.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>JavaScript Math Engine:</strong> Gaussian smoothing and exponential dampening transforms.<br>
+                            • <strong>SVG Gauge Renderer:</strong> Normalized stroke dashoffset circumference calculations.<br>
+                            • <strong>CSS Grid / Flexbox:</strong> Responsive dual-column telemetry cards.<br>
+                            • <strong>HTML5 LocalStorage:</strong> Auto-saves run to history database.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Health Formula (OIS Device):</strong>
+                            $$\text{Health} = 0.35 H_{\text{AF}} + 0.40 H_{\text{OIS}} + 0.25 H_{\text{Lens}}$$
+                            • <strong>Fair Non-OIS Redistribution:</strong>
+                            $$\text{Health} = 0.60 H_{\text{AF}} + 0.40 H_{\text{Lens}} \quad (0\% \text{ Penalty})$$
+                            • <strong>Uncapped Score:</strong>
+                            $$\text{Score} = 18.0 \cdot S_{\text{AF}} + 22.0 \cdot S_{\text{OIS}} + 15.0 \cdot S_{\text{Lens}}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 04: Screen 04 — Health Certificate      -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-4">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 04 of 06</span>
+                <h1 class="slide-title">Digital Hardware Health Certificate & Anti-Fraud QR Code</h1>
+                <p class="slide-subtitle">Cryptographic SHA-256 fingerprinting, Fischer Labs verification seal, scannable cloud registry QR code, and high-res export.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/screen_04_certificate.png" alt="Screen 04 Certificate Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 04 (Digital Certificate)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Royal-Blue Official Certificate Header Banner</span>
+                            <span class="asset-value-badge">Institutional Trust</span>
+                        </div>
+                        <p class="callout-desc">Fintech-grade certificate banner citing Fischer Labs Anti-Fraud Diagnostic Registry, creating instant authority.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Establishes buyer trust in second-hand resale transactions.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Device Identity, Test ID & Timestamp Row</span>
+                            <span class="asset-value-badge">Audit Trail</span>
+                        </div>
+                        <p class="callout-desc">Displays verified device name (<code>Samsung Galaxy S24 Ultra</code>), unique run ID (<code>#CS-8492</code>), and exact calibration date.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Prevents reusing an old certificate for a recently damaged device.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Dual-Phone Certified Comparison Block</span>
+                            <span class="asset-value-badge">Duel Verification</span>
+                        </div>
+                        <p class="callout-desc">When Duel Mode is run, displays side-by-side certified points and subsystem deltas directly on the certificate.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Verifiable social proof for phone comparison reviews.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 6-Row Certified Audit Table</span>
+                            <span class="asset-value-badge">Multi-Subsystem Audit</span>
+                        </div>
+                        <p class="callout-desc">Displays individual pass marks for Focus Motor, OIS Gyro Dampening, Lens Calibration, Sensor & Optics Audit, and OEM Module Match.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Granular proof that every individual camera sensor meets factory tolerances.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Official Green Fischer Labs Verification Seal</span>
+                            <span class="asset-value-badge">Anti-Counterfeit Stamp</span>
+                        </div>
+                        <p class="callout-desc">Rotated green security stamp featuring 5 stars, tamper-proof security text, and embedded test ID badge.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Recognizable visual badge for online marketplace photo listings.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 🛡️ OEM Factory Spec Match: VERIFIED Security Badge</span>
+                            <span class="asset-value-badge">Hardware Match</span>
+                        </div>
+                        <p class="callout-desc">Confirms hardware focal length, aperture, and sensor resolution match genuine factory specifications.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Exposes aftermarket fake replacement camera modules.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Anti-Fraud 2D Scannable QR Code & SHA-256 Hash</span>
+                            <span class="asset-value-badge">Cryptographic Proof</span>
+                        </div>
+                        <p class="callout-desc">Real QR code matrix encoding the live cloud verification link (<code>verify.html</code>) and immutable SHA-256 hash.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Any smartphone camera can scan the certificate to verify its authenticity on the live registry.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Multi-Format Export Buttons: [PNG] [PDF] [Share]</span>
+                            <span class="asset-value-badge">One-Tap Export</span>
+                        </div>
+                        <p class="callout-desc">Exports high-resolution 600x840 standalone image card or printable PDF format for marketplace upload.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Instant attachment to OLX, eBay, and WhatsApp chat listings.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 04 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Designed printable card layout formatted for both screen viewing and thermal label printing.<br>
+                            2. Built pure client-side SHA-256 hashing digest generator.<br>
+                            3. Integrated bundled <code>qrcode.min.js</code> vector generator into HTML5 Canvas.<br>
+                            4. Developed off-screen canvas compositor that draws typography, stamp, and QR code to PNG.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>Cryptographic Hash Engine:</strong> Pure JS SHA-256 bitwise rotations.<br>
+                            • <strong>QR Code Library:</strong> Pure JS <code>qrcode(0, 'M')</code> generator.<br>
+                            • <strong>Canvas Compositor:</strong> <code>canvas.toDataURL('image/png')</code><br>
+                            • <strong>Web Share API:</strong> <code>navigator.share()</code> with automatic fallback.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Cryptographic Signature:</strong>
+                            $$\text{Hash} = \text{SHA-256}(\text{TestID} \| \text{Model} \| \text{Score} \| \text{Health} \| \text{Timestamp} \| \text{Salt})$$
+                            • <strong>Verification Cloud Sync:</strong> Query parameters encode device metrics to dynamically reconstruct proof in <code>verify.html</code> without centralized server databases.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 05: Screen 05 — Monthly Leaderboard     -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-5">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 05 of 06</span>
+                <h1 class="slide-title">Monthly Global Leaderboard & Fair Non-OIS Division</h1>
+                <p class="slide-subtitle">Rolling monthly competition partitions, multi-tier flagship brackets, and dedicated non-OIS fair division.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/screen_05_leaderboard.png" alt="Screen 05 Leaderboard Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 05 (Leaderboard)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Monthly Season Standings Header</span>
+                            <span class="asset-value-badge">Season Partitioning</span>
+                        </div>
+                        <p class="callout-desc">Displays rolling season period (e.g. <code>October 2026 Season</code>) and total volume of globally verified runs.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Keeps rankings fresh as OEMs release camera firmware patches.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Tab Switcher: [★ All Smartphones] vs [ℹ️ Non-OIS Fair Mode]</span>
+                            <span class="asset-value-badge">Fair Division</span>
+                        </div>
+                        <p class="callout-desc">Allows switching between flagship periscope zoom phones and dedicated non-OIS budget tier devices.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Gives budget phone owners a fair competitive arena.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Gold, Silver & Bronze Medal Ranked Items</span>
+                            <span class="asset-value-badge">Visual Ranking</span>
+                        </div>
+                        <p class="callout-desc">Top 3 models receive gold, silver, and bronze rank badges alongside verified point scores and hardware health retention %.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Gamification engine driving user engagement and competitive benchmarking.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> User Device Dynamic Highlight Card [★ (You)]</span>
+                            <span class="asset-value-badge">Personal Ranking</span>
+                        </div>
+                        <p class="callout-desc">Directly inserts the user's tested device into the leaderboard hierarchy with a highlighted star and glowing border.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Instant feedback showing the user exactly where their phone stands worldwide.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 05 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Created modular data structure partitioning devices by category.<br>
+                            2. Implemented dynamic sorting routine that computes placement based on latest diagnostic score.<br>
+                            3. Designed responsive rank cards with medal color accents and user-status badges.<br>
+                            4. Added persistent tab state switching.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>JavaScript ES6 Array Engine:</strong> <code>list.sort()</code> and <code>list.filter()</code><br>
+                            • <strong>DOM Generator:</strong> Clean DOM element factory creating sanitized cards.<br>
+                            • <strong>CSS Glassmorphism:</strong> Dynamic highlights for user-owned devices.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Relative Ranking Percentile:</strong>
+                            $$\text{Percentile} = \left(1.0 - \frac{\text{Rank} - 1}{N}\right) \times 100\%$$
+                            • <strong>Non-OIS Normalization:</strong> Scores are normalized against a 12,000 pt budget baseline so health percentages correlate with flagship tiers.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 06: Screen 06 — Test History & Trends   -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-6">
+            <div class="slide-header">
+                <span class="slide-badge">Screen 06 of 06</span>
+                <h1 class="slide-title">Test History & Camera Health Retention Trends</h1>
+                <p class="slide-subtitle">Offline Room/SQLite database mock, degradation sparklines, and single-tap historical certificate re-inspection.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/screen_06_history.png" alt="Screen 06 History Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: Screen 06 (History & Trends)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Camera Health Retention Trend Canvas Sparkline</span>
+                            <span class="asset-value-badge">Degradation Curve</span>
+                        </div>
+                        <p class="callout-desc">HTML5 Canvas sparkline plotting historical camera health retention percentage across previous diagnostic tests.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Visual proof of lens stability and actuator wear rate over time.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Historical Diagnostic Log Cards</span>
+                            <span class="asset-value-badge">Historical Records</span>
+                        </div>
+                        <p class="callout-desc">Displays date, device model, point score, and health rating. Clicking any past entry opens its original certificate.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Enables single-tap inspection of past diagnostic runs before completing a sale.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> [Clear History Logs] Database Control</span>
+                            <span class="asset-value-badge">Storage Management</span>
+                        </div>
+                        <p class="callout-desc">Allows user to reset local test history logs with safety confirmation dialog.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Ensures user privacy and clean state when selling or reassigning a phone.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 06 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Implemented JSON-serialized storage manager mimicking Android Room / iOS CoreData.<br>
+                            2. Built sparkline generator with green-to-transparent gradient fill.<br>
+                            3. Connected history cards to auto-populate certificate view upon selection.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>Web Storage API:</strong> <code>localStorage.setItem('camscore_history')</code><br>
+                            • <strong>Canvas 2D Path API:</strong> <code>ctx.bezierCurveTo()</code> for smooth degradation plotting.<br>
+                            • <strong>JSON Serializer:</strong> Robust try/catch schema validation.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Degradation Rate ($\Delta H / \Delta t$):</strong>
+                            $$\frac{\Delta H}{\Delta t} = \frac{H_{\text{current}} - H_{\text{initial}}}{t_{\text{current}} - t_{\text{initial}}}$$
+                            • Allows detecting sudden drops caused by physical drops vs gradual thermal aging.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 07: Pro Subsystem 1 — Target Mode       -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-7">
+            <div class="slide-header">
+                <span class="slide-badge">Pro Extension 01</span>
+                <h1 class="slide-title">Universal Second-Screen Reference Target Mode</h1>
+                <p class="slide-subtitle">Lab-in-a-Box companion view (<code>target.html</code>) displaying ISO 12233 10° slanted edges, ArUco fiducials, and 24-patch CIE LAB grid.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box" style="max-width: 650px;">
+                    <img src="images/screen_target_reference.png" alt="Target Mode Reference Chart Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: <code>target.html</code> (Lab-in-a-Box Target Chart)
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 4 Corner ArUco Fiducial Marker Tags</span>
+                            <span class="asset-value-badge">Perspective Warp Lock</span>
+                        </div>
+                        <p class="callout-desc">High-contrast ArUco tags allow the smartphone camera to compute a homography matrix and correct perspective angles.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Enables accurate resolution measurements even if the user holds the phone at an angle.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> ISO 12233 10° Slanted-Edge Resolution Charts</span>
+                            <span class="asset-value-badge">Spatial Frequency Response</span>
+                        </div>
+                        <p class="callout-desc">Calculates true Spatial Frequency Response (MTF50 in $\text{lp/mm}$) across high-contrast slanted edge transitions.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> The global standard metric used by DxOMark and optical engineers.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> 60Hz Animated Temporal Strobe Bar</span>
+                            <span class="asset-value-badge">Temporal Strobe</span>
+                        </div>
+                        <p class="callout-desc">Real-time phase-locked horizontal strobe bar cycling at 59.9Hz to audit frame delivery jitter and OIS phase lag.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Validates shutter synchronization and frame rate stability.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Macbeth 24-Patch CIE LAB Color Matrix</span>
+                            <span class="asset-value-badge">Ground Truth Color</span>
+                        </div>
+                        <p class="callout-desc">24 calibrated color patches (skin tones, sky blue, foliage, primaries) providing mathematical ground truth coordinates.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Computes exact Delta E ($\Delta E$) color accuracy for photo calibration.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 07 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Built standalone companion web app (<code>target.html</code>) designed for tablets, laptops, and monitors.<br>
+                            2. Rendered SVG vector patterns for sub-pixel edge sharpness.<br>
+                            3. Implemented 60Hz requestAnimationFrame strobe animation timer.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>SVG 2.0 Vector Engine:</strong> Sub-pixel geometric edge sharpness.<br>
+                            • <strong>CIE LAB Color Space:</strong> D65 standard illuminant reference values.<br>
+                            • <strong>High-Frequency Strobe Loop:</strong> Hardware-synchronized rendering.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Modulation Transfer Function (MTF):</strong>
+                            $$\text{MTF}(f) = \left|\mathcal{F}\{\text{LSF}(x)\}\right|$$
+                            • <strong>CIE76 Color Difference:</strong>
+                            $$\Delta E = \sqrt{(\Delta L^*)^2 + (\Delta a^*)^2 + (\Delta b^*)^2}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SLIDE 08: Pro Subsystem 2 — CMOS Defect Pass -->
+        <!-- ============================================== -->
+        <section class="slide-page" id="slide-8">
+            <div class="slide-header">
+                <span class="slide-badge">Pro Extension 02</span>
+                <h1 class="slide-title">Physical CMOS Defect & Micro-Scratch Scanner</h1>
+                <p class="slide-subtitle">Flat-field optical uniformity check, internal dust particle detection, and dead/hot pixel cluster mapping.</p>
+            </div>
+
+            <div class="slide-visual-grid">
+                <div class="prototype-image-box">
+                    <img src="images/modal_defect_scanner.png" alt="Defect Scanner Modal Prototype">
+                    <div class="image-caption">
+                        <span>📷</span> Real Prototype Capture: CMOS Defect Scanner Modal
+                    </div>
+                </div>
+
+                <div class="callouts-list">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Flat-Field Guidance Prompt & 2s Progress Bar</span>
+                            <span class="asset-value-badge">Optical Sampling</span>
+                        </div>
+                        <p class="callout-desc">Instructs user to point at a uniform white sheet of paper or laptop screen; samples 120 consecutive frames across the entire sensor surface.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Exposes microscopic defects invisible in normal cluttered photo scenes.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> Internal Dust & Micro-Scratch Detection Result</span>
+                            <span class="asset-value-badge">Optics Cleanliness</span>
+                        </div>
+                        <p class="callout-desc">Applies morphological gradient filter to differentiate removable surface fingerprints from internal dust under the lens glass.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Protects buyers from dropped phones with compromised lens seals.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> CMOS Pixel Cluster Audit (0 Dead / 0 Hot Pixels)</span>
+                            <span class="asset-value-badge">Silicon Health</span>
+                        </div>
+                        <p class="callout-desc">Detects permanently stuck hot pixels and non-responsive dead pixels across all color filter array channels.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Verifies the physical health of the silicon imaging chip.</div>
+                    </div>
+
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <span class="callout-target"><span class="arrow-pointer">──►</span> OEM Spec Match Pass Line (Original Module)</span>
+                            <span class="asset-value-badge">Anti-Counterfeit</span>
+                        </div>
+                        <p class="callout-desc">Confirms center-to-edge light fall-off (96.8% uniformity) matches original Sony IMX or Samsung ISOCELL factory specs.</p>
+                        <div class="callout-asset-value">💡 <strong>Value Asset:</strong> Exposes cheap \$10 aftermarket replacement camera parts.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engineering-deepdive">
+                <div class="deepdive-title">🛠️ Slide 08 Engineering Process, Tooling & Scientific Mechanisms</div>
+                <div class="deepdive-grid">
+                    <div class="dd-block">
+                        <div class="dd-block-title">⚙️ Development Process</div>
+                        <div class="dd-block-content">
+                            1. Developed high-precision flat-field optical pass modal dialog.<br>
+                            2. Implemented spatial gradient variance algorithms detecting internal dust spots.<br>
+                            3. Connected audit results directly to Screen 03 sub-score card and Screen 04 certificate.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🧰 Tools & APIs Used</div>
+                        <div class="dd-block-content">
+                            • <strong>ImageData Luminance Buffer:</strong> <code>offCtx.getImageData()</code><br>
+                            • <strong>Morphological Blob Detection:</strong> Spatial thresholding.<br>
+                            • <strong>Vignette Model:</strong> $\cos^4(\theta)$ radial optical fall-off.
+                        </div>
+                    </div>
+                    <div class="dd-block">
+                        <div class="dd-block-title">🔬 Scientific Mechanism & Math</div>
+                        <div class="dd-block-content">
+                            • <strong>Flat-Field Vignetting Uniformity:</strong>
+                            $$U = \left(1.0 - \frac{Y_{\text{center}} - Y_{\text{corner}}}{Y_{\text{center}}}\right) \times 100\%$$
+                            • <strong>Dust Spot Criterion:</strong> Local intensity dip exceeding $3\sigma$ below neighborhood median.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Slide Navigation Script -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(num) {
+            if (num < 1) num = 1;
+            if (num > totalSlides) num = totalSlides;
+            currentSlide = num;
+
+            document.querySelectorAll('.slide-page').forEach((el, idx) => {
+                el.classList.toggle('active', (idx + 1) === currentSlide);
+            });
+
+            document.getElementById('slide-indicator').textContent = `Slide 0${currentSlide} / 0${totalSlides}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>
+
